@@ -21,4 +21,3 @@ Route::get('/', function () {
 });
 // Route::get('/ac',[AccountController::class,'checkTable']);
 // Route::get('/bk',[BookingController::class,'checkTable']);
-
