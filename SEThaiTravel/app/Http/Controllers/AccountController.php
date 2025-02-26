@@ -13,6 +13,7 @@ use App\Models\Tour;
 use App\Models\TourHasGuideList;
 use App\Models\Payment;
 
+use App\Models\LocationInTour;
 class AccountController extends Controller
 {
     function checkTable(){
@@ -25,8 +26,7 @@ class AccountController extends Controller
             echo "Table does not exist!";
         }
       }
-
-      function index(Request $request){
+      function checkLogin(Request $request){
         $request->validate([
           'username'=>'required',
           'password'=>'required'
@@ -43,16 +43,19 @@ class AccountController extends Controller
           switch($account->permittion_acc){
               case "admin" : 
                 return "This is admin page"; //ของจริงจะใส่เป็น view('ชื่อของไฟล์ที่เป็นหน้า',compact('ตัวแปรที่เก็บข้อมูลของadmin'))
-              case "corp"  : 
+              case "corp"  :
                   $corp= CorpList::find($account->id_account);
+                  session(['userID' => $corp]);
                   dd($corp);
                 return "This is corp page";
               case "user"  : 
                   $user= UserList::find($account->id_account);
-                  dd($user);
-                return "This is user page";
+                  // dd($user);
+                  session(['userID' => $user]);
+                return view('userPage');
               case "guide" : 
                   $guide= GuideList::find($account->id_account);
+                  session(['userID' => $guide]);
                   dd($guide);
                 return "This is guide page";
           }
@@ -165,14 +168,15 @@ class AccountController extends Controller
             switch($typeOfSign){
               case 'corp': 
                 return view('corpSignIn',compact('username','password','typeOfSign','email'));
-              case 'guide': return "This is guide sign in page";
-              case 'user': return "This is user sign in page";
+              case 'guide': 
+                return view('guideSignIn',compact('username','password','typeOfSign','email'));
+              case 'user': 
+                return view('userSignIn',compact('username','password','typeOfSign','email'));
             } 
           }
           else{
             return redirect()->back()->withErrors(['SignIn_failed' => 'username or email have used'])->withInput();
-          }
-         
+          }    
       }
       function insertCorp(Request $request){
         // dd($request->all());
@@ -205,19 +209,96 @@ class AccountController extends Controller
           'owner_country_code'=>1
         ]; 
         dd($corpData);
+        //insert corp
       }
 
       
       function insertUser(Request $request){
-        
+        $accountData=[
+          'permittion_acc'=>$request->typeOfSign,
+          'username'=>$request->username,
+          'password'=>$request->password,
+          'email'=>$request->email,
+          'status'=>'pending'
+        ];
+        // dd($accountData);
+        // Account::insert($accountData);
+        // $idAcc = Account::where()    
+        // $idAcc->id_account
+        $userData=[
+          'account_id_account'=>1,//สมมมุตินะของจริงต้องใช้ id ที่พึ่งใส่ไป
+          'name'=>$request->FirstName,
+          'surname'=> $request->LastName,
+          'photo'=> "photo.png",
+          'phonenumber'=>$request->PhoneNum,
+          'fake_BAN'=>$request->CardNum,
+          'address'=>$request->Address." ".$request->District." ".$request->Subdistrict.
+          " ".$request->Province,
+          'postcode'=>$request->PostNum,
+          'country'=>1//อันนี้ก็สมมติของจริงน่าจะมีเงื่อนไขเเล้วค่อยนำค่ามาใส่
+        ]; 
+        dd($userData);
+        //insert user
       }
       function insertGuide(Request $request){
-
+        $accountData=[
+          'permittion_acc'=>$request->typeOfSign,
+          'username'=>$request->username,
+          'password'=>$request->password,
+          'email'=>$request->email,
+          'status'=>'pending'
+        ];
+        // dd($accountData);
+        // Account::insert($accountData);
+        // $idAcc = Account::where()    
+        // $idAcc->id_account
+        $guideData=[
+          'account_id_account'=>1,//สมมมุตินะของจริงต้องใช้ id ที่พึ่งใส่ไป
+          'guide_license'=>$request->GuideLicense,
+          'name'=>$request->FirstName,
+          'surname'=> $request->LastName,
+          'photo'=> "photo.png",
+          'corp_list_account_id_account'=> $request->corp,
+          'phonenumber'=>$request->PhoneNum,
+          'fake_BAN'=>$request->CardNum,
+          'address'=>$request->Address." ".$request->District." ".$request->Subdistrict.
+          " ".$request->Province,
+          'postcode'=>$request->PostNum,
+          'country'=>1//อันนี้ก็สมมติของจริงน่าจะมีเงื่อนไขเเล้วค่อยนำค่ามาใส่
+        ]; 
+        dd($guideData);
+        //insert guide
       }
       function search(Request $request){
-        
       }
-      
-      //login sign-in search viewProduct 
+
+      function logOut(Request $request){
+        $request->session()->invalidate(); // ทำให้ session ID ปัจจุบันใช้ไม่ได้
+        $request->session()->regenerateToken(); // สร้าง CSRF token ใหม่ ป้องกัน 419 Page Expired
+        return view('login');
+      }
+      function viewProduct(Request $request){//อันนี้ยังไม่เสร็จ
+        $tourID = $request->tourID;
+        $tourData = Tour::where('id_tour',$tourID)->first();
+        switch($tourData->from_owner){
+          case "guide": $productData = Tour::join('guide_list', 'tour.owner_id', '=', 'guide_list.account_id_account')
+                                                ->where('tour.id_tour', $tourID)
+                                                ->select('tour.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname')
+                                                ->first(); break;              
+          case "corp":  $productData = Tour::join('corp_list', 'tour.owner_id', '=', 'corp_list.account_id_account')
+                                                ->where('tour.id_tour', $tourID)
+                                                ->select('tour.*', 'corp_list.name as corp_name')
+                                                ->first(); break; 
+        }
+        $locationInTourData = LocationInTour::where('tour_id_tour',$tourID)->pluck('loc_api');
+        $locationFetchApi = $locationInTourData->map(function ($apiUrl) {
+          $response = Http::get($apiUrl);
+          return $response->successful() ? $response->json() : null;
+      })->filter();
+        return view('viewProduct',[
+          'tour_info' => $productData,
+          'locations' => $locationFetchApi
+        ]);
+      }
 
 }
