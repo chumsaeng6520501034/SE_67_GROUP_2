@@ -91,5 +91,79 @@ class UserListController extends Controller
             // dd($booking);
             // return 'update success';
       }
+      function getUserBuyHistory(){
+        //$history = Booking::where('user_list_account_id_account',19)->get();
+        // $buy = Booking::where('tour_id_tour',1)->get();
+        //$userId = $request->input('user_list_account_id_account');
+        
+        $idAccount = session('id_account');
+        //if (!$idAccount) {
+        // return redirect()->route('login')->with('error', 'You must be logged in to view your sales history');
+      //}
+        $history = Booking::where('user_list_account_id_account',$idAccount)->get();
+        
+        dd($history); 
+        return view('???',compact('history'));
+      }
+
+      function getGuideSellHistory(){
+        //$userId = Auth::id();
+        //$history = Tour::where('owner_id', $userId)->get();
+        //$history = Tour::where('owner_id',30)->get(); //test
+        //$userId = $request->input('owner_id');
+        $idAccount = session('id_account');
+        $history = Tour::where('owner_id',$idAccount)->get();
+
+        dd($history);
+        return view('???',compact('history'));
+      }
+
+      function getCorpSellHistory(){
+        // เหมือนguide
+        $idAccount = session('id_account');
+        $history = Tour::where('owner_id',$idAccount)->get();
+
+        return view('???',compact('history'));
+      }
+
+      function getGuideWorkTourtHistory(){
+        $idAccount = session('id_account');
+        $history = TourHasGuideList::where('guide_list_account_id_account',$idAccount)->get();
+
+        dd($history);
+        return view('???',compact('history'));
+      }
+
+      function getUserPaymentHistory(){
+        //$history = Payment::where('booking_user_list_account_id_account',19)->get();
+        //id ของuser 
+        $idAccount = session('id_account');
+        $history = Payment::where('booking_user_list_account_id_account',$idAccount)->get();
+        dd($history);
+        return view('???',compact('history'));
+      }
+
+      function getTourPaymentHistory(){
+        //$history = Payment::where('booking_Tour_id_Tour',5)->get();
+        
+        //id ทัวร์ เพื่อดูว่าทัวร์นั้นมีคนจ่ายกี่คนยังไง
+        $idAccount = session('id_account');//แก้เป็น session ที่เก็บtour
+        $history = Payment::where('booking_Tour_id_Tour',$idAccount)->get();
+        dd($history);
+        return view('???',compact('history'));
+      }
+      
+      function getTourActive(){
+        $tour = Tour::where('status','ongoing')->get();
+        dd($tour);
+        return view('???',compact('tour'));
+      }
+
+      function searchNameTourActive(){
+        $name = session('name');//session ที่เก็บข้อความค้นหา
+        $tour = Tour::where('name',$name)->where('status', 'ongoing')->get();//สำหรับทัวร์ที่กำลังมี
+        
+        return view('???',compact('tour'));
+      }
       
 }
