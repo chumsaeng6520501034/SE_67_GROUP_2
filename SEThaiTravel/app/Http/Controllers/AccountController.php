@@ -19,6 +19,7 @@ class AccountController extends Controller
             echo "Table does not exist!";
         }
       }
+
       function checkLogin(Request $request){
         $request->validate([
           'username'=>'required',
@@ -55,7 +56,8 @@ class AccountController extends Controller
         }
         // return view('test',compact('account'));
       }
-      function signin(Request $request){
+      function signIn(Request $request) //ส่งข้อมูลบัญชีไปสร้างตัวตน
+      {
           $request->validate([
           'username'=>'required',
           'password'=>'required',
@@ -81,7 +83,8 @@ class AccountController extends Controller
             return redirect()->back()->withErrors(['SignIn_failed' => 'username or email have used'])->withInput();
           }    
       }
-      function insertCorp(Request $request){
+      function insertCorp(Request $request) //สร้างตัวตนบ.
+      {
         // dd($request->all());
         $accountData=[
           'permittion_acc'=>$request->typeOfSign,
@@ -114,7 +117,8 @@ class AccountController extends Controller
         dd($corpData);
         //insert corp
       }
-      function insertUser(Request $request){
+      function insertUser(Request $request) //สร้างตัวตนลูกค้า
+      {
         $accountData=[
           'permittion_acc'=>$request->typeOfSign,
           'username'=>$request->username,
@@ -141,7 +145,8 @@ class AccountController extends Controller
         dd($userData);
         //insert user
       }
-      function insertGuide(Request $request){
+      function insertGuide(Request $request) //สร้างตัวตนไกด์
+      {
         $accountData=[
           'permittion_acc'=>$request->typeOfSign,
           'username'=>$request->username,
@@ -170,14 +175,18 @@ class AccountController extends Controller
         dd($guideData);
         //insert guide
       }
-      function search(Request $request){
+      
+      function search(Request $request) //หน้าแรก
+      {
       }
 
-      function logOut(Request $request){
+      function logOut(Request $request)// ย้อนกลับหน้าแรก
+      {
         $request->session()->invalidate(); // ทำให้ session ID ปัจจุบันใช้ไม่ได้
         $request->session()->regenerateToken(); // สร้าง CSRF token ใหม่ ป้องกัน 419 Page Expired
         return view('login');
       }
+
       function viewProduct(Request $request){//อันนี้ยังไม่เสร็จ
         $tourID = $request->tourID;
         $tourData = Tour::where('id_tour',$tourID)->first();
@@ -185,7 +194,7 @@ class AccountController extends Controller
           case "guide": $productData = Tour::join('guide_list', 'tour.owner_id', '=', 'guide_list.account_id_account')
                                                 ->where('tour.id_tour', $tourID)
                                                 ->select('tour.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname')
-                                                ->first(); break;              
+                                                ->first(); break;
           case "corp":  $productData = Tour::join('corp_list', 'tour.owner_id', '=', 'corp_list.account_id_account')
                                                 ->where('tour.id_tour', $tourID)
                                                 ->select('tour.*', 'corp_list.name as corp_name')

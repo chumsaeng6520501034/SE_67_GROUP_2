@@ -59,4 +59,27 @@ class GuideListController extends Controller
         ];
         // Offer::insert($offerData);
     }
+
+
+
+    function addTour (Request $request){
+        $requestTourID = $request->requestTourID;
+        $offerData = [
+            "request_tour_id_request_tour" => $requestTourID,
+            "from_who_offer" => "guide",
+            "id_who_offer" => session('userID')->account_id_account,
+            "contect" => $request->contect,
+            "price" => $request->price,
+            "description" => $request->description,
+            "hotel" => $request->hotel,
+            "hotel_price" => $request->hotelPrice,
+            "travel" => $request->travel,
+            "travel_price" => $request->travelPrice,
+            "guide_qty" => $request->guideQTY,
+            "status" => "new",
+            "offer_date" => Carbon::now()->toDateTimeString()
+        ];
+
+        // Offer::insert($offerData);
+    }
 }

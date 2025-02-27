@@ -28,6 +28,7 @@ class UserListController extends Controller
             return view('review');
             // view('review',compact('guideInTour','bookingID','userID'))
       }
+
       function insertReviewTour(Request $request){
             $reviewData=[
                 'booking_id_booking'=> $request->bookingID,
@@ -40,6 +41,7 @@ class UserListController extends Controller
             dd($reviewData);
             // Review::insert($reviewData);
       }
+
       function bookingTour(Request $request){
         $tourID=1;//$request->tourId
         $totalMember = Booking::where('tour_id_tour', 1) //TourID ใช้ของที่กดจองมา
@@ -56,6 +58,7 @@ class UserListController extends Controller
         $userID=session('userID')->account_id_account;//$request->userId
         return view('bookingTour',compact('tourID','userID','tourName','tourPrice','totalMember','tourCapacity'));
       }
+
       function insertBooking(Request $request){
         if($request->adultqty==0 && $request->kidqty==0) 
         {
@@ -84,6 +87,7 @@ class UserListController extends Controller
         //Booking::insert($bookingData);
         return view('summaryBooking',compact('totalPrice'));
       }
+      
       function cancelBookingTour(Request $request){
             $bookingID = 1;//$request->idBooking
             $bookingData=['status'=>'cancel'];
