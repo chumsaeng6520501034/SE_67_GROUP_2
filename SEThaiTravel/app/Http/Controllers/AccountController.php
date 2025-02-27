@@ -3,15 +3,22 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Account;
 use App\Models\CorpList;
 use App\Models\GuideList;
 use App\Models\UserList;
+use App\Models\Booking;
 use App\Models\Tour;
+use App\Models\TourHasGuideList;
+use App\Models\Payment;
+
 use App\Models\LocationInTour;
 class AccountController extends Controller
 {
     function checkTable(){
+      
+      //getGuideSellHistory();
         if (Schema::hasTable((new Account)->getTable())) {
             echo "Account exists!";
         } 
@@ -70,6 +77,7 @@ class AccountController extends Controller
           $typeOfSign= $request->type;
           $checkAcc=Account::where('username',$request->username)->first();
           if(is_null($checkAcc)){
+            //session(['id_account' => $request->id_account]);
             switch($typeOfSign){
               case 'corp': 
                 return view('corpSignIn',compact('username','password','typeOfSign','email'));
