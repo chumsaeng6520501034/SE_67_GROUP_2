@@ -224,7 +224,7 @@ class AccountController extends Controller
           case "guide": $productData = Tour::join('guide_list', 'tour.owner_id', '=', 'guide_list.account_id_account')
                                                 ->where('tour.id_tour', $tourID)
                                                 ->select('tour.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname')
-                                                ->first(); break;              
+                                                ->first(); break;
           case "corp":  $productData = Tour::join('corp_list', 'tour.owner_id', '=', 'corp_list.account_id_account')
                                                 ->where('tour.id_tour', $tourID)
                                                 ->select('tour.*', 'corp_list.name as corp_name')
