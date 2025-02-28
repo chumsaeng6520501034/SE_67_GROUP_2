@@ -16,17 +16,10 @@ use App\Models\Payment;
 use App\Models\LocationInTour;
 class AccountController extends Controller
 {
-    function checkTable(){
-      
-      //getGuideSellHistory();
-        if (Schema::hasTable((new Account)->getTable())) {
-            echo "Account exists!";
-        } 
-        else{
-            echo "Table does not exist!";
-        }
+      function viewLogin(){ // Redirect ไปที่หน้า login
+        return view('login');
       }
-      function checkLogin(Request $request){
+      function checkLogin(Request $request){ //ตรวจสอบการ login ว่าเป็น user ประเภทไหน แล้ว Redirect ไปที่หน้าของ Account ประเภทนั้น
         $request->validate([
           'username'=>'required',
           'password'=>'required'
@@ -42,12 +35,12 @@ class AccountController extends Controller
         {
           switch($account->permittion_acc){
               case "admin" : 
-                return "This is admin page"; //ของจริงจะใส่เป็น view('ชื่อของไฟล์ที่เป็นหน้า',compact('ตัวแปรที่เก็บข้อมูลของadmin'))
+                session(['userID' => $account]);
+                return view('adminPage'); //ของจริงจะใส่เป็น view('ชื่อของไฟล์ที่เป็นหน้า',compact('ตัวแปรที่เก็บข้อมูลของadmin'))
               case "corp"  :
                   $corp= CorpList::find($account->id_account);
                   session(['userID' => $corp]);
-                  dd($corp);
-                return "This is corp page";
+                return view('corpPage');
               case "user"  : 
                   $user= UserList::find($account->id_account);
                   // dd($user);
@@ -56,13 +49,15 @@ class AccountController extends Controller
               case "guide" : 
                   $guide= GuideList::find($account->id_account);
                   session(['userID' => $guide]);
-                  dd($guide);
-                return "This is guide page";
+                  // dd($guide);
+                return view('guidePage');
           }
         }
-        // return view('test',compact('account'));
       }
-      function signin(Request $request){
+      function viewSignIn(){ // Redirect ไปที่ หน้า signIn หน้าแรกที่มีให้เลือกประเภทการ SignIn
+        return view('signIn');
+      }
+      function signIn(Request $request){ // รับข้อมูลจากหน้า signIn หน้าเเรกแล้วมาแบ่งประเภทว่าจะ Redirect ไปหน้า signIn ที่เลือกมา
           $request->validate([
           'username'=>'required',
           'password'=>'required',
@@ -73,9 +68,10 @@ class AccountController extends Controller
           $password= $request->password;
           $email=$request->email;
           $typeOfSign= $request->type;
-          $checkAcc=Account::where('username',$request->username)->first();
+          $checkAcc=Account::where('username',$username)
+                             ->orWhere('email ', 'LIKE', $email)
+                             ->first();//ใช้ตรวจสอบ username email ว่ามีแล้วหรือยัง
           if(is_null($checkAcc)){
-            //session(['id_account' => $request->id_account]);
             switch($typeOfSign){
               case 'corp': 
                 return view('corpSignIn',compact('username','password','typeOfSign','email'));
@@ -89,8 +85,7 @@ class AccountController extends Controller
             return redirect()->back()->withErrors(['SignIn_failed' => 'username or email have used'])->withInput();
           }    
       }
-      function insertCorp(Request $request){
-        // dd($request->all());
+      function insertCorp(Request $request){//เพิ่ม บริษัทเข้าฐานข้อมูลแล้ว Redirect ไปหน้า Home
         $accountData=[
           'permittion_acc'=>$request->typeOfSign,
           'username'=>$request->username,
@@ -99,13 +94,12 @@ class AccountController extends Controller
           'status'=>'pending'
         ];
         // dd($accountData);
-        // Account::insert($accountData);
-        // $idAcc = Account::where()    
-        // $idAcc->id_account
+        Account::insert($accountData);
+        $idAcc = Account::where('username',$request->username)->first();    
         $corpData=[
-          'account_id_account'=>1,
+          'account_id_account'=> $idAcc->id_account,
           'corp_license'=>$request->registNum,
-          // 'logo'=>$request->logo,
+          'logo'=>"logo.png",
           'name'=>$request->corpName,
           'address'=> $request->address." ".$request->district." ".$request->subdistict.
                       " ".$request->province,
@@ -119,12 +113,13 @@ class AccountController extends Controller
                             " ".$request->ownerProvince." ".$request->ownerPostalNum,
           'owner_country_code'=>1
         ]; 
-        dd($corpData);
-        //insert corp
+        // dd($corpData);
+        CorpList::insert($corpData);
+        return view('home');
       }
 
       
-      function insertUser(Request $request){
+      function insertUser(Request $request){//เพิ่ม ลูกค้าเข้าฐานข้อมูลแล้ว Redirect ไปหน้า Home
         $accountData=[
           'permittion_acc'=>$request->typeOfSign,
           'username'=>$request->username,
@@ -133,11 +128,10 @@ class AccountController extends Controller
           'status'=>'pending'
         ];
         // dd($accountData);
-        // Account::insert($accountData);
-        // $idAcc = Account::where()    
-        // $idAcc->id_account
+        Account::insert($accountData);
+        $idAcc = Account::where('username',$request->username)->first();    
         $userData=[
-          'account_id_account'=>1,//สมมมุตินะของจริงต้องใช้ id ที่พึ่งใส่ไป
+          'account_id_account'=> $idAcc->id_account,//สมมมุตินะของจริงต้องใช้ id ที่พึ่งใส่ไป
           'name'=>$request->FirstName,
           'surname'=> $request->LastName,
           'photo'=> "photo.png",
@@ -148,10 +142,11 @@ class AccountController extends Controller
           'postcode'=>$request->PostNum,
           'country'=>1//อันนี้ก็สมมติของจริงน่าจะมีเงื่อนไขเเล้วค่อยนำค่ามาใส่
         ]; 
-        dd($userData);
-        //insert user
+        // dd($userData);
+        UserList::insert($userData);
+        return view('home');
       }
-      function insertGuide(Request $request){
+      function insertGuide(Request $request){//เพิ่ม ไกด์เข้าฐานข้อมูลแล้ว Redirect ไปหน้า Home
         $accountData=[
           'permittion_acc'=>$request->typeOfSign,
           'username'=>$request->username,
@@ -160,11 +155,10 @@ class AccountController extends Controller
           'status'=>'pending'
         ];
         // dd($accountData);
-        // Account::insert($accountData);
-        // $idAcc = Account::where()    
-        // $idAcc->id_account
+        Account::insert($accountData);
+        $idAcc = Account::where('username',$request->username)->first();    
         $guideData=[
-          'account_id_account'=>1,//สมมมุตินะของจริงต้องใช้ id ที่พึ่งใส่ไป
+          'account_id_account'=>$idAcc->id_account,//สมมมุตินะของจริงต้องใช้ id ที่พึ่งใส่ไป
           'guide_license'=>$request->GuideLicense,
           'name'=>$request->FirstName,
           'surname'=> $request->LastName,
@@ -177,18 +171,53 @@ class AccountController extends Controller
           'postcode'=>$request->PostNum,
           'country'=>1//อันนี้ก็สมมติของจริงน่าจะมีเงื่อนไขเเล้วค่อยนำค่ามาใส่
         ]; 
-        dd($guideData);
-        //insert guide
+        // dd($guideData);
+        GuideList::insert($guideData);
+        return view('home');
       }
-      function search(Request $request){
+      function search(Request $request){// ค้นหาทัวร์ที่วางขายอยู่
+          $name = $request->searchKey;
+          $startDate = $request->startDate;
+          $endDate = $request->endDate;
+          $capacity = $request->capacity;
+          if(is_numeric($name)){//เช็คว่าเป็นตัวเลขไหมถ้าเป็นจะ search แบบ private 
+            $searchTourData =Tour::where(function ($query) {
+              $query->where('name', 'LIKE', '%'.$name.'%')
+                    ->orWhere('start_tour_date', 'LIKE', $startDate)
+                    ->orWhere('end_tour_date', 'LIKE', $endDate)
+                    ->orWhere('tour_capacity', '>=', $capacity);
+             })
+            ->where('status', 'LIKE', 'ongoing')
+            ->where('type_tour', 'LIKE', 'private')
+            ->get();
+          }
+          else{
+            $searchTourData =Tour::where(function ($query) {
+              $query->where('name', 'LIKE', '%'.$name.'%')
+                    ->orWhere('start_tour_date', 'LIKE', $startDate)
+                    ->orWhere('end_tour_date', 'LIKE',  $endDate)
+                    ->orWhere('tour_capacity', '>=', $capacity);
+             })
+            ->where('status', 'LIKE', 'ongoing')
+            ->where('type_tour', 'LIKE', 'public')
+            ->get();
+          }
+          $ownerData = [];
+          foreach($searchTourData as $data){//อันนหาหาข้อมูลของเจ้าของทัวร์นั้นๆแล้วส่งไปใน view ด้วยเผื่อใช้
+            switch($data->from_owner){
+              case "guide": $ownerData[] = GuideList::find($data->owner_id); break;
+              case "corp": $ownerData[] = CorpList::find($data->owner_id); break;
+            }
+          }
+          return view('searchPage',compact('ownerData','$searchTourData'));
       }
 
-      function logOut(Request $request){
+      function logOut(Request $request){//Log out แล้ว เคลีย session ทิ้ง
         $request->session()->invalidate(); // ทำให้ session ID ปัจจุบันใช้ไม่ได้
         $request->session()->regenerateToken(); // สร้าง CSRF token ใหม่ ป้องกัน 419 Page Expired
-        return view('login');
+        return view('home');
       }
-      function viewProduct(Request $request){//อันนี้ยังไม่เสร็จ
+      function viewProduct(Request $request){//ดึงข้อมูลของTour ที่จะดูมาแล้ว Redirect ไปที่หน้าดูข้อมูลสินค้าพร้อมส่งข้อมูลที่ต้องการไปด้วย
         $tourID = $request->tourID;
         $tourData = Tour::where('id_tour',$tourID)->first();
         switch($tourData->from_owner){
