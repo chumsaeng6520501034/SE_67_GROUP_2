@@ -9,7 +9,7 @@
 <body class="relative w-full h-screen bg-cover bg-center" style="background-image: url('https://my.kapook.com/imagescontent/fb_img/816/s_96528_4076.jpg');">
     
     <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
-        <div class="bg-white bg-opacity-80 backdrop-blur-md p-10 rounded-2xl shadow-lg w-[900px]">
+        <div class="bg-white bg-opacity-80 backdrop-blur-md p-6 rounded-2xl shadow-lg w-[700px]">
         <h2 class="text-4xl font-bold text-center text-[#0F3557]">SIGN UP</h2>
         
          <!-- อัพโหลดรูป -->
@@ -22,7 +22,7 @@
         </div>
 
         <form>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-2 gap-1">
                 <!-- บรรทัดที่ 1 -->
                 <label class="flex flex-col">
                     First Name*
