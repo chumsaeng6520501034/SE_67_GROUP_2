@@ -36,7 +36,7 @@
 </head>
 <body class="relative w-full h-screen bg-cover bg-center" style="background-image: url('https://my.kapook.com/imagescontent/fb_img/816/s_96528_4076.jpg');">
     
-    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 mt-10 w-full max-w-lg sm:max-w-xl md:max-w-2xl bg-white bg-opacity-80 backdrop-blur-md p-6 rounded-2xl shadow-lg overflow-y-auto max-h-[90vh]">
+    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 mt-10 w-full max-w-lg sm:max-w-xl md:max-w-2xl bg-white bg-opacity-50 backdrop-blur-md p-6 rounded-2xl shadow-lg overflow-y-auto max-h-[90vh]">
         
         <h2 class="text-4xl font-bold text-center text-[#0F3557]">SIGN UP</h2>
         
