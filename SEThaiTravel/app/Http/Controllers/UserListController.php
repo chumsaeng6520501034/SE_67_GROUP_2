@@ -95,6 +95,7 @@ class UserListController extends Controller
             // dd($booking);
             // return 'update success';
       }
+
       function getUserBuyHistory(){
         //$history = Booking::where('user_list_account_id_account',19)->get();
         // $buy = Booking::where('tour_id_tour',1)->get();
@@ -103,7 +104,7 @@ class UserListController extends Controller
         $idAccount = session('id_account');
         //if (!$idAccount) {
         // return redirect()->route('login')->with('error', 'You must be logged in to view your sales history');
-      //}
+        //}
         $history = Booking::where('user_list_account_id_account',$idAccount)->get();
         
         dd($history); 
@@ -170,4 +171,17 @@ class UserListController extends Controller
         return view('???',compact('tour'));
       }
       
+      function getRequestTour(){
+        $idAccount = session('id_account');
+        $Available_req = Request_tour::where('user_list_account_id_account',$idAccount)
+                        ->where('request_status','ongoing')->get();
+        $History_req   = Request_tour::where('user_list_account_id_account',$idAccount)
+                        ->where('request_status','finish')->get();
+        $Cancal_req    = Request_tour::where('user_list_account_id_account',$idAccount)
+                        ->where('request_status','cancal')->get();
+
+        dd($Available_req); 
+        return view('???',compact('Available_req'));
+      }
+
 }
