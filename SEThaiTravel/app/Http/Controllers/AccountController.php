@@ -25,7 +25,10 @@ class AccountController extends Controller
           'password'=>'required'
           ],
           );
-        
+          // $account = Account::where('username', $request->username)->first();
+        //   if (!$account || !Hash::check($request->password, $account->password)) {
+        //     return redirect()->back()->withErrors(['login_failed' => 'Invalid username or password'])->withInput();
+        // }
         $account = Account::where('username',$request->username)->where('password',$request->password)->first();
         if(is_null($account))
         {
@@ -65,6 +68,7 @@ class AccountController extends Controller
           ],
           );
           $username= $request->username;
+          // $password=Hash::make($request->password);
           $password= $request->password;
           $email=$request->email;
           $typeOfSign= $request->type;
@@ -215,7 +219,7 @@ class AccountController extends Controller
       function logOut(Request $request){//Log out แล้ว เคลีย session ทิ้ง
         $request->session()->invalidate(); // ทำให้ session ID ปัจจุบันใช้ไม่ได้
         $request->session()->regenerateToken(); // สร้าง CSRF token ใหม่ ป้องกัน 419 Page Expired
-        return view('home');
+        return view('home'); //redirect('/')
       }
       function viewProduct(Request $request){//ดึงข้อมูลของTour ที่จะดูมาแล้ว Redirect ไปที่หน้าดูข้อมูลสินค้าพร้อมส่งข้อมูลที่ต้องการไปด้วย
         $tourID = $request->tourID;
