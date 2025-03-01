@@ -10,12 +10,13 @@
 
     <div class="bg-white bg-opacity-50 backdrop-blur-lg p-12 rounded-2xl shadow-2xl w-96"> 
         <h2 class="text-4xl font-bold text-center text-blue-900 mb-6">SIGN UP</h2>
-        <form>
+
+        <form action="/signUpCategory" method="POST">
+            @csrf
             <div class="mb-4">
                 <label class="block text-gray-700 font-semibold">User Name</label>
                 <input type="text" name="username" class="w-full p-3 border rounded-lg text-lg" required>
             </div>
-
             <div class="mb-4">
                 <label class="block text-gray-700 font-semibold">Password</label>
                 <input type="password" name="password" class="w-full p-3 border rounded-lg text-lg" required>
@@ -30,9 +31,9 @@
                 <label class="block text-gray-700 font-semibold">Sign up as</label>
                 <select name="role" class="w-full p-3 border rounded-lg text-lg" required>
                     <option value="">Select Role...</option>
-                    <option value="customer">CUSTOMER</option>
+                    <option value="user">CUSTOMER</option>
                     <option value="guide">GUIDE</option>
-                    <option value="corporation">CORPORATION</option>
+                    <option value="corp">CORPORATION</option>
                 </select>
             </div>
 

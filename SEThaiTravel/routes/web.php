@@ -23,3 +23,5 @@ Route::get('/', function () {
 Route::get('/us',[UserListController::class,'getRequestTour']);
 // Route::get('/ac',[AccountController::class,'checkTable']);
 // Route::get('/bk',[BookingController::class,'checkTable']);
+Route::get('/signUp',[AccountController::class,'viewSignIn']);
+Route::post('/signUpCategory',[AccountController::class,'signIn']);

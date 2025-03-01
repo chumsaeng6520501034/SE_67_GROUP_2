@@ -58,7 +58,7 @@ class AccountController extends Controller
         }
       }
       function viewSignIn(){ // Redirect ไปที่ หน้า signIn หน้าแรกที่มีให้เลือกประเภทการ SignIn
-        return view('signIn');
+        return view('account.signUp');
       }
       function signIn(Request $request){ // รับข้อมูลจากหน้า signIn หน้าเเรกแล้วมาแบ่งประเภทว่าจะ Redirect ไปหน้า signIn ที่เลือกมา
           $request->validate([
@@ -71,7 +71,7 @@ class AccountController extends Controller
           // $password=Hash::make($request->password);
           $password= $request->password;
           $email=$request->email;
-          $typeOfSign= $request->type;
+          $typeOfSign= $request->role;
           $checkAcc=Account::where('username',$username)
                              ->orWhere('email ', 'LIKE', $email)
                              ->first();//ใช้ตรวจสอบ username email ว่ามีแล้วหรือยัง
