@@ -5,6 +5,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CorpListController;
 use App\Http\Controllers\GuideListController;
 use App\Http\Controllers\UserListController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,5 +20,6 @@ use App\Http\Controllers\UserListController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/us',[UserListController::class,'getRequestTour']);
 // Route::get('/ac',[AccountController::class,'checkTable']);
 // Route::get('/bk',[BookingController::class,'checkTable']);

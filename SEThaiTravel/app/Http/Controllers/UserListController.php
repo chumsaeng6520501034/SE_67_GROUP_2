@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\UserList;
 use App\Models\TourHasGuideList;
 use App\Models\Booking;
+use App\Models\Tour;
+use App\Models\RequestTour;
 use Carbon\Carbon;
 class UserListController extends Controller
 {
@@ -91,6 +93,8 @@ class UserListController extends Controller
             // dd($booking);
             // return 'update success';
       }
+
+      //ตรวจสอบประวัติการซื้อทัวร์
       function getUserBuyHistory(){
         //$history = Booking::where('user_list_account_id_account',19)->get();
         // $buy = Booking::where('tour_id_tour',1)->get();
@@ -106,6 +110,49 @@ class UserListController extends Controller
         return view('???',compact('history'));
       }
 
+      //ตรวจสอบการโอนเงินลูกค้า
+      function getUserPaymentHistory(){
+        //$history = Payment::where('booking_user_list_account_id_account',19)->get();
+        //id ของuser 
+        $idAccount = session('id_account');
+        $history = Payment::where('booking_user_list_account_id_account',$idAccount)->get();
+        dd($history);
+        return view('???',compact('history'));
+      }
+
+      
+      //ทัวร์ที่กำลังวางขายอยู่
+      function getTourActive(){
+        $tour = Tour::where('status','ongoing')->where('type_tour', 'public')->get();
+        dd($tour);
+        return view('???',compact('tour'));
+      }
+
+      //ค้นหาทัวร์ที่กำลังวางขายอยู่  แต่เอาชื่อหา
+      function searchNameTourActive(){
+        $name = session('name');//session ที่เก็บข้อความค้นหา
+        $tour = Tour::where('name',$name)->where('status', 'ongoing')
+                ->where('type_tour', 'public')->get();
+        
+        return view('???',compact('tour'));
+      }
+
+      //ตรวจสอบทัวร์ที่ร้องขอของลูกค้าคนนั้น
+      function getRequestTour(){
+        $idAccount = session('id_account');
+        $tour = RequestTour::where('user_list_account_id_account',$idAccount)->get();
+        dd($tour);
+        return view('???',compact('tour'));
+      }
+
+
+
+
+
+
+
+      
+      //ตรวจสอบประวัติการขายทัวร์
       function getGuideSellHistory(){
         //$userId = Auth::id();
         //$history = Tour::where('owner_id', $userId)->get();
@@ -118,14 +165,15 @@ class UserListController extends Controller
         return view('???',compact('history'));
       }
 
-      function getCorpSellHistory(){
-        // เหมือนguide
-        $idAccount = session('id_account');
-        $history = Tour::where('owner_id',$idAccount)->get();
+      // function getCorpSellHistory(){
+      //   // เหมือนguide
+      //   $idAccount = session('id_account');
+      //   $history = Tour::where('owner_id',$idAccount)->get();
 
-        return view('???',compact('history'));
-      }
+      //   return view('???',compact('history'));
+      // }
 
+      //ตรวจสอบประวัติการทำงานในทัวร์
       function getGuideWorkTourtHistory(){
         $idAccount = session('id_account');
         $history = TourHasGuideList::where('guide_list_account_id_account',$idAccount)->get();
@@ -134,15 +182,7 @@ class UserListController extends Controller
         return view('???',compact('history'));
       }
 
-      function getUserPaymentHistory(){
-        //$history = Payment::where('booking_user_list_account_id_account',19)->get();
-        //id ของuser 
-        $idAccount = session('id_account');
-        $history = Payment::where('booking_user_list_account_id_account',$idAccount)->get();
-        dd($history);
-        return view('???',compact('history'));
-      }
-
+      //ตรวจสอบการโอนเงินของไกด์
       function getTourPaymentHistory(){
         //$history = Payment::where('booking_Tour_id_Tour',5)->get();
         
@@ -152,18 +192,5 @@ class UserListController extends Controller
         dd($history);
         return view('???',compact('history'));
       }
-      
-      function getTourActive(){
-        $tour = Tour::where('status','ongoing')->get();
-        dd($tour);
-        return view('???',compact('tour'));
-      }
 
-      function searchNameTourActive(){
-        $name = session('name');//session ที่เก็บข้อความค้นหา
-        $tour = Tour::where('name',$name)->where('status', 'ongoing')->get();//สำหรับทัวร์ที่กำลังมี
-        
-        return view('???',compact('tour'));
-      }
-      
 }
