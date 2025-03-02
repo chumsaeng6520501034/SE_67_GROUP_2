@@ -48,18 +48,29 @@ class UserListController extends Controller
   }
   function viewMyReview(Request $request)
   { //ดูรีวิวของฉันทั้งหมด
-    $myReview = Review::where('user_list_account_id_account', session('userID')->account_id_account)->get();
-    $bookingData = [];
-    $guideData = [];
-    foreach ($myReview as $Review) {
-      $bookingData[] = Booking::where('id_booking', $Review->booking_id_booking);
-      $guideData[] = GuideList::find($Review->guide_list_account_id_account);
-    }
-    $tourData = [];
-    foreach ($bookingData as $book) {
-      $tourData[] = Tour::where('id_tour', $book->tour_id_tour);
-    }
-    return view('myReview', compact('myReview', 'guideData', 'tourData'));
+    $myReview = Review::join('booking', 'review.booking_id_booking', '=', 'booking.id_booking')
+                      ->join('tour', 'booking.tour_id_tour', '=', 'tour.id_tour')
+                      ->join('guide_list', 'review.guide_list_account_id_account', '=', 'guide_list.account_id_account')
+                      ->where('review.user_list_account_id_account ', session('userID')->account_id_account)
+                      ->select(
+                          'review.*',
+                          'booking.*',
+                          'tour.*',
+                          'guide_list.*'
+                      )
+                      ->get();
+    // $myReview = Review::where('user_list_account_id_account', session('userID')->account_id_account)->get();
+    // $bookingData = [];
+    // $guideData = [];
+    // foreach ($myReview as $Review) {
+    //   $bookingData[] = Booking::where('id_booking', $Review->booking_id_booking);
+    //   $guideData[] = GuideList::find($Review->guide_list_account_id_account);
+    // }
+    // $tourData = [];
+    // foreach ($bookingData as $book) {
+    //   $tourData[] = Tour::where('id_tour', $book->tour_id_tour);
+    // }
+    return view('myReview', compact('myReview'));
   }
   function viewEditReview(Request $request)
   { //หน้าแก้ไขรีวิว
