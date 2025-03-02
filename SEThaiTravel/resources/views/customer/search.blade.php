@@ -10,7 +10,7 @@
     <!-- Sidebar -->
     @include('components.sidebarCustomer')
     <!-- Navbar -->
-    <nav class="bg-blue-900 shadow-md p-4 flex justify-between items-center sticky top-0 z-10">
+    <nav class="bg-blue-900 shadow-md p-4 flex justify-between items-center top-0 z-10">
         <div class="text-2xl text-white font-bold pl-10">TRAVEL</div>
         <div class="flex space-x-4 items-center">
             <input type="text" placeholder="Search" class="border px-4 py-2 rounded-lg">
