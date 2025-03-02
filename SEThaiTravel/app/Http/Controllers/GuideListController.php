@@ -18,7 +18,7 @@ class GuideListController extends Controller
         else{
             echo "Table does not exist!";
         }
-      }
+    }
     function checkTourSale(Request $request){
         $userID = session('userID')->account_id_account;
         $tourData = Tour::where('owner_id',$userID)->where('status','ongoing')->get();
