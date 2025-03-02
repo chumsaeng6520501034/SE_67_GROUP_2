@@ -20,6 +20,7 @@ use App\Http\Controllers\UserListController;
 Route::get('/', function () {
     return view('welcome');
 });
+
 Route::get('/us',[UserListController::class,'getRequestTour']);
 // Route::get('/ac',[AccountController::class,'checkTable']);
 // Route::get('/bk',[BookingController::class,'checkTable']);
