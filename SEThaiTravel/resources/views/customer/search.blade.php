@@ -18,13 +18,13 @@
             <!-- Input วันที่ไป -->
             <div class="flex items-center space-x-2 ">
                 <label for="startDate" class="text-sm font-semibold text-white">From:</label>
-                <input type="date" id="startDate" class="border px-2 py-1 rounded-lg">
+                <input type="date" id="start_date" class="border px-2 py-1 rounded-lg">
             </div>
 
             <!-- Input วันที่กลับ -->
             <div class="flex items-center space-x-2">
                 <label for="endDate" class="text-sm font-semibold text-white">To:</label>
-                <input type="date" id="endDate" class="border px-2 py-1 rounded-lg">
+                <input type="date" id="end_date" class="border px-2 py-1 rounded-lg">
             </div>
 
             <!-- Input จำนวนคน -->
@@ -35,13 +35,13 @@
 
             <!-- Input ช่วงงบประมาณ -->
             <div class="flex space-x-4 items-center">
-                <label for="minBudget" class="text-sm font-semibold text-white">Min:</label>
-                <input type="range" id="minBudget" min="0" max="1000000" value="0" step="10000" class="w-32" oninput="updateMinValue(this.value)">
-                <span id="minValue" class="text-sm font-semibold text-white">0</span>
+                <label for="min_budget" class="text-sm font-semibold text-white">Min:</label>
+                <input type="range" id="min_budget" min="0" max="1000000" value="0" step="10000" class="w-32" oninput="updateMinValue(this.value)">
+                <span id="min_value" class="text-sm font-semibold text-white">0</span>
 
-                <label for="maxBudget" class="text-sm font-semibold text-white">Max:</label>
-                <input type="range" id="maxBudget" min="0" max="1000000" value="1000000" step="10000" class="w-32" oninput="updateMaxValue(this.value)">
-                <span id="maxValue" class="text-sm font-semibold text-white">1000000</span>
+                <label for="max_budget" class="text-sm font-semibold text-white">Max:</label>
+                <input type="range" id="max_budget" min="0" max="1000000" value="1000000" step="10000" class="w-32" oninput="updateMaxValue(this.value)">
+                <span id="max_value" class="text-sm font-semibold text-white">1000000</span>
             </div>
         </div>
     </nav>
@@ -101,11 +101,11 @@
     </div>
     <script>
     function updateMinValue(value) {
-        document.getElementById("minValue").innerText = parseInt(value).toLocaleString();
+        document.getElementById("min_value").innerText = parseInt(value).toLocaleString();
     }
 
     function updateMaxValue(value) {
-        document.getElementById("maxValue").innerText = parseInt(value).toLocaleString();
+        document.getElementById("max_value").innerText = parseInt(value).toLocaleString();
     }
 </script>
 </body>
