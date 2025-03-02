@@ -10,7 +10,8 @@
 
     <div class="bg-white bg-opacity-50 backdrop-blur-lg p-12 rounded-2xl shadow-2xl w-96"> 
         <h2 class="text-4xl font-bold text-center text-blue-900 mb-6">LOG IN</h2>
-        <form>
+        <form action="/checkLogIn" method="POST">
+            @csrf
             <div class="mb-4">
                 <label class="block text-gray-700 font-semibold">User Name</label>
                 <input type="text" name="username" class="w-full p-3 border rounded-lg text-lg" required>
