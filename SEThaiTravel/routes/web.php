@@ -26,3 +26,7 @@ Route::get('/us',[UserListController::class,'getRequestTour']);
 // Route::get('/bk',[BookingController::class,'checkTable']);
 Route::get('/signUp',[AccountController::class,'viewSignIn']);
 Route::post('/signUpCategory',[AccountController::class,'signIn']);
+Route::get('/logIn',[AccountController::class,'viewLogin']);
+Route::get('/logOut',[AccountController::class,'logOut']);
+Route::post('/checkLogIn',[AccountController::class,'checkLogin']);
+Route::get('/calendar',[UserListController::class,'viewCalendar']);

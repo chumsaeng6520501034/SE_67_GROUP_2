@@ -370,4 +370,27 @@ class UserListController extends Controller
 
   //หน้าสำหรับเพิ่มรีเควสท์
   //เพิ่มรีเควสท์ใหม่เข้าฐานข้อมูล
+  function viewCalendar(){
+    return view('customer.calendar');
+  }
+  function fetchCalendar(){//ดึงข้อมูลมาทำปฏิทิน
+    $id=session('userID')->account_id_account; 
+    $bookingData=Booking::where('user_list_account_id_account',$id)->where('status','NOT LIKE','cancel')->get();
+    $tourData=[];
+    $tourIds = $bookingData->pluck('tour_id_tour');
+  
+    // ดึงข้อมูล Tour ทั้งหมดที่อยู่ใน Booking (Query เดียว)
+    $tours = Tour::whereIn('id_tour', $tourIds)->get();
+  
+    // จัดรูปแบบข้อมูลให้เหมาะกับ FullCalendar
+    $formattedEvents = $tours->map(function ($tour) {
+        return [
+            'title' => $tour->name,
+            'start' => $tour->start_tour_date,
+            'end' => Carbon::parse($tour->end_tour_date)->addDay()->format('Y-m-d'),
+        ];
+    });
+    
+    return response()->json($formattedEvents);
+  }
 }

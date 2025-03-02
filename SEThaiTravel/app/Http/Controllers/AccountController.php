@@ -17,7 +17,7 @@ use App\Models\LocationInTour;
 class AccountController extends Controller
 {
       function viewLogin(){ // Redirect ไปที่หน้า login
-        return view('login');
+        return view('account.logIn');
       }
       function checkLogin(Request $request){ //ตรวจสอบการ login ว่าเป็น user ประเภทไหน แล้ว Redirect ไปที่หน้าของ Account ประเภทนั้น
         $request->validate([
@@ -48,7 +48,7 @@ class AccountController extends Controller
                   $user= UserList::find($account->id_account);
                   // dd($user);
                   session(['userID' => $user]);
-                return view('userPage');
+                return view('customer.home');
               case "guide" : 
                   $guide= GuideList::find($account->id_account);
                   session(['userID' => $guide]);
@@ -219,7 +219,7 @@ class AccountController extends Controller
       function logOut(Request $request){//Log out แล้ว เคลีย session ทิ้ง
         $request->session()->invalidate(); // ทำให้ session ID ปัจจุบันใช้ไม่ได้
         $request->session()->regenerateToken(); // สร้าง CSRF token ใหม่ ป้องกัน 419 Page Expired
-        return view('home'); //redirect('/')
+        return redirect('/logIn'); //redirect('/')
       }
       function viewProduct(Request $request){//ดึงข้อมูลของTour ที่จะดูมาแล้ว Redirect ไปที่หน้าดูข้อมูลสินค้าพร้อมส่งข้อมูลที่ต้องการไปด้วย
         $tourID = $request->tourID;

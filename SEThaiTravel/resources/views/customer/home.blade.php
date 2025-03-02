@@ -142,7 +142,7 @@
                 <a href="#" class="block py-2 px-4 hover:bg-blue-800 rounded">MY TOUR</a>
                 <a href="#" class="block py-2 px-4 hover:bg-blue-800 rounded">HISTORY</a>
                 <a href="#" class="block py-2 px-4 hover:bg-blue-800 rounded">MY REVIEW</a>
-                <a href="#" class="block py-2 px-4 hover:bg-blue-800 rounded">CALENDAR</a>
+                <a href="/calendar" class="block py-2 px-4 hover:bg-blue-800 rounded">CALENDAR</a>
                 <a href="#" class="block py-2 px-4 hover:bg-blue-800 rounded">MY BOOKING</a>
                 <a href="#" class="block py-2 px-4 hover:bg-blue-800 rounded">MY PAYMENT</a>
             </nav>
