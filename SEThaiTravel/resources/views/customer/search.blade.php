@@ -6,11 +6,11 @@
     <title>Travel Deals</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-900">
     <!-- Sidebar -->
     @include('components.sidebarCustomer')
     <!-- Navbar -->
-    <nav class="bg-blue-900 shadow-md p-4 flex justify-between items-center ">
+    <nav class="bg-blue-900 shadow-md p-4 flex justify-between items-center sticky top-0 z-10">
         <div class="text-2xl text-white font-bold pl-10">TRAVEL</div>
         <div class="flex space-x-4 items-center">
             <input type="text" placeholder="Search" class="border px-4 py-2 rounded-lg">
@@ -52,44 +52,50 @@
                 <!-- <h1 class="absolute top-[40%] left-1/2 transform -translate-x-1/2 text-white text-8xl font-bold">TRAVEL</h1> -->
     
     <!-- Travel Deals -->
-    <div class="absolute top-[110%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-10 rounded-lg w-2/3 mt-20">
-        @foreach (range(2, 3) as $item)
+    @php
+        $currentPage = request()->query('page', 1); // หน้าปัจจุบัน
+        $perPage = 10; // จำนวนรายการต่อหน้า
+        $items = collect(range(1, 200)); // ข้อมูลทั้งหมด (ตัวอย่าง: 200 รายการ)
+        $paginatedItems = $items->forPage($currentPage, $perPage); // ดึงข้อมูลตามหน้า
+        $totalPages = ceil($items->count() / $perPage); // จำนวนหน้าทั้งหมด
+    @endphp
+
+    <div class="relative top-[-90%] p-10 rounded-lg w-2/3 mt-20 mx-auto">
+        @foreach ($paginatedItems as $item)
             <div class="bg-white rounded-lg shadow-md p-4 mb-6 flex">
                 <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination" class="w-1/3 rounded-lg">
                 <div class="ml-4 w-2/3">
                     <h2 class="text-xl font-bold">Bangkok</h2>
-                    <p class="text-gray-600">DESCRIPYION</p>
+                    <p class="text-gray-600">DESCRIPTION</p>
                     <div>
                         <p class="text-gray-400 mt-40">STATUS</p>
                         @php
-                            $status = rand(0, 1) ? 'Available' : 'Full'; // สุ่มค่าสถานะ (ตัวอย่าง)
+                            $status = rand(0, 1) ? 'Available' : 'Full';
                         @endphp
                         <p class="mt-4 text-xl font-bold 
                             {{ $status === 'Available' ? 'text-green-500' : 'text-red-500' }}">
                             {{ $status }}
                         </p>
                     </div>
-                    
                 </div>
                 <div class="ml-auto text-right mt-auto">
                     <p class="text-sm text-gray-500">REVIEW</p>
                     <p class="font-bold">1,989 reviews</p>
                     @php
-                        $rating = 4.5; // ค่าคะแนนรีวิวเฉลี่ย (ตัวอย่าง)
-                        $fullStars = floor($rating); // ดาวเต็ม
-                        $halfStar = ($rating - $fullStars) >= 0.5 ? true : false; // ดาวครึ่ง
-                        $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0); // ดาวที่เหลือ
+                        $rating = 4.5;
+                        $fullStars = floor($rating);
+                        $halfStar = ($rating - $fullStars) >= 0.5 ? true : false;
+                        $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
                     @endphp
-
                     <div class="flex justify-end text-yellow-500">
                         @for ($i = 0; $i < $fullStars; $i++)
-                            <span>★</span> {{-- ดาวเต็ม --}}
+                            <span>★</span>
                         @endfor
                         @if ($halfStar)
-                            <span class="text-yellow-300">★</span> {{-- ดาวครึ่ง --}}
+                            <span class="text-yellow-300">★</span>
                         @endif
                         @for ($i = 0; $i < $emptyStars; $i++)
-                            <span class="text-gray-300">★</span> {{-- ดาวว่าง --}}
+                            <span class="text-gray-300">★</span>
                         @endfor
                     </div>
                     <button class="bg-blue-500 text-white px-4 py-2 rounded-lg mt-2">Discount 50%</button>
@@ -98,7 +104,64 @@
                 </div>
             </div>
         @endforeach
+
+        <!-- ปุ่ม Pagination -->
+        <div class="mt-6 flex justify-center space-x-2 text-white">
+            @if ($currentPage > 1)
+                <a href="?page={{ $currentPage - 1 }}" class="px-4 py-2 bg-yellow-700 rounded-lg">Previous</a>
+            @endif
+
+            @php
+                $maxPagesToShow = 7; // จำนวนหน้าที่จะแสดงก่อนใช้ "..."
+            @endphp
+
+            @if ($totalPages <= 10)
+                @for ($i = 1; $i <= $totalPages; $i++)
+                    <a href="?page={{ $i }}" class="px-4 py-2 {{ $i == $currentPage ? 'bg-green-500 text-white' : 'bg-gray-200' }} rounded-lg">
+                        {{ $i }}
+                    </a>
+                @endfor
+            @else
+                <!-- ถ้าหน้าปัจจุบันอยู่ในช่วงต้น -->
+                @if ($currentPage <= 4)
+                    @for ($i = 1; $i <= $maxPagesToShow; $i++)
+                        <a href="?page={{ $i }}" class="px-4 py-2 {{ $i == $currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200' }} rounded-lg">
+                            {{ $i }}
+                        </a>
+                    @endfor
+                    <span class="px-4 py-2">...</span>
+                    <a href="?page={{ $totalPages }}" class="px-4 py-2 bg-gray-200 rounded-lg">{{ $totalPages }}</a>
+
+                <!-- ถ้าหน้าปัจจุบันอยู่ในช่วงท้าย -->
+                @elseif ($currentPage >= $totalPages - 3)
+                    <a href="?page=1" class="px-4 py-2 bg-gray-200 rounded-lg">1</a>
+                    <span class="px-4 py-2">...</span>
+                    @for ($i = $totalPages - ($maxPagesToShow - 1); $i <= $totalPages; $i++)
+                        <a href="?page={{ $i }}" class="px-4 py-2 {{ $i == $currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200' }} rounded-lg">
+                            {{ $i }}
+                        </a>
+                    @endfor
+
+                <!-- ถ้าหน้าปัจจุบันอยู่ตรงกลาง -->
+                @else
+                    <a href="?page=1" class="px-4 py-2 bg-gray-200 rounded-lg">1</a>
+                    <span class="px-4 py-2">...</span>
+                    @for ($i = $currentPage - 2; $i <= $currentPage + 2; $i++)
+                        <a href="?page={{ $i }}" class="px-4 py-2 {{ $i == $currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200' }} rounded-lg">
+                            {{ $i }}
+                        </a>
+                    @endfor
+                    <span class="px-4 py-2">...</span>
+                    <a href="?page={{ $totalPages }}" class="px-4 py-2 bg-gray-200 rounded-lg">{{ $totalPages }}</a>
+                @endif
+            @endif
+
+            @if ($currentPage < $totalPages)
+                <a href="?page={{ $currentPage + 1 }}" class="px-4 py-2 bg-green-900 rounded-lg">Next</a>
+            @endif
+        </div>
     </div>
+
     <script>
     function updateMinValue(value) {
         document.getElementById("min_value").innerText = parseInt(value).toLocaleString();
