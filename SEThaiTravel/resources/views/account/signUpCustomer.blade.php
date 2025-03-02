@@ -119,7 +119,7 @@
 
             <!-- ปุ่ม SUBMIT และ ปุ่ม BACK ในแถวเดียวกัน -->
             <div class="flex justify-between mt-6">
-                <a href="#" class="bg-gray-500 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-red-700 transition">
+                <a href="/signUp" class="bg-gray-500 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-red-700 transition">
                     BACK
                 </a>
 

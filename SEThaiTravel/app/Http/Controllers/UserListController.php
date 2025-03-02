@@ -10,8 +10,11 @@ use App\Models\Booking;
 use App\Models\Tour;
 use App\Models\RequestTour;
 use App\Models\GuideList;
+use App\Models\Review;
+use App\Models\Payment;
+use App\Models\Offer;
 use Carbon\Carbon;
-
+//??รอถาม *ทำใหม่  //พร้อมใช้
 class UserListController extends Controller
 {
   function checkTable()
@@ -22,8 +25,8 @@ class UserListController extends Controller
       echo "Table does not exist!";
     }
   }
-  function review(Request $request)
-  { //รีวิวทัวร์
+  //รีวิวทัวร์//
+  function reviewForm(Request $request){
     $userID = session('userID')->account_id_account;
     $tourID = $request->tourID; //สมมติความจริงจะได้จากตอนที่กดปุ่มรีวิวทัว(อันนี้เอาไว้ query หา guide ในทัวร์ไว้ให้ลูกค้าเลือกรีวิว) $request->tourID
     $bookingID = $request->bookingID; //สมมติความจริงจะได้จากตอนที่กดปุ่มรีวิวทัว() ex $request->bookingID
@@ -33,8 +36,8 @@ class UserListController extends Controller
       ->get(); //เอาไว้ใช้ตอน เลือก รีวิว guide แล้วจะแสดงเป็นชื่อ
     return view('review', compact('guideInTour', 'bookingID', 'userID'));
   }
-  function insertReviewTour(Request $request)
-  { //เพิ่มรีวิวในฐานข้อมูล
+  //เพิ่มรีวิวในฐานข้อมูล//
+  function addReview(Request $request){
     $reviewData = [
       'booking_id_booking' => $request->bookingID,
       'user_list_account_id_account' => session('userID')->account_id_account,
@@ -48,21 +51,34 @@ class UserListController extends Controller
   }
   function viewMyReview(Request $request)
   { //ดูรีวิวของฉันทั้งหมด
-    $myReview = Review::where('user_list_account_id_account', session('userID')->account_id_account)->get();
-    $bookingData = [];
-    $guideData = [];
-    foreach ($myReview as $Review) {
-      $bookingData[] = Booking::where('id_booking', $Review->booking_id_booking);
-      $guideData[] = GuideList::find($Review->guide_list_account_id_account);
-    }
-    $tourData = [];
-    foreach ($bookingData as $book) {
-      $tourData[] = Tour::where('id_tour', $book->tour_id_tour);
-    }
-    return view('myReview', compact('myReview', 'guideData', 'tourData'));
+    $myReview = Review::join('booking', 'review.booking_id_booking', '=', 'booking.id_booking')
+                      ->join('tour', 'booking.tour_id_tour', '=', 'tour.id_tour')
+                      ->join('guide_list', 'review.guide_list_account_id_account', '=', 'guide_list.account_id_account')
+                      ->where('review.user_list_account_id_account ', session('userID')->account_id_account)
+                      ->select(
+                          'review.*',
+                          'booking.*',
+                          'tour.*',
+                          'guide_list.*'
+                      )
+                      ->get();
+    // $myReview = Review::where('user_list_account_id_account', session('userID')->account_id_account)->get();
+    // $bookingData = [];
+    // $guideData = [];
+    // foreach ($myReview as $Review) {
+    //   $bookingData[] = Booking::where('id_booking', $Review->booking_id_booking);
+    //   $guideData[] = GuideList::find($Review->guide_list_account_id_account);
+    // }
+    // $tourData = [];
+    // foreach ($bookingData as $book) {
+    //   $tourData[] = Tour::where('id_tour', $book->tour_id_tour);
+    // }
+    return view('myReview', compact('myReview'));
   }
-  function viewEditReview(Request $request)
-  { //หน้าแก้ไขรีวิว
+
+  //หน้าแก้ไขรีวิว
+  function changeReviewForm(Request $request)
+  {
     $bookingID = $request->$bookingID;
     $tourID = $request->tourID;
     $userID = session('userID')->account_id_account;
@@ -76,8 +92,10 @@ class UserListController extends Controller
       ->where('guide_list_account_id_account', $guideID)->first();
     return view('editReview', compact('reviewData', 'guideInTour', 'guideID', '$bookingID'));
   }
-  function updateReview(Request $request)
-  { //อัพเดต รีวิว
+
+  //อัพเดต รีวิว
+  function changeReview(Request $request)
+  { 
     $reviewData = [
       'booking_id_booking' => $request->bookingID,
       'user_list_account_id_account' => session('userID')->account_id_account,
@@ -93,6 +111,7 @@ class UserListController extends Controller
       ->update($reviewData);
     // return "redirect ไปหน้าที่ต้องการ";
   }
+//------------------------------------------------------------------------------------------------------
   function viewMyBooking()
   {
     $bookingData = Booking::where('user_list_account_id_account', session('userID')->account_id_account)->get();
@@ -155,7 +174,8 @@ class UserListController extends Controller
     // return 'update success';
   }
 
-  //ตรวจสอบประวัติการซื้อทัวร์
+//-----------------------------------------------------------------------------------------------------------
+  //ตรวจสอบประวัติการซื้อทัวร์ *
   function getUserBuyHistory()
   {
     //$history = Booking::where('user_list_account_id_account',19)->get();
@@ -172,19 +192,7 @@ class UserListController extends Controller
     return view('???', compact('history'));
   }
 
-  //ตรวจสอบการโอนเงินลูกค้า
-  function getUserPaymentHistory()
-  {
-    //$history = Payment::where('booking_user_list_account_id_account',19)->get();
-    //id ของuser 
-    $idAccount = session('id_account');
-    $history = Payment::where('booking_user_list_account_id_account', $idAccount)->get();
-    dd($history);
-    return view('???', compact('history'));
-  }
-
-
-  //ทัวร์ที่กำลังวางขายอยู่
+  //ทัวร์ที่กำลังวางขายอยู่ *
   function getTourActive()
   {
     $tour = Tour::where('status', 'ongoing')->where('type_tour', 'public')->get();
@@ -192,7 +200,7 @@ class UserListController extends Controller
     return view('???', compact('tour'));
   }
 
-  //ค้นหาทัวร์ที่กำลังวางขายอยู่  แต่เอาชื่อหา
+  //ค้นหาทัวร์ที่กำลังวางขายอยู่  แต่เอาชื่อหา *
   function searchNameTourActive()
   {
     $name = session('name'); //session ที่เก็บข้อความค้นหา
@@ -201,25 +209,9 @@ class UserListController extends Controller
 
     return view('???', compact('tour'));
   }
-
-  //ตรวจสอบทัวร์ที่ร้องขอของลูกค้าคนนั้น
-  function getRequestTour()
-  {
-    $idAccount = session('id_account');
-    $tour = RequestTour::where('user_list_account_id_account', $idAccount)->get();
-    dd($tour);
-    return view('???', compact('tour'));
-  }
-
-
-
-
-
-
-
-
+  
   //ตรวจสอบประวัติการขายทัวร์
-  function getGuideSellHistory()
+  /*function getGuideSellHistory()
   {
     //$userId = Auth::id();
     //$history = Tour::where('owner_id', $userId)->get();
@@ -230,7 +222,7 @@ class UserListController extends Controller
 
     dd($history);
     return view('???', compact('history'));
-  }
+  }*/
 
   // function getCorpSellHistory(){
   //   // เหมือนguide
@@ -240,18 +232,18 @@ class UserListController extends Controller
   //   return view('???',compact('history'));
   // }
 
-  //ตรวจสอบประวัติการทำงานในทัวร์
-  function getGuideWorkTourtHistory()
+  //ตรวจสอบประวัติการทำงานในทัวร์//
+  /*function getGuideWorkTourtHistory()
   {
     $idAccount = session('id_account');
     $history = TourHasGuideList::where('guide_list_account_id_account', $idAccount)->get();
 
     dd($history);
     return view('???', compact('history'));
-  }
+  }*/
 
   //ตรวจสอบการโอนเงินของไกด์
-  function getTourPaymentHistory()
+  /*function getTourPaymentHistory()
   {
     //$history = Payment::where('booking_Tour_id_Tour',5)->get();
 
@@ -260,27 +252,122 @@ class UserListController extends Controller
     $history = Payment::where('booking_Tour_id_Tour', $idAccount)->get();
     dd($history);
     return view('???', compact('history'));
-  }
-
-  function searchNameTourActive()
-  {
-    $name = session('name'); //session ที่เก็บข้อความค้นหา
-    $tour = Tour::where('name', $name)->where('status', 'ongoing')->get(); //สำหรับทัวร์ที่กำลังมี
-
-    return view('???', compact('tour'));
-  }
-
-  function getRequestTour()
-  {
+  }*/
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //ตรวจสอบการโอนเงินลูกค้าทั้งหมด//
+  function getUserPaymentHistory(){
     $idAccount = session('id_account');
-    $Available_req = Request_tour::where('user_list_account_id_account', $idAccount)
-      ->where('request_status', 'ongoing')->get();
-    $History_req   = Request_tour::where('user_list_account_id_account', $idAccount)
-      ->where('request_status', 'finish')->get();
-    $Cancal_req    = Request_tour::where('user_list_account_id_account', $idAccount)
-      ->where('request_status', 'cancal')->get();
+    $paymentHistory = Payment::where('booking_user_list_account_id_account', $idAccount)->get();
+    dd($paymentHistory);
+    return view('???', compact('paymentHistory'));
+  }
+  //รายละเอียดการโอนเงินครั้งใด ๆ ที่โดนเลือก//
+  function getPaymentDetails(Request $request){
+    $idAccount = session('id_account');
+    $idPayment = $request->paymentID;
+    $bill = payment::table('payment as p')
+    ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
+    ->join('user_list as u', 'u.account_id_account', '=', 'p.booking_user_list_account_id_account')
+    ->where('p.booking_user_list_account_id_account', $idAccount)
+    ->where('p.id_payment', $idPayment)
+    ->get();
+    dd($bill);
+    return view('???', compact('bill'));
+  }
 
+  //ขอรีเควสท์ที่ลูกค้ากำลังประกาศ//
+  function getRequestTourAvailable(){
+    $idAccount = session('id_account');
+    $Available_req = RequestTour::where('user_list_account_id_account', $idAccount)
+    ->where('request_status', 'ongoing')
+    ->get();
     dd($Available_req);
     return view('???', compact('Available_req'));
   }
+  //ขอรีเควสท์ที่ลูกค้าเคยสร้าง//
+  function getRequestTourHistory(){
+    $idAccount = session('id_account');
+    $History_req   = RequestTour::where('user_list_account_id_account', $idAccount)
+    ->where('request_status', 'finish')
+    ->get();
+    dd($History_req);
+    return view('???', compact('History_req'));
+  }
+  //ขอรีเควสท์ที่ลูกค้ายกเลิก//
+  function getRequestTourCancel(){
+    $idAccount = session('id_account');
+    $Cancal_req = RequestTour::where('user_list_account_id_account', $idAccount)
+    ->where('request_status', 'cancal')
+    ->get();
+    dd($Cancal_req);
+    return view('???', compact('Cancal_req'));
+  }
+  //รายละเอียดรีเควสท์ใด ๆ ที่โดนเลือก//
+  function getOfferFromRequest(Request $request){
+    $idAccount = session('id_account');
+    $idRequest = $request->requestID;
+    $offerList = Offer::table('offer as o')
+    ->join(' request_tour as r', 'r.id_request_tour', '=', 'o.request_tour_id_request_tour')
+    ->where('r.id_request_tour', $idRequest)
+    ->get();
+    dd($offerList);
+    return view('???', compact('offerList'));
+  }
+
+  //แสดงหน้าต่างเตือนว่ากำลังจะลบรีเควสท์//
+  function changeStatusRequestTour(Request $request){
+    $idRequest = $request->requestID;
+    return view('cancelRequest', compact('idRequest'));
+  }
+  //ลบรีเควสท์//
+  function cancelRequestTour(Request $request){
+    $idRequest = $request->requestID;
+    RequestTour::update('UPDATE request_tour SET request_status = ? WHERE request_tour.id_request_tour = ?'
+    , ['cancel', $idRequest]);
+    //return view(,);
+  }
+  //แก้ไขรีเควสท์ในฐานข้อมูล มีแก้อีก
+  function changeRequestTour(Request $request){
+    $requestData = [
+      'id_request_tour ' => $request->requestID,
+      'user_list_account_id_account' => session('userID')->account_id_account,
+      'name' => $request->nameRequest,
+      'end_of_request_date' => $request->endDateRequest,
+      'start_tour_date' => $request->startTourDate,
+      'end_tour_date' => $request->endTourDate,
+      'max_price' => $request->maxPrice,
+      'start_price' => $request->startPrice,
+      'guide_qty' => $request->guideQty,
+      'size_tour' => $request->sizeTour,
+      'contect' => $request->contect,
+      'hotel_status' => $request->hotelStatus,
+      'travel_status' => $request->travelStatus,
+      'request_status' => $request->requestStatus,
+      'description' => $request->description,
+      'time' => $request->time
+    ];
+    // dd($requestData);
+    RequestTour::where('id_request_tour', $request->bookingID)
+      ->where('user_list_account_id_account', session('userID')->account_id_account)
+      ->update($requestData);
+    // return "redirect ไปหน้าที่ต้องการ";
+  }
+  //หน้าสำหรับแก้ไขรีเควสท์ มีแก้อีก
+  function changeRequestForm(Request $request){
+    $bookingID = $request->$bookingID;
+    $tourID = $request->tourID;
+    $userID = session('userID')->account_id_account;
+    $guideID = $request->guideID;
+    $guideInTour = TourHasGuideList::where('tour_id_tour', $tourID)
+      ->join('guide_list', 'Tour_has_guide_list.guide_list_account_id_account ', '=', 'guide_list.account_id_account')
+      ->select('Tour_has_guide_list.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname')
+      ->get();
+    $reviewData = Review::where('booking_id_booking', $bookingID)
+      ->where('user_list_account_id_account', $userID)
+      ->where('guide_list_account_id_account', $guideID)->first();
+    return view('changeRequest', compact('reviewData', 'guideInTour', 'guideID', '$bookingID'));
+  }
+
+  //หน้าสำหรับเพิ่มรีเควสท์
+  //เพิ่มรีเควสท์ใหม่เข้าฐานข้อมูล
 }

@@ -73,16 +73,16 @@ class AccountController extends Controller
           $email=$request->email;
           $typeOfSign= $request->role;
           $checkAcc=Account::where('username',$username)
-                             ->orWhere('email ', 'LIKE', $email)
+                             ->orWhere('email', 'LIKE', $email)
                              ->first();//ใช้ตรวจสอบ username email ว่ามีแล้วหรือยัง
           if(is_null($checkAcc)){
             switch($typeOfSign){
               case 'corp': 
-                return view('corpSignIn',compact('username','password','typeOfSign','email'));
+                return view('account.signUpCorperation',compact('username','password','typeOfSign','email'));
               case 'guide': 
-                return view('guideSignIn',compact('username','password','typeOfSign','email'));
+                return view('account.signUpGuide',compact('username','password','typeOfSign','email'));
               case 'user': 
-                return view('userSignIn',compact('username','password','typeOfSign','email'));
+                return view('account.signUpCustomer',compact('username','password','typeOfSign','email'));
             } 
           }
           else{
