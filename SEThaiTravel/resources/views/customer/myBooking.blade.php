@@ -108,10 +108,10 @@
                     <div class="relative flex-1">
                         <label>Status</label>
                         <select id="filterDropdown" class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">All Status</option>
-                            <option value="paid">PAID</option>
-                            <option value="In process">IN PROCESS</option>
-                            <option value="cancel">CANCEL</option>
+                            <option value="" style="color: black;">All Status</option>
+                            <option value="paid" style="color: rgb(12, 236, 12);">PAID</option>
+                            <option value="In process" style="color: rgb(255, 255, 44);">IN PROCESS</option>
+                            <option value="cancel" style="color: rgb(255, 41, 41);">CANCEL</option>
                         </select>
                     </div>
                     <div>
@@ -133,13 +133,13 @@
                         <p class="text-gray-600 mt-1">{{ $tourData[$i]->description }}</p>
                         <p class="text-gray-500 text-sm mt-2">{{ $bookingData[$i]->status }}</p>
                     </div>
-                    <div class="p-6 bg-gray-100 w-1/4 text-center rounded-r-lg">
-                        <p class="text-gray-600 text-sm">REVIEW</p>
-                        <p class="text-gray-800 font-semibold">{{ $tourData[$i]->start_tour_date}}</p>
-                        <div class="flex justify-center my-3">⭐⭐⭐⭐⭐</div>
-                        <button class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Discount 50%</button>
-                        <p class="text-gray-500 mt-2 text-sm line-through">{{ $tourData[$i]->price }}</p>
-                        {{-- <p class="text-2xl font-bold text-gray-800">{{ $tour->discount_price }}</p> --}}
+                    <div class="p-6 bg-gray-100 w-1/4 text-right rounded-r-lg">
+                        <p class="text-gray-800 text-md font-bold">Booking Date</p>
+                        <p class="text-gray-600 font-semibold">{{ $bookingData[$i]->booked_date }}</p>
+                        <p class="text-gray-800 text-md font-bold">Expiration Date</p>
+                        <p class="text-gray-600 text-md font-semibold">{{date("Y-m-d", strtotime($bookingData[$i]->payment_date))}}</p>
+                        <p class="text-gray-800 m-2 text-md font-bold">{{ $bookingData[$i]->total_price }} ฿</p>
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">PAY NOW</button>
                     </div>
                 </div>
             </div>
@@ -155,6 +155,20 @@
             let mainContent = document.getElementById('mainContent');
             sidebar.classList.toggle('open');
         });
+        document.getElementById("filterDropdown").addEventListener("change", function() {
+        const colors = {
+            "": "text-black",
+            "paid": "text-green-500",
+            "In process": "text-yellow-500",
+            "cancel": "text-red-500"
+        };
+
+        // ลบสีเก่าก่อน
+        this.classList.remove("text-black", "text-green-500", "text-yellow-500", "text-red-500");
+
+        // เพิ่มสีใหม่ตามค่าที่เลือก
+        this.classList.add(colors[this.value] || "text-black");
+    });
     </script>
 </body>
 </html>
