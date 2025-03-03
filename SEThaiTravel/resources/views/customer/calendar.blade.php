@@ -26,7 +26,9 @@
         }
 
         /* ใช้ transition เพื่อให้ sidebar และปฏิทินเคลื่อนที่แบบ smooth */
-        #sidebar, #mainContent, #calendarContainer {
+        #sidebar,
+        #mainContent,
+        #calendarContainer {
             transition: all 0.3s ease-in-out;
         }
     </style>
@@ -47,11 +49,12 @@
             <div class="p-6 text-center">
                 <img class="h-16 w-16 rounded-full mx-auto" src="https://avatars.githubusercontent.com/u/64538277"
                     alt="avatar" />
-                <h2 class="text-lg font-bold mt-2">{{session('userID')->name}}</h2>
+                <h2 class="text-lg font-bold mt-2">{{ session('userID')->name }}</h2>
             </div>
 
             <!-- Menu Items -->
             <nav class="flex flex-col space-y-2">
+                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REQUEST</a>
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">HISTORY</a>
@@ -63,14 +66,18 @@
 
             <!-- Log Out -->
             <div class="mt-auto">
-                <a href="/logOut"
-                    class="flex items-center justify block py-3 px-6 hover:bg-red-700 transition duration-300">
+                <a href="/logOut" class="flex items-center justify-between py-3 px-6 hover:bg-red-700 transition duration-300 rounded">
                     <span>LOG OUT</span>
+                    <svg class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
                 </a>
             </div>
         </aside>
 
-        
+
 
         <!-- Main Content -->
         <div id="mainContent" class="flex-1 p-5 flex justify-center transition-all duration-300">
@@ -95,27 +102,27 @@
                 events: '/api/Calendar'
             });
             calendar.render();
-    
+
             // ฟังก์ชัน Toggle Sidebar
             var toggleSidebarButton = document.getElementById('toggleSidebar');
             var sidebar = document.getElementById('sidebar');
             var mainContent = document.getElementById('mainContent');
             if (sidebar.classList.contains('-translate-x-full')) {
-                    // Sidebar ถูกซ่อน -> Calendar ต้องชิดซ้าย
-                    mainContent.style.marginLeft = "0px";
-                } else {
-                    // Sidebar ถูกเปิด -> Calendar ต้องขยับไปขวา
-                    mainContent.style.marginLeft = "16rem"; // 16rem คือความกว้างของ Sidebar (w-64)
-                }
-    
-                // ปรับขนาดปฏิทินให้ถูกต้องหลังจาก Sidebar เปลี่ยนขนาดเสร็จ
-                setTimeout(function() {
-                    calendar.updateSize();
-                }, 300);
-    
+                // Sidebar ถูกซ่อน -> Calendar ต้องชิดซ้าย
+                mainContent.style.marginLeft = "0px";
+            } else {
+                // Sidebar ถูกเปิด -> Calendar ต้องขยับไปขวา
+                mainContent.style.marginLeft = "16rem"; // 16rem คือความกว้างของ Sidebar (w-64)
+            }
+
+            // ปรับขนาดปฏิทินให้ถูกต้องหลังจาก Sidebar เปลี่ยนขนาดเสร็จ
+            setTimeout(function() {
+                calendar.updateSize();
+            }, 300);
+
             toggleSidebarButton.addEventListener('click', function() {
                 sidebar.classList.toggle('-translate-x-full');
-                
+
                 if (sidebar.classList.contains('-translate-x-full')) {
                     // Sidebar ถูกซ่อน -> Calendar ต้องชิดซ้าย
                     mainContent.style.marginLeft = "0px";
@@ -123,16 +130,16 @@
                     // Sidebar ถูกเปิด -> Calendar ต้องขยับไปขวา
                     mainContent.style.marginLeft = "16rem"; // 16rem คือความกว้างของ Sidebar (w-64)
                 }
-    
+
                 // ปรับขนาดปฏิทินให้ถูกต้องหลังจาก Sidebar เปลี่ยนขนาดเสร็จ
                 setTimeout(function() {
                     calendar.updateSize();
                 }, 300);
             });
-            
+
         });
     </script>
-    
+
 
 </body>
 

@@ -66,6 +66,7 @@
                 <h2 class="text-lg font-bold mt-2">{{session('userID')->name}}</h2>
             </div>
             <nav class="flex flex-col space-y-2">
+                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REQUEST</a>
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">HISTORY</a>
@@ -75,8 +76,13 @@
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY PAYMENT</a>
             </nav>
             <div class="mt-auto">
-                <a href="/logOut" class="flex items-center justify block py-3 px-6 hover:bg-red-700 transition duration-300">
+                <a href="/logOut" class="flex items-center justify-between py-3 px-6 hover:bg-red-700 transition duration-300 rounded">
                     <span>LOG OUT</span>
+                    <svg class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
                 </a>
             </div>
         </aside>
