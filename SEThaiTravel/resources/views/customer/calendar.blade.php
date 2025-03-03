@@ -42,7 +42,7 @@
 
         <!-- Sidebar -->
         <aside id="sidebar"
-            class="fixed top-0 left-0 w-64 h-screen bg-[#0F588C] text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300">
+            class="fixed top-0 left-0 w-64 h-screen bg-[#0F588C] text-white shadow-lg flex flex-col transform  transition-transform duration-300 ">
             <!-- User Profile -->
             <div class="p-6 text-center">
                 <img class="h-16 w-16 rounded-full mx-auto" src="https://avatars.githubusercontent.com/u/64538277"
@@ -53,10 +53,10 @@
             <!-- Menu Items -->
             <nav class="flex flex-col space-y-2">
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
-                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY TOUR</a>
+                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REQUEST</a>
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">HISTORY</a>
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REVIEW</a>
-                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY BOOKING</a>
+                <a href="/myBooking" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY BOOKING</a>
                 <a href="/calendar" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">CALENDAR</a>
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY PAYMENT</a>
             </nav>
@@ -69,6 +69,8 @@
                 </a>
             </div>
         </aside>
+
+        
 
         <!-- Main Content -->
         <div id="mainContent" class="flex-1 p-5 flex justify-center transition-all duration-300">
@@ -98,6 +100,18 @@
             var toggleSidebarButton = document.getElementById('toggleSidebar');
             var sidebar = document.getElementById('sidebar');
             var mainContent = document.getElementById('mainContent');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                    // Sidebar ถูกซ่อน -> Calendar ต้องชิดซ้าย
+                    mainContent.style.marginLeft = "0px";
+                } else {
+                    // Sidebar ถูกเปิด -> Calendar ต้องขยับไปขวา
+                    mainContent.style.marginLeft = "16rem"; // 16rem คือความกว้างของ Sidebar (w-64)
+                }
+    
+                // ปรับขนาดปฏิทินให้ถูกต้องหลังจาก Sidebar เปลี่ยนขนาดเสร็จ
+                setTimeout(function() {
+                    calendar.updateSize();
+                }, 300);
     
             toggleSidebarButton.addEventListener('click', function() {
                 sidebar.classList.toggle('-translate-x-full');
@@ -115,6 +129,7 @@
                     calendar.updateSize();
                 }, 300);
             });
+            
         });
     </script>
     

@@ -117,9 +117,9 @@ class UserListController extends Controller
     $bookingData = Booking::where('user_list_account_id_account', session('userID')->account_id_account)->get();
     $tourData = [];
     foreach ($bookingData as $book) {
-      $tourData[] = Tour::where('id_tour', $book->tour_id_tour);
+      $tourData[] = Tour::where('id_tour', $book->tour_id_tour)->first();
     }
-    return view('myBooking', compact('bookingData', 'tourData'));
+    return view('customer.myBooking', compact('bookingData', 'tourData'));
   }
   function bookingTour(Request $request)
   { // จองทัวร์
