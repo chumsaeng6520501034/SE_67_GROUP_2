@@ -10,36 +10,36 @@
     <!-- Sidebar -->
     @include('components.sidebarCustomer')
     <!-- Navbar -->
-    <nav class="bg-blue-900 shadow-md p-4 flex justify-between items-center top-0 z-10">
+    <nav class="fixed top-0 left-1/2 transform -translate-x-1/2 p-4 flex justify-center items-center space-x-6 z-50">
         <div class="text-2xl text-white font-bold pl-10">TRAVEL</div>
         <div class="flex space-x-4 items-center">
             <input type="text" placeholder="Search" class="border px-4 py-2 rounded-lg">
 
             <!-- Input วันที่ไป -->
             <div class="flex items-center space-x-2 ">
-                <label for="startDate" class="text-sm font-semibold text-white">From:</label>
+                <label for="start_date" class="text-xl font-semibold text-yellow-500">From:</label>
                 <input type="date" id="start_date" class="border px-2 py-1 rounded-lg">
             </div>
 
             <!-- Input วันที่กลับ -->
             <div class="flex items-center space-x-2">
-                <label for="endDate" class="text-sm font-semibold text-white">To:</label>
+                <label for="end_date" class="text-xl font-semibold text-yellow-500">To:</label>
                 <input type="date" id="end_date" class="border px-2 py-1 rounded-lg">
             </div>
 
             <!-- Input จำนวนคน -->
             <div class="flex items-center space-x-2">
-                <label for="people" class="text-sm font-semibold text-white">People:</label>
+                <label for="people" class="text-xl font-semibold text-yellow-500">People:</label>
                 <input type="number" id="people" min="1" value="1" class="border px-2 py-1 rounded-lg w-16">
             </div>
 
             <!-- Input ช่วงงบประมาณ -->
             <div class="flex space-x-4 items-center">
-                <label for="min_budget" class="text-sm font-semibold text-white">Min:</label>
+                <label for="min_budget" class="text-xl font-semibold text-yellow-500">Min:</label>
                 <input type="range" id="min_budget" min="0" max="1000000" value="0" step="10000" class="w-32" oninput="updateMinValue(this.value)">
                 <span id="min_value" class="text-sm font-semibold text-white">0</span>
 
-                <label for="max_budget" class="text-sm font-semibold text-white">Max:</label>
+                <label for="max_budget" class="text-xl font-semibold text-yellow-500">Max:</label>
                 <input type="range" id="max_budget" min="0" max="1000000" value="1000000" step="10000" class="w-32" oninput="updateMaxValue(this.value)">
                 <span id="max_value" class="text-sm font-semibold text-white">1000000</span>
             </div>
