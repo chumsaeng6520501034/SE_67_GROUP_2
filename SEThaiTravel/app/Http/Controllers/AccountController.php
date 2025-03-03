@@ -219,7 +219,7 @@ class AccountController extends Controller
       function logOut(Request $request){//Log out แล้ว เคลีย session ทิ้ง
         $request->session()->invalidate(); // ทำให้ session ID ปัจจุบันใช้ไม่ได้
         $request->session()->regenerateToken(); // สร้าง CSRF token ใหม่ ป้องกัน 419 Page Expired
-        return redirect('/logIn'); //redirect('/')
+        return redirect('/'); //redirect('/')
       }
       function viewProduct(Request $request){//ดึงข้อมูลของTour ที่จะดูมาแล้ว Redirect ไปที่หน้าดูข้อมูลสินค้าพร้อมส่งข้อมูลที่ต้องการไปด้วย
         $tourID = $request->tourID;
