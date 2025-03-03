@@ -16,29 +16,17 @@
 <body class="bg-gray-100">
 
     <!-- Button Toggle Sidebar -->
-    <button id="toggleSidebar" class="fixed top-4 left-4 text-white bg-blue-700 p-3 rounded-md z-[100] shadow-lg hover:bg-blue-800">
+    <button id="toggleSidebar" class="fixed top-4 left-4 text-white bg-blue-700 p-3 rounded-md z-[110] shadow-lg hover:bg-blue-800 transition-all duration-300">
         ☰
     </button>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed top-0 left-0 w-64 h-screen bg-[#0F588C] text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300 z-50">
-        <!-- User Profile -->
-        <div class="p-6 text-center">
-            <img class="h-16 w-16 rounded-full mx-auto border-2 border-white" src="https://avatars.githubusercontent.com/u/64538277" alt="avatar" />
-            <h2 class="text-lg font-bold mt-2">User Name</h2>
-        </div>
-
+    <aside id="sidebar" class="fixed top-0 left-0 w-64 h-screen bg-[#0F588C] text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300 z-50 pt-16">
         <!-- Menu Items -->
         <nav class="flex flex-col space-y-2">
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">ADD TOUR</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">MY TOUR</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">MY JOB</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">MY OFFER</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">JOB HISTORY</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">SELL HISTORY</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">CALENDAR</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">ALL PAYMENT</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">STATISTIC</a>
+            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">SIGH IN</a>
+            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">LOG IN</a>
+            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">SETTING</a>
         </nav>
 
         <!-- Log Out -->

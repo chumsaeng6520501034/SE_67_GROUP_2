@@ -70,6 +70,8 @@
             </div>
         </aside>
 
+        
+
         <!-- Main Content -->
         <div id="mainContent" class="flex-1 p-5 flex justify-center transition-all duration-300">
             <div id="calendarContainer" class="bg-white p-5 rounded-lg shadow-md w-4/5 transition-all duration-300">
