@@ -18,7 +18,7 @@ use App\Http\Controllers\UserListController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('user.home');
 });
 
 Route::get('/us',[UserListController::class,'getRequestTour']);
