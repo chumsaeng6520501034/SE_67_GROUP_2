@@ -114,12 +114,28 @@ class UserListController extends Controller
 //------------------------------------------------------------------------------------------------------
   function viewMyBooking()
   {
-    $bookingData = Booking::where('user_list_account_id_account', session('userID')->account_id_account)->get();
-    $tourData = [];
-    foreach ($bookingData as $book) {
-      $tourData[] = Tour::where('id_tour', $book->tour_id_tour)->first();
-    }
-    return view('customer.myBooking', compact('bookingData', 'tourData'));
+    $bookingData = Booking::join('tour', 'booking.tour_id_tour', '=', 'tour.id_tour')
+    ->where('booking.user_list_account_id_account', session('userID')->account_id_account)
+    ->select('booking.*', 'tour.name','tour.description as tourDes') // เลือกเฉพาะฟิลด์ที่ต้องการ
+    ->get();
+    return view('customer.myBooking', compact('bookingData'));
+  }
+  function searchBooking(Request $request){
+    $status = $request->status;
+    $name = $request->name;
+    $startDate = $request->startDate;
+    $endDate = $request->endDate;
+    $bookingData = Booking::join('tour', 'booking.tour_id_tour', '=', 'tour.id_tour')
+    ->where('booking.user_list_account_id_account',session('userID')->account_id_account)
+    ->where('booking.status', 'LIKE', '%'.$status.'%')
+    ->where(function ($query) use ($status, $name, $startDate, $endDate) {
+        $query->whereRaw('LOWER(tour.name) LIKE LOWER(?)', ['%'.$name.'%'])
+              ->orWhereDate('booked_date','LIKE',$startDate)
+              ->orWhereDate('payment_date','LIKE',$endDate);
+    })
+    ->select('booking.*', 'tour.name','tour.description as tourDes') // เลือกเฉพาะฟิลด์ที่ต้องการ
+    ->get();
+    return view('customer.myBooking', compact('bookingData'));
   }
   function bookingTour(Request $request)
   { // จองทัวร์
