@@ -41,7 +41,7 @@
             <input type="file" id="imageUpload" class="hidden" accept="image/*">
         </div>
 
-        <form>
+        <form action="/insertGuide" method="POST">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <label class="flex flex-col">
                     First Name*
@@ -118,7 +118,7 @@
                 </label>
                 <label class="flex flex-col">
                     Expiration Date*
-                    <input type="text" class="p-2 border shadow-md rounded w-full">
+                    <input type="date" class="p-2 border shadow-md rounded w-full">
                 </label>
             </div>
 
@@ -133,6 +133,10 @@
                     SUBMIT
                 </button>
             </div>
+            <input type="hidden" name="username" value={{$username}}>
+            <input type="hidden" name="password" value={{$password}}>
+            <input type="hidden" name="typeOfSign" value={{$typeOfSign}}>
+            <input type="hidden" name="email" value={{$email}}>
         </form>
     </div>
     @vite(['resources/js/thaiLocation.js'])
