@@ -75,26 +75,21 @@
                             <th class="border border-blue-500 px-4 py-2">DATE PAYMENT</th>
                             <th class="border border-blue-500 px-4 py-2">BOOKING ID</th>
                             <th class="border border-blue-500 px-4 py-2">TOUR ID</th>
+                            <th class="border border-blue-500 px-4 py-2">Net price</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- @foreach($payments as $index => $payment)
+                        @foreach($paymentHistory as $index => $payment)
                         <tr class="text-center">
                             <td class="border border-gray-300 px-4 py-2">{{ $index + 1 }}</td>
                             <td class="border border-gray-300 px-4 py-2">{{ $payment->checknumber }}</td>
                             <td class="border border-gray-300 px-4 py-2">{{ $payment->payment_date }}</td>
                             <td class="border border-gray-300 px-4 py-2">{{ $payment->booking_user_list_account_id_account }}</td>
                             <td class="border border-gray-300 px-4 py-2">{{ $payment->booking_Tour_id_Tour }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $payment->total_price}}</td>
                         </tr>
-                        @endforeach --}}
-                        
-                        <tr>
-                            <td class="border border-blue-500 px-4 py-2 text-center">1</td>
-                            <td class="border border-blue-500 px-4 py-2 text-center">CHK123456</td>
-                            <td class="border border-blue-500 px-4 py-2 text-center">2025-03-04</td>
-                            <td class="border border-blue-500 px-4 py-2 text-center">BK001</td>
-                            <td class="border border-blue-500 px-4 py-2 text-center">TR1001</td>
-                        </tr>
+                        @endforeach 
+
                     </tbody>
                 </table>
             </div>
