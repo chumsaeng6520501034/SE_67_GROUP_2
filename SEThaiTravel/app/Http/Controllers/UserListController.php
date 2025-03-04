@@ -114,12 +114,29 @@ class UserListController extends Controller
 //------------------------------------------------------------------------------------------------------
   function viewMyBooking()
   {
-    $bookingData = Booking::where('user_list_account_id_account', session('userID')->account_id_account)->get();
-    $tourData = [];
-    foreach ($bookingData as $book) {
-      $tourData[] = Tour::where('id_tour', $book->tour_id_tour)->first();
-    }
-    return view('customer.myBooking', compact('bookingData', 'tourData'));
+    $bookingData = Booking::join('tour', 'booking.tour_id_tour', '=', 'tour.id_tour')
+    ->where('booking.user_list_account_id_account', session('userID')->account_id_account)
+    ->select('booking.*', 'tour.name','tour.description as tourDes') // เลือกเฉพาะฟิลด์ที่ต้องการ
+    ->get();
+    return view('customer.myBooking', compact('bookingData'));
+  }
+  
+  function searchBooking(Request $request){
+    $status = $request->status;
+    $name = $request->name;
+    $startDate = $request->startDate;
+    $endDate = $request->endDate;
+    $bookingData = Booking::join('tour', 'booking.tour_id_tour', '=', 'tour.id_tour')
+    ->where('booking.user_list_account_id_account',session('userID')->account_id_account)
+    ->where('booking.status', 'LIKE', '%'.$status.'%')
+    ->where(function ($query) use ($status, $name, $startDate, $endDate) {
+        $query->whereRaw('LOWER(tour.name) LIKE LOWER(?)', ['%'.$name.'%'])
+              ->orWhereDate('booked_date','LIKE',$startDate)
+              ->orWhereDate('payment_date','LIKE',$endDate);
+    })
+    ->select('booking.*', 'tour.name','tour.description as tourDes') // เลือกเฉพาะฟิลด์ที่ต้องการ
+    ->get();
+    return view('customer.myBooking', compact('bookingData'));
   }
   function bookingTour(Request $request)
   { // จองทัวร์
@@ -256,14 +273,14 @@ class UserListController extends Controller
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   //ตรวจสอบการโอนเงินลูกค้าทั้งหมด//
   function getUserPaymentHistory(){
-    $idAccount = session('id_account');
+    $idAccount = session('id_account')->account_id_account;
     $paymentHistory = Payment::where('booking_user_list_account_id_account', $idAccount)->get();
     dd($paymentHistory);
     return view('???', compact('paymentHistory'));
   }
   //รายละเอียดการโอนเงินครั้งใด ๆ ที่โดนเลือก//
   function getPaymentDetails(Request $request){
-    $idAccount = session('id_account');
+    $idAccount = session('id_account')->account_id_account;
     $idPayment = $request->paymentID;
     $bill = payment::table('payment as p')
     ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
@@ -275,9 +292,16 @@ class UserListController extends Controller
     return view('???', compact('bill'));
   }
 
+  function getAllRequestTour(){
+    $idAccount = session('id_account')->account_id_account;
+    $All_req = RequestTour::where('user_list_account_id_account', $idAccount)
+    ->get();
+    return view('customer.myRequest', compact('All_req'));
+  }
+
   //ขอรีเควสท์ที่ลูกค้ากำลังประกาศ//
   function getRequestTourAvailable(){
-    $idAccount = session('id_account');
+    $idAccount = session('id_account')->account_id_account;
     $Available_req = RequestTour::where('user_list_account_id_account', $idAccount)
     ->where('request_status', 'ongoing')
     ->get();
@@ -286,7 +310,7 @@ class UserListController extends Controller
   }
   //ขอรีเควสท์ที่ลูกค้าเคยสร้าง//
   function getRequestTourHistory(){
-    $idAccount = session('id_account');
+    $idAccount = session('id_account')->account_id_account;
     $History_req   = RequestTour::where('user_list_account_id_account', $idAccount)
     ->where('request_status', 'finish')
     ->get();
@@ -295,7 +319,7 @@ class UserListController extends Controller
   }
   //ขอรีเควสท์ที่ลูกค้ายกเลิก//
   function getRequestTourCancel(){
-    $idAccount = session('id_account');
+    $idAccount = session('id_account')->account_id_account;
     $Cancal_req = RequestTour::where('user_list_account_id_account', $idAccount)
     ->where('request_status', 'cancal')
     ->get();
@@ -304,7 +328,7 @@ class UserListController extends Controller
   }
   //รายละเอียดรีเควสท์ใด ๆ ที่โดนเลือก//
   function getOfferFromRequest(Request $request){
-    $idAccount = session('id_account');
+    $idAccount = session('id_account')->account_id_account;
     $idRequest = $request->requestID;
     $offerList = Offer::table('offer as o')
     ->join(' request_tour as r', 'r.id_request_tour', '=', 'o.request_tour_id_request_tour')
