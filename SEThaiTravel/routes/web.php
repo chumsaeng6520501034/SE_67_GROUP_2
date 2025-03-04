@@ -37,5 +37,6 @@ Route::post('/checkLogIn',[AccountController::class,'checkLogin']);
 Route::get('/calendar',[UserListController::class,'viewCalendar']);
 Route::get('/myBooking',[UserListController::class,'viewMyBooking']);
 Route::post('/searchBooking',[UserListController::class,'searchBooking']);
+Route::get('/payments',[UserListController::class,'getUserPaymentHistory']);
 
 

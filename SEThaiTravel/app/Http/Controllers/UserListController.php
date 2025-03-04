@@ -273,13 +273,13 @@ class UserListController extends Controller
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   //ตรวจสอบการโอนเงินลูกค้าทั้งหมด//
   function getUserPaymentHistory(){
-    $idAccount = session('id_account')->account_id_account;
+    $idAccount = session('userID')->account_id_account;
     $paymentHistory = Payment::where('booking_user_list_account_id_account', $idAccount)->get();
     return view('customer.payments', compact('paymentHistory'));
   }
   //รายละเอียดการโอนเงินครั้งใด ๆ ที่โดนเลือก//
   function getPaymentDetails(Request $request){
-    $idAccount = session('id_account')->account_id_account;
+    $idAccount = session('userID')->account_id_account;
     $idPayment = $request->paymentID;
     $bill = payment::table('payment as p')
     ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
