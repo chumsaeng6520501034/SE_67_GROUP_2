@@ -444,4 +444,20 @@ class AccountController extends Controller
           194 => "Zimbabwe"
       ];
       }
+      
+      function deleteAccountForm(Request $request){
+        $idAccount = $request->requestID;
+        return view('deleteAccount', compact('idAccount'));
+      }
+      //ลบรีเควสท์//
+      function deleteAccount(Request $request){
+        $idAccount = session('id_account')->account_id_account;
+        Account::update('UPDATE account SET status = ? WHERE account.id_account = ? ;'
+        , ['disappear', $idAccount]);
+        $request->session()->invalidate(); // ทำให้ session ID ปัจจุบันใช้ไม่ได้
+        $request->session()->regenerateToken(); // สร้าง CSRF token ใหม่ ป้องกัน 419 Page Expired
+        return redirect('/');
+      }
+
+
 }
