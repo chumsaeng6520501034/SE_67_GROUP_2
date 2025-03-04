@@ -8,6 +8,7 @@ use App\Models\UserList;
 use App\Models\TourHasGuideList;
 use App\Models\Booking;
 use App\Models\Tour;
+use App\Models\Account;
 use App\Models\RequestTour;
 use App\Models\GuideList;
 use App\Models\Review;
@@ -120,7 +121,7 @@ class UserListController extends Controller
     ->get();
     return view('customer.myBooking', compact('bookingData'));
   }
-  
+
   function searchBooking(Request $request){
     $status = $request->status;
     $name = $request->name;
@@ -273,13 +274,14 @@ class UserListController extends Controller
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   //ตรวจสอบการโอนเงินลูกค้าทั้งหมด//
   function getUserPaymentHistory(){
-    $idAccount = session('id_account')->account_id_account;
+    $idAccount = session('userID')->account_id_account;
     $paymentHistory = Payment::where('booking_user_list_account_id_account', $idAccount)->get();
+
     return view('customer.payments', compact('paymentHistory'));
   }
   //รายละเอียดการโอนเงินครั้งใด ๆ ที่โดนเลือก//
   function getPaymentDetails(Request $request){
-    $idAccount = session('id_account')->account_id_account;
+    $idAccount = session('userID')->account_id_account;
     $idPayment = $request->paymentID;
     $bill = payment::table('payment as p')
     ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
@@ -292,7 +294,7 @@ class UserListController extends Controller
   }
 
   function getAllRequestTour(){
-    $idAccount = session('')->account_id_account;
+    $idAccount = session('userID')->account_id_account;
     $All_req = RequestTour::where('user_list_account_id_account', $idAccount)
     ->get();
     return view('customer.myRequest', compact('All_req'));
@@ -417,5 +419,11 @@ class UserListController extends Controller
     });
     
     return response()->json($formattedEvents);
+  }
+  function viewProfile(){
+    $id = session('userID')->account_id_account; 
+    $accountData = Account::where('id_account', $id)->first();
+    $userData = UserList::where('account_id_account',$id)->first();
+    return view('customer.profile',compact('accountData','userData'));
   }
 }

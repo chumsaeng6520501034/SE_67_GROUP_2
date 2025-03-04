@@ -47,16 +47,18 @@
             class="fixed top-0 left-0 w-64 h-screen bg-blue-900 text-white shadow-lg flex flex-col transform  transition-transform duration-300 ">
             <!-- User Profile -->
             <div class="p-6 text-center">
-                <img class="h-16 w-16 rounded-full mx-auto" src="https://avatars.githubusercontent.com/u/64538277"
+                <a href="/userProfile">
+                    <img class="h-16 w-16 rounded-full mx-auto" src="https://avatars.githubusercontent.com/u/64538277"
                     alt="avatar" />
+                </a>
                 <h2 class="text-lg font-bold mt-2">{{ session('userID')->name }}</h2>
             </div>
 
             <!-- Menu Items -->
             <nav class="flex flex-col space-y-2">
-                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
+                <a href="/home" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
-                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REQUEST</a>
+                <a href="/myRequest" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REQUEST</a>
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">HISTORY</a>
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REVIEW</a>
                 <a href="/myBooking" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY BOOKING</a>
