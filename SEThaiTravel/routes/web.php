@@ -25,6 +25,10 @@ Route::get('/home', function () {
     return view('customer.home');
 });
 
+Route::get('/customer', function () {
+    return view('customer.myRequest');
+});
+
 Route::get('/us',[UserListController::class,'getRequestTour']);
 // Route::get('/ac',[AccountController::class,'checkTable']);
 // Route::get('/bk',[BookingController::class,'checkTable']);
@@ -38,3 +42,4 @@ Route::get('/calendar',[UserListController::class,'viewCalendar']);
 Route::get('/myBooking',[UserListController::class,'viewMyBooking']);
 Route::post('/searchBooking',[UserListController::class,'searchBooking']);
 Route::get('/userProfile',[UserListController::class,'viewProfile']);
+Route::get('/myRequest',[UserListController::class,'getAllRequestTour']);

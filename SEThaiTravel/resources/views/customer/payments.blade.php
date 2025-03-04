@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Table</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-image: url('https://cdn.pixabay.com/photo/2019/11/10/08/31/beach-4615202_1280.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: 'Inknut Antiqua', serif;
+        }
+
+        #sidebar,
+        #mainContent {
+            transition: all 0.3s ease-in-out;
+        }
+        #sidebar {
+    z-index: 50; /* ให้ Sidebar อยู่ด้านหน้า */
+}
+#toggleSidebar {
+    position: fixed;
+    z-index: 100; /* ให้ปุ่มอยู่ด้านหน้าสุด */
+}
+#sidebar {
+        transform: translateX(-100%);
+    }
+    .sidebar-open #sidebar {
+        transform: translateX(0);
+    }
+    .sidebar-open #mainContent {
+        margin-left: 16rem; /* ขยับไปทางขวาเท่ากับความกว้างของ Sidebar */
+    }
+    </style>
+</head>
+
+<body>
+
+    <div class="flex h-screen">
+        <!-- Button Toggle Sidebar -->
+        <button id="toggleSidebar" class="fixed top-4 left-4 bg-blue-500 text-white p-2 rounded-md z-50">
+            ☰
+        </button>
+
+        <!-- Sidebar -->
+        <aside id="sidebar"
+            class="fixed top-0 left-0 w-64 h-screen bg-[#0F588C] text-white shadow-lg flex flex-col transition-transform duration-300">
+            <div class="p-6 text-center">
+                <img class="h-16 w-16 rounded-full mx-auto" src="https://avatars.githubusercontent.com/u/64538277"
+                    alt="avatar" />
+                <h2 class="text-lg font-bold mt-2">{{ session('userID')->name }}</h2>
+            </div>
+
+            <nav class="flex flex-col space-y-2">
+                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
+                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
+                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REQUEST</a>
+                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">HISTORY</a>
+                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REVIEW</a>
+                <a href="/myBooking" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY BOOKING</a>
+                <a href="/calendar" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">CALENDAR</a>
+                <a href="/payments" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY PAYMENT</a>
+            </nav>
+
+            <div class="mt-auto">
+                <a href="/logOut"
+                    class="flex items-center justify-between py-3 px-6 hover:bg-red-700 transition duration-300 rounded">
+                    <span>LOG OUT</span>
+                    <svg class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div id="mainContent" class="flex-1 p-5 flex justify-center transition-all duration-300">
+            <div class="bg-white bg-opacity-80 backdrop-blur-md p-6 rounded-2xl shadow-lg w-4/5 transition-all duration-300">
+                <!-- Search and Date Filter -->
+                <div class="flex items-center space-x-4 mb-4 bg-white bg-opacity-80 p-3 rounded-lg shadow-lg">
+                    <div class="flex items-center border rounded px-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 10a7 7 0 1 0-14 0 7 7 0 0 0 14 0z" />
+                        </svg>
+                        <input type="text" placeholder="Search" class="outline-none px-2 py-1">
+                    </div>
+                    <div class="flex items-center border rounded px-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 4h10M3 10h18M5 14h14m-7 4v-4" />
+                        </svg>
+                        <input type="date" class="outline-none px-2 py-1">
+                    </div>
+                </div>
+
+                <!-- Payment Table -->
+                <table class="w-full border border-blue-500">
+                    <thead>
+                        <tr class="bg-blue-500 text-white">
+                            <th class="border border-blue-500 px-4 py-2">NO.</th>
+                            <th class="border border-blue-500 px-4 py-2">CHEQUE NO.</th>
+                            <th class="border border-blue-500 px-4 py-2">DATE PAYMENT</th>
+                            <th class="border border-blue-500 px-4 py-2">BOOKING ID</th>
+                            <th class="border border-blue-500 px-4 py-2">TOUR ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{-- @foreach($payments as $index => $payment)
+                        <tr class="text-center">
+                            <td class="border border-gray-300 px-4 py-2">{{ $index + 1 }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $payment->checknumber }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $payment->payment_date }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $payment->booking_user_list_account_id_account }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $payment->booking_Tour_id_Tour }}</td>
+                        </tr>
+                        @endforeach --}}
+                        
+                        <tr>
+                            <td class="border border-blue-500 px-4 py-2 text-center">1</td>
+                            <td class="border border-blue-500 px-4 py-2 text-center">CHK123456</td>
+                            <td class="border border-blue-500 px-4 py-2 text-center">2025-03-04</td>
+                            <td class="border border-blue-500 px-4 py-2 text-center">BK001</td>
+                            <td class="border border-blue-500 px-4 py-2 text-center">TR1001</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('toggleSidebar').addEventListener('click', function () {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        });
+        document.getElementById('toggleSidebar').addEventListener('click', function () {
+        document.body.classList.toggle('sidebar-open');
+    });
+    </script>
+
+</body>
+
+</html>
