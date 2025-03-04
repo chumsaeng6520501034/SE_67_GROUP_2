@@ -1,0 +1,20 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-l0sNRNKZ.js",
+    "name": "app",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-D03Ay3w-.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/thaiLocation.js": {
+    "file": "assets/thaiLocation-ODXAvGxX.js",
+    "name": "thaiLocation",
+    "src": "resources/js/thaiLocation.js",
+    "isEntry": true
+  }
+}

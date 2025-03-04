@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <style>
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
@@ -63,8 +65,12 @@
                     <input type="text" class="p-2 border shadow-md rounded w-full">
                 </label>
                 <label class="flex flex-col">
-                    Country*
-                    <input type="text" class="p-2 border shadow-md rounded w-full">
+                    Country
+                    <select name="country" id="country" class="p-2 border shadow-md rounded w-full">
+                        @foreach ($allCountry as $key => $country)
+                            <option value={{ $key }}>{{ $country }}</option>
+                        @endforeach
+                    </select>
                 </label>
                 <label class="flex flex-col sm:col-span-2">
                     ID Card Number*
@@ -114,15 +120,14 @@
                 </label>
             </div>
 
-            <!-- ปุ่ม BACK & SUBMIT -->
-            <div class="flex justify-center mt-6 space-x-4">
-                <!-- ปุ่ม BACK -->
-                <a href="/signUp" class="bg-gray-500 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-red-700 transition">
+            <div class="flex justify-between mt-6">
+                <a href="/signUp"
+                    class="bg-gray-500 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-red-700 transition">
                     BACK
                 </a>
 
-                <!-- ปุ่ม SUBMIT -->
-                <button type="submit" class="bg-[#0F3557] text-white font-bold py-2 px-6 rounded shadow-md hover:bg-blue-700 transition">
+                <button type="submit"
+                    class="bg-blue-600 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-blue-800 transition">
                     SUBMIT
                 </button>
             </div>
@@ -143,6 +148,12 @@
                 reader.readAsDataURL(file);
             }
         });
+        $(document).ready(function() {
+        $('#country').select2({
+            placeholder: "Select a country",
+            allowClear: true
+        });
+    });
     </script>
 
 </body>
