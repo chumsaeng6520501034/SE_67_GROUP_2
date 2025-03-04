@@ -293,7 +293,7 @@ class UserListController extends Controller
   }
 
   function getAllRequestTour(){
-    $idAccount = session('id_account')->account_id_account;
+    $idAccount = session('')->account_id_account;
     $All_req = RequestTour::where('user_list_account_id_account', $idAccount)
     ->get();
     return view('customer.myRequest', compact('All_req'));
