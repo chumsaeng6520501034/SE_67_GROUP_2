@@ -63,7 +63,7 @@
 
     <!-- Travel Deals -->
     <div class="absolute top-[30vh] left-1/2 transform -translate-x-1/2 w-2/3 max-w-[900px] px-6 z-10">
-    @foreach ($paginatedItems as $item)
+    @foreach ($All_req as $All_req)
         <div class="bg-white bg-opacity-80 backdrop-blur-lg rounded-lg shadow-lg p-6 mb-6 flex relative mx-auto">
             <!-- Icon บนขวา -->
             <div class="absolute top-2 right-2 cursor-pointer">
@@ -77,15 +77,22 @@
 
             <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination" class="w-1/3 rounded-lg">
             <div class="ml-4 w-2/3">
-                <h2 class="text-xl font-bold">Bangkok</h2>
-                <p class="text-gray-600">DESCRIPTION</p>
-                <p class="text-gray-400 mt-40">STATUS</p>
+                <h2 class="text-xl font-bold">{{  ucwords($All_req->name) }}</h2>
+                <p class="text-gray-600">{{ $All_req->request_date}}</p>
+                @switch($All_req->request_status)
+                @case("finish")
+                <p class="text-gray-400 mt-40">{{ ucwords($All_req->request_status) }}</p>@break
+                @case("ongoing")
+                <p class="text-gray-400 mt-40">{{ ucwords($All_req->request_status) }}</p>@break
+                @case("cancel")
+                <p class="text-gray-400 mt-40">{{ ucwords($request_tour->request_status) }}</p>@break
+                @endswitch
             </div>
             <div class="ml-auto text-right mt-auto">
                 <p class="text-sm text-gray-500">BOOKING DATE</p>
-                <p class="font-bold">xx/xx/xxxx</p>
+                <p class="font-bold">{{ $All_req->request_date}}</p>
                 <p class="text-gray-500">Price</p>
-                <p class="text-xl font-bold">$10000</p>
+                <p class="text-xl font-bold">{{$All_req->max_price }}</p>
                 <div class="mt-2 flex gap-2">
                     <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">Start</button>
                     <button class="bg-gray-500 text-white px-4 py-2 rounded-lg">End</button>

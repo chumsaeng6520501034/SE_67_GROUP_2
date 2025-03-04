@@ -120,7 +120,7 @@ class UserListController extends Controller
     ->get();
     return view('customer.myBooking', compact('bookingData'));
   }
-  
+
   function searchBooking(Request $request){
     $status = $request->status;
     $name = $request->name;
@@ -275,8 +275,7 @@ class UserListController extends Controller
   function getUserPaymentHistory(){
     $idAccount = session('id_account')->account_id_account;
     $paymentHistory = Payment::where('booking_user_list_account_id_account', $idAccount)->get();
-    dd($paymentHistory);
-    return view('???', compact('paymentHistory'));
+    return view('customer.payments', compact('paymentHistory'));
   }
   //รายละเอียดการโอนเงินครั้งใด ๆ ที่โดนเลือก//
   function getPaymentDetails(Request $request){
@@ -293,7 +292,7 @@ class UserListController extends Controller
   }
 
   function getAllRequestTour(){
-    $idAccount = session('id_account')->account_id_account;
+    $idAccount = session('userID')->account_id_account;
     $All_req = RequestTour::where('user_list_account_id_account', $idAccount)
     ->get();
     return view('customer.myRequest', compact('All_req'));
@@ -394,6 +393,8 @@ class UserListController extends Controller
 
   //หน้าสำหรับเพิ่มรีเควสท์
   //เพิ่มรีเควสท์ใหม่เข้าฐานข้อมูล
+
+  
   function viewCalendar(){
     return view('customer.calendar');
   }
