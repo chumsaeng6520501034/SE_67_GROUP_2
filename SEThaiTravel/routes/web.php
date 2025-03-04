@@ -43,3 +43,5 @@ Route::get('/myBooking',[UserListController::class,'viewMyBooking']);
 Route::post('/searchBooking',[UserListController::class,'searchBooking']);
 Route::get('/userProfile',[UserListController::class,'viewProfile']);
 Route::get('/myRequest',[UserListController::class,'getAllRequestTour']);
+Route::get('/payments',[UserListController::class,'getUserPaymentHistory']);
+
