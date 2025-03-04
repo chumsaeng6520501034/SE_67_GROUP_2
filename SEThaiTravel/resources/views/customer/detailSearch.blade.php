@@ -63,11 +63,11 @@
             <!-- รายละเอียด Children / Adults -->
             <div class="flex justify-center w-full py-16">
                 <div class="text-center w-1/2">
-                    <h3 class="text-2xl font-bold">Children</h3>
+                    <h3 class="text-2xl font-bold">Reserved</h3>
                     <p class="text-2xl">100</p>
                 </div>
                 <div class="text-center w-1/2">
-                    <h3 class="text-2xl font-bold">Adults</h3>
+                    <h3 class="text-2xl font-bold">Srplus</h3>
                     <p class="text-2xl">900</p>
                 </div>
             </div>
