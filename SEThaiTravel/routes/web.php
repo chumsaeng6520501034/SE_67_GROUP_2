@@ -21,6 +21,10 @@ Route::get('/', function () {
     return view('user.home');
 });
 
+Route::get('/home', function () {
+    return view('customer.home');
+});
+
 Route::get('/us',[UserListController::class,'getRequestTour']);
 // Route::get('/ac',[AccountController::class,'checkTable']);
 // Route::get('/bk',[BookingController::class,'checkTable']);
