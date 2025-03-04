@@ -120,7 +120,7 @@ class UserListController extends Controller
     ->get();
     return view('customer.myBooking', compact('bookingData'));
   }
-  
+
   function searchBooking(Request $request){
     $status = $request->status;
     $name = $request->name;
@@ -293,7 +293,7 @@ class UserListController extends Controller
   }
 
   function getAllRequestTour(){
-    $idAccount = session('id_account')->account_id_account;
+    $idAccount = session('userID')->account_id_account;
     $All_req = RequestTour::where('user_list_account_id_account', $idAccount)
     ->get();
     return view('customer.myRequest', compact('All_req'));
