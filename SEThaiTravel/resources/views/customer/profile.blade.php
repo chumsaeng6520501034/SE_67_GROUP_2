@@ -104,7 +104,9 @@
             <div class="flex justify-end space-x-2">
                 <button @click="openDeleteModal = false"
                     class="bg-gray-500 text-white px-4 py-2 rounded-lg">Cancel</button>
-                <button class="bg-red-500 text-white px-4 py-2 rounded-lg">Delete</button>
+                <form action="/deleteAccount" method="GET">
+                    <button class="bg-red-500 text-white px-4 py-2 rounded-lg">Delete</button>
+                </form>
             </div>
         </div>
     </div>

@@ -29,7 +29,7 @@ class AccountController extends Controller
         //   if (!$account || !Hash::check($request->password, $account->password)) {
         //     return redirect()->back()->withErrors(['login_failed' => 'Invalid username or password'])->withInput();
         // }
-        $account = Account::where('username',$request->username)->where('password',$request->password)->first();
+        $account = Account::where('username',$request->username)->where('password',$request->password)->where('status', 'NOT LIKE', 'disappear')->where('status', 'NOT LIKE', 'pending')->first();
         if(is_null($account))
         {
           return redirect()->back()->withErrors(['login_failed' => 'Invalid username or password'])->withInput();
@@ -451,9 +451,9 @@ class AccountController extends Controller
       }
       //ลบรีเควสท์//
       function deleteAccount(Request $request){
-        $idAccount = session('id_account')->account_id_account;
-        Account::update('UPDATE account SET status = ? WHERE account.id_account = ? ;'
-        , ['disappear', $idAccount]);
+        $idAccount = session('userID')->account_id_account;
+        $accountData = ['status' => 'disappear'];
+        Account::where('id_account', $idAccount)->update($accountData);
         $request->session()->invalidate(); // ทำให้ session ID ปัจจุบันใช้ไม่ได้
         $request->session()->regenerateToken(); // สร้าง CSRF token ใหม่ ป้องกัน 419 Page Expired
         return redirect('/');
