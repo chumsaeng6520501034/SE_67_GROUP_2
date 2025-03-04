@@ -120,6 +120,7 @@ class UserListController extends Controller
     ->get();
     return view('customer.myBooking', compact('bookingData'));
   }
+  
   function searchBooking(Request $request){
     $status = $request->status;
     $name = $request->name;
@@ -272,14 +273,13 @@ class UserListController extends Controller
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   //ตรวจสอบการโอนเงินลูกค้าทั้งหมด//
   function getUserPaymentHistory(){
-    $idAccount = session('id_account');
+    $idAccount = session('id_account')->account_id_account;
     $paymentHistory = Payment::where('booking_user_list_account_id_account', $idAccount)->get();
-    dd($paymentHistory);
-    return view('???', compact('paymentHistory'));
+    return view('customer.payments', compact('paymentHistory'));
   }
   //รายละเอียดการโอนเงินครั้งใด ๆ ที่โดนเลือก//
   function getPaymentDetails(Request $request){
-    $idAccount = session('id_account');
+    $idAccount = session('id_account')->account_id_account;
     $idPayment = $request->paymentID;
     $bill = payment::table('payment as p')
     ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
@@ -291,9 +291,16 @@ class UserListController extends Controller
     return view('???', compact('bill'));
   }
 
+  function getAllRequestTour(){
+    $idAccount = session('')->account_id_account;
+    $All_req = RequestTour::where('user_list_account_id_account', $idAccount)
+    ->get();
+    return view('customer.myRequest', compact('All_req'));
+  }
+
   //ขอรีเควสท์ที่ลูกค้ากำลังประกาศ//
   function getRequestTourAvailable(){
-    $idAccount = session('id_account');
+    $idAccount = session('id_account')->account_id_account;
     $Available_req = RequestTour::where('user_list_account_id_account', $idAccount)
     ->where('request_status', 'ongoing')
     ->get();
@@ -302,7 +309,7 @@ class UserListController extends Controller
   }
   //ขอรีเควสท์ที่ลูกค้าเคยสร้าง//
   function getRequestTourHistory(){
-    $idAccount = session('id_account');
+    $idAccount = session('id_account')->account_id_account;
     $History_req   = RequestTour::where('user_list_account_id_account', $idAccount)
     ->where('request_status', 'finish')
     ->get();
@@ -311,7 +318,7 @@ class UserListController extends Controller
   }
   //ขอรีเควสท์ที่ลูกค้ายกเลิก//
   function getRequestTourCancel(){
-    $idAccount = session('id_account');
+    $idAccount = session('id_account')->account_id_account;
     $Cancal_req = RequestTour::where('user_list_account_id_account', $idAccount)
     ->where('request_status', 'cancal')
     ->get();
@@ -320,7 +327,7 @@ class UserListController extends Controller
   }
   //รายละเอียดรีเควสท์ใด ๆ ที่โดนเลือก//
   function getOfferFromRequest(Request $request){
-    $idAccount = session('id_account');
+    $idAccount = session('id_account')->account_id_account;
     $idRequest = $request->requestID;
     $offerList = Offer::table('offer as o')
     ->join(' request_tour as r', 'r.id_request_tour', '=', 'o.request_tour_id_request_tour')
@@ -386,6 +393,8 @@ class UserListController extends Controller
 
   //หน้าสำหรับเพิ่มรีเควสท์
   //เพิ่มรีเควสท์ใหม่เข้าฐานข้อมูล
+
+  
   function viewCalendar(){
     return view('customer.calendar');
   }
