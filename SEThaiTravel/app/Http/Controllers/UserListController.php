@@ -8,6 +8,7 @@ use App\Models\UserList;
 use App\Models\TourHasGuideList;
 use App\Models\Booking;
 use App\Models\Tour;
+use App\Models\Account;
 use App\Models\RequestTour;
 use App\Models\GuideList;
 use App\Models\Review;
@@ -415,5 +416,11 @@ class UserListController extends Controller
     });
     
     return response()->json($formattedEvents);
+  }
+  function viewProfile(){
+    $id = session('userID')->account_id_account; 
+    $accountData = Account::where('id_account', $id)->first();
+    $userData = UserList::where('account_id_account',$id)->first();
+    return view('customer.profile',compact('accountData','userData'));
   }
 }
