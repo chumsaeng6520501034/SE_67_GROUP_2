@@ -21,25 +21,13 @@
     </button>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed top-0 left-0 w-64 h-screen bg-[#0F588C] text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300 z-50 pt-16">
+    <aside id="sidebar" class="fixed top-0 left-0 w-64 h-screen bg-blue-900 text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300 z-50 pt-16">
         <!-- Menu Items -->
         <nav class="flex flex-col space-y-2">
             <a href="/signUp" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">SIGN IN</a>
             <a href="/logIn" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">LOG IN</a>
             <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">SETTING</a>
         </nav>
-
-        <!-- Log Out -->
-        <div class="mt-auto">
-            <a href="#" class="flex items-center justify-between py-3 px-6 hover:bg-red-700 transition duration-300 rounded">
-                <span>LOG OUT</span>
-                <svg class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                    <polyline points="16 17 21 12 16 7" />
-                    <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
-            </a>
-        </div>
     </aside>
 
     <!-- JavaScript for Sidebar Toggle -->
