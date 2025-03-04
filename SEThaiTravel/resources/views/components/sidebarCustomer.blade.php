@@ -41,7 +41,7 @@
             <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REVIEW</a>
             <a href="/myBooking" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY BOOKING</a>
             <a href="/calendar" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">CALENDAR</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY PAYMENT</a>
+            <a href="/payments" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY PAYMENT</a>
         </nav>
 
         <!-- Log Out -->
