@@ -81,22 +81,24 @@
                     Address
                     <input type="text" class="p-2 border shadow-md rounded w-full">
                 </label>
+                
+                <label class="flex flex-col">
+                    Province
+                    <select name="province" id="province" class="p-2 border shadow-md rounded w-full"></select>
+                </label>
 
                 <label class="flex flex-col">
                     District
-                    <input type="text" class="p-2 border shadow-md rounded w-full">
-                </label>
-                <label class="flex flex-col">
-                    Province
-                    <input type="text" class="p-2 border shadow-md rounded w-full">
-                </label>
-                <label class="flex flex-col">
-                    Postal Number
-                    <input type="text" class="p-2 border shadow-md rounded w-full">
+                    <select name="district" id="amphoe" class="p-2 border shadow-md rounded w-full"></select>
                 </label>
 
                 <label class="flex flex-col">
                     Subdistrict
+                    <select name="subdistrict" id="tambon" class="p-2 border shadow-md rounded w-full"></select>
+                </label>
+
+                <label class="flex flex-col">
+                    Postal Number
                     <input type="text" class="p-2 border shadow-md rounded w-full">
                 </label>
 
@@ -133,6 +135,7 @@
             </div>
         </form>
     </div>
+    @vite(['resources/js/thaiLocation.js'])
 
     <!-- JavaScript -->
     <script>
