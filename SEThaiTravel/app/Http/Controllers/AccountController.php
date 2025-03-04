@@ -444,4 +444,18 @@ class AccountController extends Controller
           194 => "Zimbabwe"
       ];
       }
+      
+      function deleteAccountForm(Request $request){
+        $idAccount = $request->requestID;
+        return view('deleteAccount', compact('idAccount'));
+      }
+      //ลบรีเควสท์//
+      function deleteAccount(Request $request){
+        $idAccount = session('id_account')->account_id_account;
+        Account::update('UPDATE account SET status = ? WHERE account.id_account = ? ;'
+        , ['disappear', $idAccount]);
+        //return view(,);
+      }
+
+
 }
