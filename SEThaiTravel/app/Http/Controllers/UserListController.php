@@ -120,6 +120,7 @@ class UserListController extends Controller
     ->get();
     return view('customer.myBooking', compact('bookingData'));
   }
+  
   function searchBooking(Request $request){
     $status = $request->status;
     $name = $request->name;
