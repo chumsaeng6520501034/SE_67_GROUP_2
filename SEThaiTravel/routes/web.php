@@ -41,4 +41,8 @@ Route::post('/checkLogIn',[AccountController::class,'checkLogin']);
 Route::get('/calendar',[UserListController::class,'viewCalendar']);
 Route::get('/myBooking',[UserListController::class,'viewMyBooking']);
 Route::post('/searchBooking',[UserListController::class,'searchBooking']);
+Route::get('/userProfile',[UserListController::class,'viewProfile']);
 Route::get('/myRequest',[UserListController::class,'getAllRequestTour']);
+Route::get('/payments',[UserListController::class,'getUserPaymentHistory']);
+Route::get('/deleteAccount',[AccountController::class,'deleteAccount']);
+
