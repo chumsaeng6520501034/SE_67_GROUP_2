@@ -5,12 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travel Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+          #sidebar,
+        #mainContent {
+            transition: all 0.3s ease-in-out;
+        }
+
+        #sidebar {
+            z-index: 50;
+            /* ให้ Sidebar อยู่ด้านหน้า */
+        }
+
+        #toggleSidebar {
+            position: fixed;
+            z-index: 100;
+            /* ให้ปุ่มอยู่ด้านหน้าสุด */
+        }
+
+        #sidebar {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-open #sidebar {
+            transform: translateX(0);
+        }
+
+        .sidebar-open #mainContent {
+            margin-left: 16rem;
+            /* ขยับไปทางขวาเท่ากับความกว้างของ Sidebar */
+        }
+
+        #navbar {
+            transition: all 0.3s ease-in-out;
+            width: calc(100% - 0rem);
+            /* ค่าเริ่มต้นเต็มจอ */
+            margin-left: 0;
+        }
+    </style>
 </head>
 <body class="bg-gray-900">
     <div class="flex h-screen">
         @include('components.sidebarUser')
         <!-- Main Content -->
-        <main class="flex-1 relative">
+        <main id="mainContent" class="flex-1 relative">
             <div class="relative h-80 w-full">
                 <img src="https://blog.bangkokair.com/wp-content/uploads/2023/09/Cover_krabi-travel-guide-top-destinations.jpg" class="w-full h-full object-cover">
                 <h1 class="absolute top-20 left-1/2 transform -translate-x-1/2 text-white text-8xl font-bold">TRAVEL</h1>
@@ -50,5 +87,13 @@
         </main>
         
     </div>
+    <script>
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        });
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.body.classList.toggle('sidebar-open');
+        });
+    </script>
 </body>
 </html>

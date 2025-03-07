@@ -45,4 +45,5 @@ Route::get('/userProfile',[UserListController::class,'viewProfile']);
 Route::get('/myRequest',[UserListController::class,'getAllRequestTour']);
 Route::get('/payments',[UserListController::class,'getUserPaymentHistory']);
 Route::get('/deleteAccount',[AccountController::class,'deleteAccount']);
-
+Route::get('/customerSearch',[UserListController::class,'searchAllTourActive']);
+Route::get('/customerFilterSearch',[UserListController::class,'searchFilterTourActive']);

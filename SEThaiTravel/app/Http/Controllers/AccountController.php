@@ -182,40 +182,61 @@ class AccountController extends Controller
         return view('home');
       }
       function search(Request $request){// ค้นหาทัวร์ที่วางขายอยู่
-          $name = $request->searchKey;
-          $startDate = $request->startDate;
-          $endDate = $request->endDate;
-          $capacity = $request->capacity;
-          if(is_numeric($name)){//เช็คว่าเป็นตัวเลขไหมถ้าเป็นจะ search แบบ private 
-            $searchTourData =Tour::where(function ($query) {
-              $query->where('name', 'LIKE', '%'.$name.'%')
-                    ->orWhere('start_tour_date', 'LIKE', $startDate)
-                    ->orWhere('end_tour_date', 'LIKE', $endDate)
-                    ->orWhere('tour_capacity', '>=', $capacity);
-             })
-            ->where('status', 'LIKE', 'ongoing')
-            ->where('type_tour', 'LIKE', 'private')
-            ->get();
-          }
-          else{
-            $searchTourData =Tour::where(function ($query) {
-              $query->where('name', 'LIKE', '%'.$name.'%')
-                    ->orWhere('start_tour_date', 'LIKE', $startDate)
-                    ->orWhere('end_tour_date', 'LIKE',  $endDate)
-                    ->orWhere('tour_capacity', '>=', $capacity);
-             })
-            ->where('status', 'LIKE', 'ongoing')
-            ->where('type_tour', 'LIKE', 'public')
-            ->get();
-          }
-          $ownerData = [];
-          foreach($searchTourData as $data){//อันนหาหาข้อมูลของเจ้าของทัวร์นั้นๆแล้วส่งไปใน view ด้วยเผื่อใช้
+        $name = $request->searchKey;
+        $startDate = $request->startDate;
+        $endDate = $request->endDate;
+        $capacity = $request->capacity;
+        if(is_numeric($name)){//เช็คว่าเป็นตัวเลขไหมถ้าเป็นจะ search แบบ private 
+          $searchTourData = Tour::where(function ($query) use ($name, $startDate, $endDate, $capacity) {
+            $query->where('name', 'LIKE', '%'.$name.'%')
+                  ->orWhere('start_tour_date', '=', $startDate) // เปลี่ยน LIKE เป็น =
+                  ->orWhere('end_tour_date', '=', $endDate) // เปลี่ยน LIKE เป็น =
+                  ->orWhere('tour_capacity', '>=', $capacity); // ไม่มี LIKE กับตัวเลข
+                  })
+                  ->where('status', 'LIKE', 'ongoing')
+                  ->where('type_tour', 'LIKE', 'private')
+                  ->paginate(2)->appends($request->query());
+              }
+        else{
+          $searchTourData =Tour::where(function ($query) use ( $name, $startDate, $endDate,$capacity)  {
+          $query->where('start_tour_date', '=', $startDate)
+                ->orWhere('end_tour_date', '=',  $endDate)
+                ->orWhere('tour_capacity', '>=', $capacity);
+                })
+                ->whereRaw('LOWER(tour.name) LIKE LOWER(?)', ['%'.$name.'%'])
+                ->where('status', 'LIKE', 'ongoing')
+                ->where('type_tour', 'LIKE', 'public')
+                ->paginate(2)->appends($request->query());
+        }
+        $ownerData = [];
+        $totalMember = [];
+        $ownerScore = [];
+        foreach($searchTourData as $data){//อันนหาหาข้อมูลของเจ้าของทัวร์นั้นๆแล้วส่งไปใน view ด้วยเผื่อใช้
             switch($data->from_owner){
-              case "guide": $ownerData[] = GuideList::find($data->owner_id); break;
-              case "corp": $ownerData[] = CorpList::find($data->owner_id); break;
+              case "guide": $ownerData[] = GuideList::find($data->owner_id)->first(); 
+                            $ownerScore [] = Review::leftJoin('guide_list', 'review.guide_list_account_id_account', '=', 'guide_list.account_id_account')
+                            ->where('guide_list.account_id_account', $data->owner_id) // กรองเฉพาะ owner_id ที่ต้องการ
+                            ->selectRaw('COUNT(*) as total_reviews, AVG(review.sp_score) as average_score')
+                            ->first();
+                            break;
+              case "corp": $ownerData[] = CorpList::find($data->owner_id)->first(); 
+                           $ownerScore [] = Review::leftJoin('booking', 'review.booking_id_booking', '=', 'booking.id_booking')
+                            ->leftJoin('tour', function($join) {
+                                $join->on('tour.id_tour', '=', 'booking.tour_id_tour')
+                                    ->where('tour.from_owner', 'LIKE', 'corp');
+                            })
+                            ->leftJoin('corp_list', 'corp_list.account_id_account', '=', 'tour.owner_id')
+                            ->where('corp_list.account_id_account', $data->owner_id)
+                            ->selectRaw('COUNT(*) as total_reviews, AVG(review.sp_score) as average_score')
+                            ->first(); // ใช้ `first()` เพราะดึงแค่บริษัทเดียว
+                            break;
             }
-          }
-          return view('searchPage',compact('ownerData','$searchTourData'));
+            $totalMember[]= Booking::where('tour_id_tour', $data->id_tour ) //TourID ใช้ของที่กดจองมา
+            ->where('status', 'NOT LIKE', 'cancel')
+            ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
+            ->value('Total_Member');
+        }
+        return view('user.search',compact('ownerData','searchTourData','totalMember','ownerScore'));
       }
 
       function logOut(Request $request){//Log out แล้ว เคลีย session ทิ้ง
