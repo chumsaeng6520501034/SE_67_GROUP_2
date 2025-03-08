@@ -233,6 +233,7 @@ class UserListController extends Controller
     $startDate = $request->startDate;
     $endDate = $request->endDate;
     $capacity = $request->capacity;
+    $path = $_SERVER['REQUEST_URI'];
     if(is_numeric($name)){//เช็คว่าเป็นตัวเลขไหมถ้าเป็นจะ search แบบ private 
       $searchTourData = Tour::where(function ($query) use ($name, $startDate, $endDate, $capacity) {
         $query->where('name', 'LIKE', '%'.$name.'%')
@@ -283,7 +284,7 @@ class UserListController extends Controller
         ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
         ->value('Total_Member');
     }
-    return view('customer.search',compact('ownerData','searchTourData','totalMember','ownerScore'));
+    return view('customer.search',compact('ownerData','searchTourData','totalMember','ownerScore','path'));
   }
   function searchFilterTourActive(Request $request){
     $name = $request->searchKey;
@@ -292,6 +293,7 @@ class UserListController extends Controller
     $capacity = $request->capacity;
     $minBudget = $request->minBudget;
     $maxBudget = $request->maxBudget;
+    $path = $_SERVER['REQUEST_URI'];
     if(is_numeric($name)){//เช็คว่าเป็นตัวเลขไหมถ้าเป็นจะ search แบบ private 
       $searchTourData = Tour::where(function ($query) use ($name, $startDate, $endDate, $capacity) {
         $query->where('offer_id_offer', '=', $name)
@@ -343,7 +345,7 @@ class UserListController extends Controller
         ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
         ->value('Total_Member');
     }
-    return view('customer.search',compact('ownerData','searchTourData','totalMember','ownerScore'));
+    return view('customer.search',compact('ownerData','searchTourData','totalMember','ownerScore','path'));
   }
   //ตรวจสอบประวัติการขายทัวร์
   /*function getGuideSellHistory()
@@ -542,5 +544,34 @@ class UserListController extends Controller
     $accountData = Account::where('id_account', $id)->first();
     $userData = UserList::where('account_id_account',$id)->first();
     return view('customer.profile',compact('accountData','userData'));
+  }
+  function viewProductDetail(Request $request){
+    $tourID = $request->tourID;
+    $path = $request->path;
+    $tourData = Tour::where('id_tour',$tourID)->first();
+    switch($tourData->from_owner){
+      case "guide": $productData = Tour::join('guide_list', 'tour.owner_id', '=', 'guide_list.account_id_account')
+                                            ->where('tour.id_tour', $tourID)
+                                            ->select('tour.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname')
+                                            ->first(); break;
+      case "corp":  $productData = Tour::join('corp_list', 'tour.owner_id', '=', 'corp_list.account_id_account')
+                                            ->where('tour.id_tour', $tourID)
+                                            ->select('tour.*', 'corp_list.name as corp_name')
+                                            ->first(); break; 
+    }
+    $totalMember = Booking::where('tour_id_tour', $tourID ) //TourID ใช้ของที่กดจองมา
+    ->where('status', 'NOT LIKE', 'cancel')
+    ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
+    ->value('Total_Member');
+    // $locationInTourData = LocationInTour::where('tour_id_tour',$tourID)->pluck('loc_api');
+    // $locationFetchApi = $locationInTourData->map(function ($apiUrl) {
+    //   $response = Http::get($apiUrl);
+    //   return $response->successful() ? $response->json() : null;
+    // })->filter();
+    // return view('viewProduct',[
+    //   'tour_info' => $productData,
+    //   'locations' => $locationFetchApi
+    // ]);
+    return view('customer.detailSearch',compact('path','totalMember','productData'));
   }
 }

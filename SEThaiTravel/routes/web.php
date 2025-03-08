@@ -49,3 +49,4 @@ Route::get('/customerSearch',[UserListController::class,'searchAllTourActive']);
 Route::get('/customerFilterSearch',[UserListController::class,'searchFilterTourActive']);
 Route::get('/userSearch',[AccountController::class,'search']);
 Route::get('/userFilterSearch',[AccountController::class,'searchFilterTourActive']);
+Route::post('/customerViewProductDetail',[UserListController::class,'viewProductDetail']);

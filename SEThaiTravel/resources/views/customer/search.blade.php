@@ -59,7 +59,8 @@
             background-image: url('https://blog.bangkokair.com/wp-content/uploads/2023/09/Cover_krabi-travel-guide-top-destinations.jpg');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* ให้ภาพไม่เลื่อนตาม */
+            background-attachment: fixed;
+            /* ให้ภาพไม่เลื่อนตาม */
         }
     </style>
 </head>
@@ -79,7 +80,8 @@
                             <input type="text" name="searchKey" placeholder="Search tour name..."
                                 class="w-full px-4 py-2 border rounded-lg">
                         </div>
-                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition duration-300">SEARCH</button>
+                        <button type="submit"
+                            class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition duration-300">SEARCH</button>
                     </div>
 
                     <!-- บรรทัดที่สอง: ตัวกรอง Filters -->
@@ -126,8 +128,8 @@
 
         <!-- Hero Section -->
         <div class="relative h-[50vh] w-full">
-           
-                <div class="w-full h-full object-cover"></div>
+
+            <div class="w-full h-full object-cover"></div>
             <!-- <h1 class="absolute top-[40%] left-1/2 transform -translate-x-1/2 text-white text-8xl font-bold">TRAVEL</h1> -->
 
             <!-- Travel Deals -->
@@ -144,11 +146,17 @@
 
             <div class="relative top-[-90%] p-10 rounded-lg w-2/3 mt-20 mx-auto">
                 @foreach ($searchTourData as $item)
-                    <div class="bg-white rounded-lg shadow-lg p-6 mb-6 flex">
+                    <div
+                        class="bg-white rounded-lg shadow-lg p-6 mb-6 flex relative cursor-pointer hover:shadow-xl transition">
                         <!-- รูปภาพ -->
                         <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination"
                             class="w-1/3 rounded-lg">
-
+                        <form action="/customerViewProductDetail" method="POST">
+                            @csrf
+                            <input type="hidden" name="tourID" value={{$item->id_tour}}>
+                            <input type="hidden" name="path" value={{$path}}>
+                            <button type="submit" class="absolute inset-0 w-full h-full opacity-0 "></button>
+                        </form>
                         <!-- ส่วนข้อมูล -->
                         <div class="ml-4 w-2/3">
                             <h2 class="text-xl font-bold">{{ ucwords($item->name) }}</h2>
@@ -158,7 +166,8 @@
                             <div class=" mt-20 " id="card">
                                 <p class="text-gray-400 text-xs mt-1">Start Date: {{ $item->start_tour_date }}</p>
                                 <p class="text-gray-400 text-xs  mt-1">End Date: {{ $item->end_tour_date }}</p>
-                                <p class="text-gray-400 text-xs mt-1">Organized by: {{ $ownerData[$startArray]->name }}
+                                <p class="text-gray-400 text-xs mt-1">Organized by:
+                                    {{ $ownerData[$startArray]->name }}
                                 </p>
                                 {{-- <p class="text-gray-400 mt-2">STATUS</p> --}}
                                 @php
@@ -204,13 +213,15 @@
                             <div class="mt-auto">
                                 <p class="text-2xl font-bold text-green-600">{{ number_format($item->price) }}฿</p>
                                 @if ($status === 'Available')
-                                    <button
-                                        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm mt-2">
-                                        RESERVE NOW
-                                    </button>
+                                    <form action="/logIn" method="GET">
+                                        <button type="submit"
+                                            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm mt-2 relative z-[50]">
+                                            RESERVE NOW
+                                        </button>
+                                    </form>
                                 @else
                                     <button
-                                        class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition text-sm mt-2">
+                                        class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition text-sm mt-2 relative z-[50]">
                                         FULL
                                     </button>
                                 @endif
