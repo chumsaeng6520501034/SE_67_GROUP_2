@@ -6,20 +6,40 @@
     <title>Travel Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900">
-    <div class="flex h-screen relative">
-    
+<body class="bg-gray-900">  
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        @include('components.sidebarCustomer')
 
-        <!-- Sidebar ที่ Include -->
-            @include('components.sidebarCustomer')
-
+        <!-- Sidebar
+        <aside class="w-64 bg-blue-900 text-white p-6 space-y-4 flex flex-col h-full">
+        <div class="flex items-center space-x-2">
+            <a href="#" class="flex items-center space-x-2">
+                <label for="profile-upload" class="relative cursor-pointer">
+                    <img id="profileImage" src="https://simplyfox.co.uk//wp-content/uploads/2018/08/iStock-640299760-1249910_1080x675.jpg" alt="Profile Picture" class="w-20 h-20 rounded-full border-2 border-white object-cover">
+                    <input type="file" id="profile-upload" class="hidden" accept="image/*" onchange="previewProfileImage(event)">
+                </label>
+                <span class="font-bold cursor-pointer">User Name</span>
+            </a>
+        </div>
+            <nav class="space-y-2">
+                <a href="#" class="block py-2 px-4 hover:bg-blue-800 rounded">ADD TOUR</a>
+                <a href="#" class="block py-2 px-4 hover:bg-blue-800 rounded">MY TOUR</a>
+                <a href="#" class="block py-2 px-4 hover:bg-blue-800 rounded">HISTORY</a>
+                <a href="#" class="block py-2 px-4 hover:bg-blue-800 rounded">MY REVIEW</a>
+                <a href="#" class="block py-2 px-4 hover:bg-blue-800 rounded">CALENDAR</a>
+                <a href="#" class="block py-2 px-4 hover:bg-blue-800 rounded">MY BOOKING</a>
+                <a href="#" class="block py-2 px-4 hover:bg-blue-800 rounded">MY PAYMENT</a>
+            </nav>
+            <a href="#" class="block py-2 px-4 hover:bg-red-700 rounded">LOG OUT</a>
+        </aside>
+         -->
         <!-- Main Content -->
-        <main id="mainContent" class="flex-1 ml-0 p-5 transition-all duration-300 ease-in-out">
+        <main class="flex-1 relative overflow-hidden">
             <div class="relative h-[50vh] w-full">
                 <img src="https://blog.bangkokair.com/wp-content/uploads/2023/09/Cover_krabi-travel-guide-top-destinations.jpg" class="w-full h-full object-cover">
                 <h1 class="absolute top-[40%] left-1/2 transform -translate-x-1/2 text-white text-8xl font-bold">TRAVEL</h1>
-            </div>
-
+            
             <!-- Search Box -->
             <form action="/customerSearch" method="GET">
                 <div class="absolute top-[110%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-100 p-10 rounded-lg shadow-lg w-2/3">
@@ -79,25 +99,5 @@
                         
         </main>
     </div>
-
-    <!-- JavaScript -->
-    <script>
-        document.getElementById('toggleSidebar').addEventListener('click', function () {
-            var sidebar = document.getElementById('sidebar');
-            var mainContent = document.getElementById('mainContent');
-
-            if (sidebar.classList.contains("-translate-x-full")) {
-                // เปิด Sidebar
-                sidebar.classList.remove("-translate-x-full");
-                sidebar.classList.add("translate-x-0");
-                mainContent.style.marginLeft = "16rem"; // ขยับ Main Content ไปทางขวา
-            } else {
-                // ปิด Sidebar
-                sidebar.classList.add("-translate-x-full");
-                sidebar.classList.remove("translate-x-0");
-                mainContent.style.marginLeft = "0"; // คืนค่า Main Content
-            }
-        });
-    </script>
 </body>
 </html>
