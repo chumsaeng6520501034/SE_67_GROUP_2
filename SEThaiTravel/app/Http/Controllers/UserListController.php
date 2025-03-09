@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\UserList;
 use App\Models\TourHasGuideList;
@@ -191,25 +192,66 @@ class UserListController extends Controller
     // dd($booking);
     // return 'update success';
   }
+//   public function setSessionAndRedirect($booking_id)
+// {
+//     // บันทึกค่าลง Session
+//     session(['booking_id' => $booking_id]);
 
+//     // เปลี่ยนเส้นทางไปยังหน้ารายละเอียด
+//     return view('customer.detailBooking');
+// }
 //-----------------------------------------------------------------------------------------------------------
   //ตรวจสอบประวัติการซื้อทัวร์ *
-  function getUserBuyHistory()
-  {
-    //$history = Booking::where('user_list_account_id_account',19)->get();
-    // $buy = Booking::where('tour_id_tour',1)->get();
-    //$userId = $request->input('user_list_account_id_account');
+  function getUserBuyHistory(Request $request)
+{
+    $name = $request->input('name');
+    $idAccount = session('userID')->account_id_account;
 
-    $idAccount = session('id_account');
-    //if (!$idAccount) {
-    // return redirect()->route('login')->with('error', 'You must be logged in to view your sales history');
-    //}
-    $history = Booking::where('user_list_account_id_account', $idAccount)->get();
+    $history = Booking::where('user_list_account_id_account', $idAccount)
+        ->join('tour', 'tour.id_tour', '=', 'booking.tour_id_tour')
+        ->leftJoin('corp_list', 'corp_list.account_id_account', '=', 'tour.owner_id')  // เชื่อมบริษัท
+        ->leftJoin('guide_list', 'guide_list.account_id_account', '=', 'tour.owner_id') // เชื่อมไกด์
+        ->where('tour.name', 'LIKE', '%' . $name . '%')
+        ->get([
+            // ข้อมูล booking
+            'booking.id_booking',
+            'booking.user_list_account_id_account',
+            'booking.tour_id_tour',
+            'booking.booked_date',
+            'booking.payment_date',
+            'booking.total_price',
+            'booking.description AS desBook',
+            'booking.adult_qty AS adult',
+            'booking.kid_qty AS kid',
+            'booking.status AS booking_status',
 
-    dd($history);
-    return view('???', compact('history'));
-  }
+            // ข้อมูล tour
+            'tour.from_owner AS type',
+            'tour.owner_id AS owner',
+            'tour.name AS tour_name',
+            'tour.Release_date AS postDate',
+            'tour.End_of_sale_date',
+            'tour.start_tour_date AS startDate',
+            'tour.end_tour_date AS endDate',
+            'tour.price AS price',
+            'tour.tour_capacity AS tour_capacity',
+            'tour.contect',
+            'tour.hotel AS hotel',
+            'tour.hotel_price AS hotelPrice',
+            'tour.description AS desTour',
+            'tour.travel_by AS travelBy',
+            'tour.status AS tour_status',
+            'tour.offer_id_offer',
+            'tour.type_tour',
 
+            // ข้อมูลเจ้าของ (บริษัทใช้ name, ไกด์ใช้ name + surname)
+            DB::raw('COALESCE(corp_list.name, guide_list.name) AS owner_name'),
+            DB::raw('COALESCE(guide_list.surname, "") AS owner_surname')
+        ]);
+
+    return view('customer.detailBooking', compact('history'));
+}
+  
   //ทัวร์ที่กำลังวางขายอยู่ *
   function getTourActive()
   {
