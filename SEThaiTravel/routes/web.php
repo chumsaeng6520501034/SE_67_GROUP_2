@@ -46,3 +46,9 @@ Route::get('/myRequest',[UserListController::class,'getAllRequestTour']);
 Route::get('/payments',[UserListController::class,'getUserPaymentHistory']);
 Route::get('/deleteAccount',[AccountController::class,'deleteAccount']);
 
+// Route::get('/addTour',[UserListController::class,'']);
+Route::get('/addTour', function () {
+    return view('customer.addTour');
+});
+
+
