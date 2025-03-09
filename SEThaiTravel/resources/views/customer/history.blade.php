@@ -255,14 +255,6 @@
     });
 </script>
 
-            <!-- ปุ่มกด -->
-            <div class="flex justify-end space-x-2 mt-4">
-                <button @click="openModal = false" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-red-500 transition">Cancel</button>
-                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Submit</button>
-            </div>
-        </div>
-    </div>
-
 </body>
 </html>
 <!-- https://d2e5ushqwiltxm.cloudfront.net/wp-content/uploads/sites/67/2023/07/20040349/Finding-the-best-areas-to-live-in-Bangkok.jpg  -->
