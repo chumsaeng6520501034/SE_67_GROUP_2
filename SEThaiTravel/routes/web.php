@@ -51,3 +51,15 @@ Route::match(['get', 'post'],'/detailBooking',[UserListController::class,'getUse
 Route::get('/de', function () {
     return view('customer.detailSearch');
 });
+
+// Route::get('/addTour',[UserListController::class,'']);
+Route::get('/addTour', function () {
+    return view('customer.addTour');
+});
+
+
+Route::get('/customerSearch',[UserListController::class,'searchAllTourActive']);
+Route::get('/customerFilterSearch',[UserListController::class,'searchFilterTourActive']);
+Route::get('/userSearch',[AccountController::class,'search']);
+Route::get('/userFilterSearch',[AccountController::class,'searchFilterTourActive']);
+Route::post('/customerViewProductDetail',[UserListController::class,'viewProductDetail']);
