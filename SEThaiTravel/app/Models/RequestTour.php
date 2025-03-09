@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class RequestTour extends Model
 {
     protected $table = 'request_tour';
+    public $timestamps = false;
     use HasFactory;
 }
