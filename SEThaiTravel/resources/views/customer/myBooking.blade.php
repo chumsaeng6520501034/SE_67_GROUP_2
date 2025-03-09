@@ -81,7 +81,7 @@
             </div>
             <nav class="flex flex-col space-y-2">
                 <a href="/home" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
-                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
+                <a href="/addTour" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
                 <a href="/myRequest" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REQUEST</a>
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">HISTORY</a>
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REVIEW</a>
@@ -142,43 +142,51 @@
             </form>
 
             <div class="card-wrapper">
-                @php
-                    $count = $bookingData->count();
-                @endphp
-                @for ($i = 0; $i < $count ; $i++)
+                @foreach ($bookingData as $booking)
                     <div class="card-container m-4">
                         <div class="card bg-white rounded-lg shadow-lg flex overflow-hidden">
                             <img src="https://quintessentially.com/assets/noted/Header_2023-04-12-154210_sigz.webp"
                                 alt="Bangkok" class="w-1/3 object-cover">
                             <div class="p-6 flex-1">
-                                <h2 class="text-2xl font-bold">{{  ucwords($bookingData[$i]->name) }}</h2>
-                                <p class="text-gray-600 mt-1">{{ $bookingData[$i]->tourDes }}</p>
-                                @switch($bookingData[$i]->status)
+                                {{-- ฟอร์มเพื่อส่งชื่อไปด้วย --}}
+                                <form action="/detailBooking" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="name" value="{{ $booking->name }}">
+                                    <h2 class="text-2xl font-bold text-blue-600 hover:underline cursor-pointer">
+                                        <button type="submit" class="text-blue-600">
+                                            {{ ucwords($booking->name) }}
+                                        </button>
+                                    </h2>
+                                </form>
+                                
+                                <p class="text-gray-600 mt-1">{{ $booking->tourDes }}</p>
+                                @switch($booking->status)
                                     @case("paid")
-                                        <p class="text-green-500 text-sm mt-2 font-bold">{{ ucwords($bookingData[$i]->status) }}</p>
+                                        <p class="text-green-500 text-sm mt-2 font-bold">{{ ucwords($booking->status) }}</p>
                                     @break
-
+            
                                     @case("In process")
-                                        <p class="text-yellow-500 text-sm mt-2 font-bold">{{ ucwords($bookingData[$i]->status) }}</p>
+                                        <p class="text-yellow-500 text-sm mt-2 font-bold">{{ ucwords($booking->status) }}</p>
                                     @break
                                     @case("cancel")
-                                        <p class="text-red-500 text-sm mt-2 font-bold">{{ ucwords($bookingData[$i]->status) }}</p>
+                                        <p class="text-red-500 text-sm mt-2 font-bold">{{ ucwords($booking->status) }}</p>
                                     @break
                                 @endswitch
                             </div>
                             <div class="p-6 bg-gray-100 w-1/4 text-right rounded-r-lg">
                                 <p class="text-gray-800 text-md font-bold">Booking Date</p>
-                                <p class="text-gray-600 font-semibold">{{ $bookingData[$i]->booked_date }}</p>
+                                <p class="text-gray-600 font-semibold">{{ $booking->booked_date }}</p>
                                 <p class="text-gray-800 text-md font-bold">Expiration Date</p>
                                 <p class="text-gray-600 text-md font-semibold">
-                                    {{ date('Y-m-d', strtotime($bookingData[$i]->payment_date)) }}</p>
-                                <p class="text-gray-800 m-2 text-md font-bold">{{ $bookingData[$i]->total_price }} ฿</p>
+                                    {{ date('Y-m-d', strtotime($booking->payment_date)) }}</p>
+                                <p class="text-gray-800 m-2 text-md font-bold">{{ $booking->total_price }} ฿</p>
                                 <button class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">PAY NOW</button>
                             </div>
                         </div>
                     </div>
-                @endfor
+                @endforeach
             </div>
+            
         </div>
     </div>
 
