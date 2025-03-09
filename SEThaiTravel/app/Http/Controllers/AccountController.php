@@ -187,6 +187,7 @@ class AccountController extends Controller
         $startDate = $request->startDate;
         $endDate = $request->endDate;
         $capacity = $request->capacity;
+        $path = $_SERVER['REQUEST_URI'];
         if(is_numeric($name)){//เช็คว่าเป็นตัวเลขไหมถ้าเป็นจะ search แบบ private 
           $searchTourData = Tour::where(function ($query) use ($name, $startDate, $endDate, $capacity) {
             $query->where('name', 'LIKE', '%'.$name.'%')
@@ -237,7 +238,7 @@ class AccountController extends Controller
             ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
             ->value('Total_Member');
         }
-        return view('user.search',compact('ownerData','searchTourData','totalMember','ownerScore'));
+        return view('user.search',compact('ownerData','searchTourData','totalMember','ownerScore','path'));
       }
 
       function logOut(Request $request){//Log out แล้ว เคลีย session ทิ้ง
@@ -247,6 +248,7 @@ class AccountController extends Controller
       }
       function viewProduct(Request $request){//ดึงข้อมูลของTour ที่จะดูมาแล้ว Redirect ไปที่หน้าดูข้อมูลสินค้าพร้อมส่งข้อมูลที่ต้องการไปด้วย
         $tourID = $request->tourID;
+        $path = $request->path;
         $tourData = Tour::where('id_tour',$tourID)->first();
         switch($tourData->from_owner){
           case "guide": $productData = Tour::join('guide_list', 'tour.owner_id', '=', 'guide_list.account_id_account')
@@ -258,15 +260,20 @@ class AccountController extends Controller
                                                 ->select('tour.*', 'corp_list.name as corp_name')
                                                 ->first(); break; 
         }
-        $locationInTourData = LocationInTour::where('tour_id_tour',$tourID)->pluck('loc_api');
-        $locationFetchApi = $locationInTourData->map(function ($apiUrl) {
-          $response = Http::get($apiUrl);
-          return $response->successful() ? $response->json() : null;
-      })->filter();
-        return view('viewProduct',[
-          'tour_info' => $productData,
-          'locations' => $locationFetchApi
-        ]);
+        $totalMember = Booking::where('tour_id_tour', $tourID ) //TourID ใช้ของที่กดจองมา
+        ->where('status', 'NOT LIKE', 'cancel')
+        ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
+        ->value('Total_Member');
+        // $locationInTourData = LocationInTour::where('tour_id_tour',$tourID)->pluck('loc_api');
+        // $locationFetchApi = $locationInTourData->map(function ($apiUrl) {
+        //   $response = Http::get($apiUrl);
+        //   return $response->successful() ? $response->json() : null;
+        // })->filter();
+        // return view('viewProduct',[
+        //   'tour_info' => $productData,
+        //   'locations' => $locationFetchApi
+        // ]);
+        return view('user.detailSearch',compact('path','totalMember','productData'));
       }
       function getCountry(){
        return $countries = [
@@ -487,6 +494,7 @@ class AccountController extends Controller
         $capacity = $request->capacity;
         $minBudget = $request->minBudget;
         $maxBudget = $request->maxBudget;
+        $path = $_SERVER['REQUEST_URI'];
         if(is_numeric($name)){//เช็คว่าเป็นตัวเลขไหมถ้าเป็นจะ search แบบ private 
           $searchTourData = Tour::where(function ($query) use ($name, $startDate, $endDate, $capacity) {
             $query->where('offer_id_offer', '=', $name)
@@ -538,7 +546,7 @@ class AccountController extends Controller
             ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
             ->value('Total_Member');
         }
-        return view('user.search',compact('ownerData','searchTourData','totalMember','ownerScore'));
+        return view('user.search',compact('ownerData','searchTourData','totalMember','ownerScore','path'));
       }
 
 }

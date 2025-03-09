@@ -136,90 +136,93 @@
 
             <div class="relative top-[-90%] p-10 rounded-lg w-2/3 mt-20 mx-auto">
                 @foreach ($searchTourData as $item)
-                        <div
-                            class="bg-white rounded-lg shadow-lg p-6 mb-6 flex relative cursor-pointer hover:shadow-xl transition">
-                            <!-- รูปภาพ -->
-                            <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination"
-                                class="w-1/3 rounded-lg">
-                            <form>
-                                <button type="submit" class="absolute inset-0 w-full h-full opacity-0 "></button>
-                            </form>
-                            <!-- ส่วนข้อมูล -->
-                            <div class="ml-4 w-2/3">
-                                <h2 class="text-xl font-bold">{{ ucwords($item->name) }}</h2>
-                                <div class="mb-2">
-                                    <p class="text-gray-600">{{ $item->description }}</p>
-                                </div>
-                                <div class=" mt-20 " id="card">
-                                    <p class="text-gray-400 text-xs mt-1">Start Date: {{ $item->start_tour_date }}</p>
-                                    <p class="text-gray-400 text-xs  mt-1">End Date: {{ $item->end_tour_date }}</p>
-                                    <p class="text-gray-400 text-xs mt-1">Organized by:
-                                        {{ $ownerData[$startArray]->name }}
-                                    </p>
-                                    {{-- <p class="text-gray-400 mt-2">STATUS</p> --}}
-                                    @php
-                                        $status =
-                                            (is_null($totalMember[$startArray]) ? 0 : $totalMember[$startArray]) <
-                                            $item->tour_capacity
-                                                ? 'Available'
-                                                : 'Full';
-                                    @endphp
-                                    <p
-                                        class="mt-1 text-sm font-bold {{ $status === 'Available' ? 'text-green-500' : 'text-red-500' }}">
-                                        {{ $status }}
-                                    </p>
-                                </div>
+                    <div
+                        class="bg-white rounded-lg shadow-lg p-6 mb-6 flex relative cursor-pointer hover:shadow-xl transition">
+                        <!-- รูปภาพ -->
+                        <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination"
+                            class="w-1/3 rounded-lg">
+                        <form action="/userViewProductDetail" method="POST">
+                            @csrf
+                            <input type="hidden" name="tourID" value={{ $item->id_tour }}>
+                            <input type="hidden" name="path" value={{ $path }}>
+                            <button type="submit" class="absolute inset-0 w-full h-full opacity-0 "></button>
+                        </form>
+                        <!-- ส่วนข้อมูล -->
+                        <div class="ml-4 w-2/3">
+                            <h2 class="text-xl font-bold">{{ ucwords($item->name) }}</h2>
+                            <div class="mb-2">
+                                <p class="text-gray-600">{{ $item->description }}</p>
                             </div>
-
-                            <!-- ส่วน Review -->
-                            <div
-                                class="ml-auto w-2/5 text-right flex flex-col items-end justify-start gap-2 border-l border-gray-300 pl-6">
-                                <p class="text-xs text-gray-500">OWNER REVIEW</p>
-                                <p class="text-lg font-bold">{{ $ownerScore[$startArray]->total_reviews }} reviews</p>
-
+                            <div class=" mt-20 " id="card">
+                                <p class="text-gray-400 text-xs mt-1">Start Date: {{ $item->start_tour_date }}</p>
+                                <p class="text-gray-400 text-xs  mt-1">End Date: {{ $item->end_tour_date }}</p>
+                                <p class="text-gray-400 text-xs mt-1">Organized by:
+                                    {{ $ownerData[$startArray]->name }}
+                                </p>
+                                {{-- <p class="text-gray-400 mt-2">STATUS</p> --}}
                                 @php
-                                    $rating = is_null($ownerScore[$startArray]->average_score)
-                                        ? 0
-                                        : $ownerScore[$startArray]->average_score;
-                                    $fullStars = floor($rating);
-                                    $halfStar = $rating - $fullStars >= 0.5 ? true : false;
-                                    $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                                    $status =
+                                        (is_null($totalMember[$startArray]) ? 0 : $totalMember[$startArray]) <
+                                        $item->tour_capacity
+                                            ? 'Available'
+                                            : 'Full';
                                 @endphp
-
-                                <div class="flex text-yellow-500 text-lg">
-                                    @for ($i = 0; $i < $fullStars; $i++)
-                                        <span>★</span>
-                                    @endfor
-                                    @if ($halfStar)
-                                        <span class="text-yellow-300">★</span>
-                                    @endif
-                                    @for ($i = 0; $i < $emptyStars; $i++)
-                                        <span class="text-gray-300">★</span>
-                                    @endfor
-                                </div>
-                                <div class="mt-auto">
-                                    <p class="text-2xl font-bold text-green-600">{{ number_format($item->price) }}฿</p>
-                                    @if ($status === 'Available')
-                                        <form action="/logIn" method="GET">
-                                            <button type="submit"
-                                                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm mt-2 relative z-[50]">
-                                                RESERVE NOW
-                                            </button>
-                                        </form>
-                                    @else
-                                        <button
-                                            class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition text-sm mt-2 relative z-[50]">
-                                            FULL
-                                        </button>
-                                    @endif
-                                    <p
-                                        class="text-base font-semibold mt-2 {{ $status === 'Available' ? 'text-green-500' : 'text-red-500' }}">
-                                        NET AMOUNT:
-                                        {{ is_null($totalMember[$startArray]) ? 0 : $totalMember[$startArray++] }}/{{ $item->tour_capacity }}
-                                    </p>
-                                </div>
+                                <p
+                                    class="mt-1 text-sm font-bold {{ $status === 'Available' ? 'text-green-500' : 'text-red-500' }}">
+                                    {{ $status }}
+                                </p>
                             </div>
                         </div>
+
+                        <!-- ส่วน Review -->
+                        <div
+                            class="ml-auto w-2/5 text-right flex flex-col items-end justify-start gap-2 border-l border-gray-300 pl-6">
+                            <p class="text-xs text-gray-500">OWNER REVIEW</p>
+                            <p class="text-lg font-bold">{{ $ownerScore[$startArray]->total_reviews }} reviews</p>
+
+                            @php
+                                $rating = is_null($ownerScore[$startArray]->average_score)
+                                    ? 0
+                                    : $ownerScore[$startArray]->average_score;
+                                $fullStars = floor($rating);
+                                $halfStar = $rating - $fullStars >= 0.5 ? true : false;
+                                $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                            @endphp
+
+                            <div class="flex text-yellow-500 text-lg">
+                                @for ($i = 0; $i < $fullStars; $i++)
+                                    <span>★</span>
+                                @endfor
+                                @if ($halfStar)
+                                    <span class="text-yellow-300">★</span>
+                                @endif
+                                @for ($i = 0; $i < $emptyStars; $i++)
+                                    <span class="text-gray-300">★</span>
+                                @endfor
+                            </div>
+                            <div class="mt-auto">
+                                <p class="text-2xl font-bold text-green-600">{{ number_format($item->price) }}฿</p>
+                                @if ($status === 'Available')
+                                    <form action="/logIn" method="GET">
+                                        <button type="submit"
+                                            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm mt-2 relative z-[50]">
+                                            RESERVE NOW
+                                        </button>
+                                    </form>
+                                @else
+                                    <button
+                                        class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition text-sm mt-2 relative z-[50]">
+                                        FULL
+                                    </button>
+                                @endif
+                                <p
+                                    class="text-base font-semibold mt-2 {{ $status === 'Available' ? 'text-green-500' : 'text-red-500' }}">
+                                    NET AMOUNT:
+                                    {{ is_null($totalMember[$startArray]) ? 0 : $totalMember[$startArray++] }}/{{ $item->tour_capacity }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
                 {{ $searchTourData->links() }}
             </div>
