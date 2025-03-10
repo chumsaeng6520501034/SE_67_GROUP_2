@@ -46,10 +46,11 @@ Route::get('/myRequest',[UserListController::class,'getAllRequestTour']);
 Route::get('/payments',[UserListController::class,'getUserPaymentHistory']);
 Route::get('/deleteAccount',[AccountController::class,'deleteAccount']);
 Route::match(['get', 'post'],'/detailBooking',[UserListController::class,'getUserBuyHistory']);
+Route::get('/history',[UserListController::class,'viewHistory']);
 // Route::get('/setSession/{booking_id}', [UserListController::class, 'setSessionAndRedirect'])
 //     ->name('setSessionAndRedirect');
 Route::get('/de', function () {
-    return view('customer.detailSearch');
+    return view('customer.history');
 });
 
 // Route::get('/addTour',[UserListController::class,'']);

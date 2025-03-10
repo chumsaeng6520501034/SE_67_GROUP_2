@@ -35,92 +35,24 @@
                 </div>
             </form>
             @php
-            $tours = [
-                [
-                    "image_url" => "https://d2e5ushqwiltxm.cloudfront.net/wp-content/uploads/sites/67/2023/07/20040349/Finding-the-best-areas-to-live-in-Bangkok.jpg",
-                    "name" => "Bangkok Tour",
-                    "description" => "Explore the vibrant city of Bangkok with amazing attractions and street food.",
-                    "reviews" => 1989,
-                    "price" => 10000
-                ],
-                [
-                    "image_url" => "https://www.treehouse-villas.com/wp-content/uploads/2024/01/%E0%B8%84%E0%B8%B9%E0%B9%88%E0%B8%A1%E0%B8%B7%E0%B8%AD%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B9%80%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%A2%E0%B8%A7%E0%B8%A0%E0%B8%B9%E0%B9%80%E0%B8%81%E0%B9%87%E0%B8%95%E0%B8%89%E0%B8%9A%E0%B8%B1%E0%B8%9A%E0%B8%9A%E0%B8%84%E0%B8%99%E0%B8%A1%E0%B8%B2%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%81%E0%B8%A3%E0%B8%81-2024.webp",
-                    "name" => "Phuket Beach Trip",
-                    "description" => "Relax at the beautiful beaches of Phuket with luxury resorts and nightlife.",
-                    "reviews" => 2563,
-                    "price" => 15000
-                ],
-                [
-                    "image_url" => "https://jeeor.com/wp-content/uploads/2020/03/%E0%B9%80%E0%B8%81%E0%B8%B2%E0%B8%B0%E0%B8%9E%E0%B8%B5%E0%B8%9E%E0%B8%B5.jpg",
-                    "name" => "Krabi Adventure",
-                    "description" => "Discover the breathtaking cliffs and clear blue waters of Krabi.",
-                    "reviews" => 1023,
-                    "price" => 12000
-                ],
-                [
-                    "image_url" => "https://d2e5ushqwiltxm.cloudfront.net/wp-content/uploads/sites/67/2023/07/20040349/Finding-the-best-areas-to-live-in-Bangkok.jpg",
-                    "name" => "Bangkok Tour",
-                    "description" => "Explore the vibrant city of Bangkok with amazing attractions and street food.",
-                    "reviews" => 1989,
-                    "price" => 10000
-                ],
-                [
-                    "image_url" => "https://www.treehouse-villas.com/wp-content/uploads/2024/01/%E0%B8%84%E0%B8%B9%E0%B9%88%E0%B8%A1%E0%B8%B7%E0%B8%AD%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B9%80%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%A2%E0%B8%A7%E0%B8%A0%E0%B8%B9%E0%B9%80%E0%B8%81%E0%B9%87%E0%B8%95%E0%B8%89%E0%B8%9A%E0%B8%B1%E0%B8%9A%E0%B8%9A%E0%B8%84%E0%B8%99%E0%B8%A1%E0%B8%B2%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%81%E0%B8%A3%E0%B8%81-2024.webp",
-                    "name" => "Phuket Beach Trip",
-                    "description" => "Relax at the beautiful beaches of Phuket with luxury resorts and nightlife.",
-                    "reviews" => 2563,
-                    "price" => 15000
-                ],
-                [
-                    "image_url" => "https://jeeor.com/wp-content/uploads/2020/03/%E0%B9%80%E0%B8%81%E0%B8%B2%E0%B8%B0%E0%B8%9E%E0%B8%B5%E0%B8%9E%E0%B8%B5.jpg",
-                    "name" => "Krabi Adventure",
-                    "description" => "Discover the breathtaking cliffs and clear blue waters of Krabi.",
-                    "reviews" => 1023,
-                    "price" => 12000
-                ],
-                [
-                    "image_url" => "https://d2e5ushqwiltxm.cloudfront.net/wp-content/uploads/sites/67/2023/07/20040349/Finding-the-best-areas-to-live-in-Bangkok.jpg",
-                    "name" => "Bangkok Tour",
-                    "description" => "Explore the vibrant city of Bangkok with amazing attractions and street food.",
-                    "reviews" => 1989,
-                    "price" => 10000
-                ],
-                [
-                    "image_url" => "https://www.treehouse-villas.com/wp-content/uploads/2024/01/%E0%B8%84%E0%B8%B9%E0%B9%88%E0%B8%A1%E0%B8%B7%E0%B8%AD%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B9%80%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%A2%E0%B8%A7%E0%B8%A0%E0%B8%B9%E0%B9%80%E0%B8%81%E0%B9%87%E0%B8%95%E0%B8%89%E0%B8%9A%E0%B8%B1%E0%B8%9A%E0%B8%9A%E0%B8%84%E0%B8%99%E0%B8%A1%E0%B8%B2%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%81%E0%B8%A3%E0%B8%81-2024.webp",
-                    "name" => "Phuket Beach Trip",
-                    "description" => "Relax at the beautiful beaches of Phuket with luxury resorts and nightlife.",
-                    "reviews" => 2563,
-                    "price" => 15000
-                ],
-                [
-                    "image_url" => "https://jeeor.com/wp-content/uploads/2020/03/%E0%B9%80%E0%B8%81%E0%B8%B2%E0%B8%B0%E0%B8%9E%E0%B8%B5%E0%B8%9E%E0%B8%B5.jpg",
-                    "name" => "Krabi Adventure",
-                    "description" => "Discover the breathtaking cliffs and clear blue waters of Krabi.",
-                    "reviews" => 1023,
-                    "price" => 12000
-                ],
-                [
-                    "image_url" => "https://d2e5ushqwiltxm.cloudfront.net/wp-content/uploads/sites/67/2023/07/20040349/Finding-the-best-areas-to-live-in-Bangkok.jpg",
-                    "name" => "Bangkok Tour",
-                    "description" => "Explore the vibrant city of Bangkok with amazing attractions and street food.",
-                    "reviews" => 1989,
-                    "price" => 10000
-                ],
-                [
-                    "image_url" => "https://www.treehouse-villas.com/wp-content/uploads/2024/01/%E0%B8%84%E0%B8%B9%E0%B9%88%E0%B8%A1%E0%B8%B7%E0%B8%AD%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B9%80%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%A2%E0%B8%A7%E0%B8%A0%E0%B8%B9%E0%B9%80%E0%B8%81%E0%B9%87%E0%B8%95%E0%B8%89%E0%B8%9A%E0%B8%B1%E0%B8%9A%E0%B8%9A%E0%B8%84%E0%B8%99%E0%B8%A1%E0%B8%B2%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%81%E0%B8%A3%E0%B8%81-2024.webp",
-                    "name" => "Phuket Beach Trip",
-                    "description" => "Relax at the beautiful beaches of Phuket with luxury resorts and nightlife.",
-                    "reviews" => 2563,
-                    "price" => 15000
-                ],
-                [
-                    "image_url" => "https://jeeor.com/wp-content/uploads/2020/03/%E0%B9%80%E0%B8%81%E0%B8%B2%E0%B8%B0%E0%B8%9E%E0%B8%B5%E0%B8%9E%E0%B8%B5.jpg",
-                    "name" => "Krabi Adventure",
-                    "description" => "Discover the breathtaking cliffs and clear blue waters of Krabi.",
-                    "reviews" => 1023,
-                    "price" => 12000
-                ]
-            ];
+            $tours = [];
+
+                foreach ($historyData as $history) {
+                    $reviewCount = \App\Models\Review::where('booking_id_booking', $history->id_booking)->count();
+                    $tours[] = [
+                        "image_url" => "https://www.treehouse-villas.com/wp-content/uploads/2024/01/%E0%B8%84%E0%B8%B9%E0%B9%88%E0%B8%A1%E0%B8%B7%E0%B8%AD%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B9%80%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%A2%E0%B8%A7%E0%B8%A0%E0%B8%B9%E0%B9%80%E0%B8%81%E0%B9%87%E0%B8%95%E0%B8%89%E0%B8%9A%E0%B8%B1%E0%B8%9A%E0%B8%9A%E0%B8%84%E0%B8%99%E0%B8%A1%E0%B8%B2%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%81%E0%B8%A3%E0%B8%81-2024.webp",
+                        "name" => $history->name, // ชื่อทัวร์
+                        "description" => $history->tourDes, // รายละเอียดทัวร์
+                        "reviews_count" => $reviewCount,
+                        "reviews" => $history->score, // คะแนนรีวิว (จากตาราง review)
+                        "price" => $history->total_price // ราคาทัวร์ (จาก booking หรือ tour)
+                    ];
+                
+                }
+                    // dd($tours);
+                
+                
+            
         @endphp
         <!-- เพิ่ม Alpine.js -->
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
@@ -130,7 +62,11 @@
     <!-- Tour List -->
     <div class="flex justify-center mt-40">
         <div class="space-y-6 w-[1400px]">
-            @foreach ($tours as $tour)
+            {{-- ทำตรงนี้ --}}
+
+            
+            @foreach ($tours as $tour) 
+            
             <div class="bg-white rounded-lg shadow-md flex p-4 mx-auto w-full">
                 <img src="{{ $tour['image_url'] }}" class="rounded-lg shadow-md w-1/3">
                 <div class="ml-4 flex-1">
@@ -139,20 +75,38 @@
                 </div>
                 <div class="text-right">
                     <p class="font-bold">Tour REVIEW</p>
-                    <p>{{ $tour['reviews'] }} reviews</p>
-                    <p class="text-yellow-500 text-lg">★★★★★</p>
+                    <p>{{ $tour['reviews_count'] }} reviews</p>
+                    {{-- <p class="text-yellow-500 text-lg">★★★★★</p> --}}
+                    <p class="text-yellow-500 text-lg">
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($i <= $tour['reviews'])
+                                <span class="text-yellow-500">★</span> <!-- ดาวเต็ม -->
+                            @else
+                                <span class="text-gray-400">★</span> <!-- ดาวจาง -->
+                            @endif
+                        @endfor
+                    </p>
                     <p class="font-bold">Price</p>
                     <p>${{ $tour['price'] }}</p>
 
                     <!-- ปุ่ม REVIEW -->
                     <div class="flex justify-end mt-2">
-                        <button @click="openModal = true" class="bg-blue-600 text-white text-lg px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-                            REVIEW
+                        <button @click="openModal = true" 
+                                class="bg-blue-600 text-white text-lg px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+                                @if ($tour['reviews']) disabled @endif>
+                            @if ($tour['reviews'])
+                                Reviewed
+                            @else
+                                Review
+                            @endif
                         </button>
                     </div>
                 </div>
             </div>
             @endforeach
+
+
+
         </div>
     </div>
 
