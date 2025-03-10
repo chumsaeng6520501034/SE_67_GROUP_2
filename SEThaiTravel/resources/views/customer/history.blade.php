@@ -29,6 +29,15 @@
                         <label class="block text-sm font-medium">End Date</label>
                         <input type="date" name="endDate" id="endDate" class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
+                    <div class="relative flex-1">
+                        <label>Status</label>
+                        <select id="filterDropdown" name="status"
+                            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="" style="color: black;">All Status</option>
+                            <option value="paid" style="color: rgb(236, 12, 12);">NOT REVIEW</option>
+                            <option value="In process" style="color: rgb(15, 221, 8);">REVIEWED</option>
+                        </select>
+                    </div>
                     <div>
                         <button id="submitButton" class="mt-5 bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition duration-300">Search</button>
                     </div>
@@ -209,13 +218,6 @@
     });
 </script>
 
-            <!-- ปุ่มกด -->
-            <div class="flex justify-end space-x-2 mt-4">
-                <button @click="openModal = false" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-red-500 transition">Cancel</button>
-                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Submit</button>
-            </div>
-        </div>
-    </div>
 
 </body>
 </html>

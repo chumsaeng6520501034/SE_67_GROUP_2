@@ -224,11 +224,10 @@ class UserListController extends Controller
 //     return view('customer.detailBooking');
 // }
 //-----------------------------------------------------------------------------------------------------------
-  
-
-//ตรวจสอบประวัติการซื้อทัวร์ *
-  function getUserBuyHistory(Request $request)
+  //ตรวจสอบประวัติการซื้อทัวร์ *
+  function getDetailBooking(Request $request)
 {
+    // dd($request->tourID);
     $name = $request->input('name');
     $idAccount = session('userID')->account_id_account;
 
