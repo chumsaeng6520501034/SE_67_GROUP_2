@@ -135,7 +135,7 @@
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
 <!-- ครอบโค้ดด้วย x-data เพื่อควบคุม openModal -->
-<div x-data="{ openModal: false }">
+<div x-data="{ openModal: false ,selectedTourId: null}">
     <!-- Tour List -->
     <div class="flex justify-center mt-40">
         <div class="space-y-6 w-[1400px]">
@@ -155,7 +155,8 @@
 
                     <!-- ปุ่ม REVIEW -->
                     <div class="flex justify-end mt-2">
-                        <button @click="openModal = true" class="bg-blue-600 text-white text-lg px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                        {{-- ; selectedTourId = '{{ $tour-> }}'; loadGuides('{{ $tour['id'] }}' --}}
+                        <button @click="openModal = true ; selectedTourId = {{1}}; loadGuides('{{ 1 }}')" class="bg-blue-600 text-white text-lg px-6 py-2 rounded-lg hover:bg-blue-700 transition">
                             REVIEW
                         </button>
                     </div>
@@ -166,38 +167,49 @@
     </div>
 
     <!-- Popup Modal -->
-    <div x-show="openModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-[700px] max-h-[80vh] overflow-y-auto">
-        <h2 class="text-xl font-bold mb-4">Review</h2>
-
-        <!-- กล่องรีวิว Tour -->
-        <div class="border p-4 rounded-lg shadow-md w-[600px] mx-auto mb-6">
-            <label class="block font-bold mb-2">Tour Review</label>
-            <div class="flex justify-center mb-2">
-                <span class="star tour-star text-3xl cursor-pointer" data-value="1">⭐</span>
-                <span class="star tour-star text-3xl cursor-pointer" data-value="2">⭐</span>
-                <span class="star tour-star text-3xl cursor-pointer" data-value="3">⭐</span>
-                <span class="star tour-star text-3xl cursor-pointer" data-value="4">⭐</span>
-                <span class="star tour-star text-3xl cursor-pointer" data-value="5">⭐</span>
+    <form id="reviewForm" action="/submit-review" method="POST">
+        @csrf
+        <div x-show="openModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-[700px] max-h-[80vh] overflow-y-auto">
+                <h2 class="text-xl font-bold mb-4">Review</h2>
+    
+                <!-- รีวิวทัวร์ -->
+                <div class="border p-4 rounded-lg shadow-md w-[600px] mx-auto mb-6">
+                    <label class="block font-bold mb-2">Tour Review</label>
+                    <div class="flex justify-center mb-2">
+                        <span class="star tour-star text-3xl cursor-pointer" data-value="1">⭐</span>
+                        <span class="star tour-star text-3xl cursor-pointer" data-value="2">⭐</span>
+                        <span class="star tour-star text-3xl cursor-pointer" data-value="3">⭐</span>
+                        <span class="star tour-star text-3xl cursor-pointer" data-value="4">⭐</span>
+                        <span class="star tour-star text-3xl cursor-pointer" data-value="5">⭐</span>
+                    </div>
+                    <input type="hidden" name="tour_rating" id="tourRatingInput">
+                    <textarea name="tour_review" class="w-full border p-2 rounded mb-4" rows="3" placeholder="Write your tour experience..."></textarea>
+                </div>
+    
+                <!-- รีวิวไกด์ -->
+                <div id="guideReviewContainer">
+                    <h3 class="text-lg font-bold mb-2">Guide Reviews</h3>
+                </div>
+    
+                <!-- ปุ่มเพิ่มรีวิวไกด์ -->
+                <button type="button" onclick="addGuideReview()" class="mt-2 mb-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+                    + Add Guide Review
+                </button>
+    
+                <!-- ปุ่มกด -->
+                <div class="flex justify-end space-x-2 mt-4">
+                    <button type="button" @click="openModal = false" onclick="resetGuideCount()" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-red-500 transition">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                        Submit
+                    </button>
+                </div>
             </div>
-            <input type="hidden" name="tour_rating" id="tourRatingInput">
-            <textarea class="w-full border p-2 rounded mb-4" rows="3" placeholder="Write your tour experience..."></textarea>
         </div>
-
-        <!-- โซนรีวิวไกด์ -->
-        <div id="guideReviewContainer">
-            <h3 class="text-lg font-bold mb-2">Guide Reviews</h3>
-        </div>
-        
-        <!-- ปุ่มเพิ่ม Guide Review -->
-        <button onclick="addGuideReview()" class="mt-2 mb-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">+ Add Guide Review</button>
-
-        <!-- ปุ่มกด -->
-        <div class="flex justify-end space-x-2 mt-4">
-            <button @click="openModal = false" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-red-500 transition">Cancel</button>
-            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Submit</button>
-        </div>
-    </div>
+    </form>
+    
 </div>
 
 <script>
@@ -209,14 +221,19 @@
         let guideDiv = document.createElement('div');
         guideDiv.classList.add('border', 'p-4', 'rounded-lg', 'shadow-md', 'w-[600px]', 'mx-auto', 'mb-4');
         guideDiv.setAttribute('id', `guideReview_${guideCount}`);
-
+        // <template x-for="guide in guideList">
+        //             <option :value="guide.id" x-text="guide.name"></option>
+        //         </template>
+        // ${guideNames.map(name => `<option value="${name}">${name}</option>`).join('')}
         guideDiv.innerHTML = `
             <div class="flex justify-between items-center mb-2">
                 <label class="block font-bold">Guide Review #${guideCount}</label>
-                <button onclick="removeGuideReview(${guideCount})" class="text-red-500 text-xl font-bold hover:text-red-700">❌</button>
+                <button type="button" onclick="removeGuideReview(${guideCount})" class="text-red-500 text-xl font-bold hover:text-red-700">❌</button>
             </div>
-            <select name="guide_name_${guideCount}" class="w-full border p-2 rounded mb-2">
-                ${guideNames.map(name => `<option value="${name}">${name}</option>`).join('')}
+            <select name="guide_reviews[${guideCount}][name]" class="w-full border p-2 rounded mb-2">
+                    <template x-for="guide in Alpine.store('guideList')" :key="guide.guide_list_account_id_account">
+                        <option :value="guide.guide_list_account_id_account" x-text="guide.guide_name"></option>
+                    </template>
             </select>
             <div class="flex justify-center mb-2">
                 <span class="star guide-star-${guideCount} text-3xl cursor-pointer" data-value="1">⭐</span>
@@ -225,8 +242,8 @@
                 <span class="star guide-star-${guideCount} text-3xl cursor-pointer" data-value="4">⭐</span>
                 <span class="star guide-star-${guideCount} text-3xl cursor-pointer" data-value="5">⭐</span>
             </div>
-            <input type="hidden" name="guide_rating_${guideCount}" id="guideRatingInput_${guideCount}">
-            <textarea class="w-full border p-2 rounded mb-4" rows="3" placeholder="Write your guide experience..."></textarea>
+            <input type="hidden" name="guide_reviews[${guideCount}][rating]" id="guideRatingInput_${guideCount}">
+            <textarea name="guide_reviews[${guideCount}][review]" class="w-full border p-2 rounded mb-4" rows="3" placeholder="Write your guide experience..."></textarea>
         `;
 
         document.getElementById('guideReviewContainer').appendChild(guideDiv);
@@ -243,15 +260,23 @@
             });
         });
     }
-
+    function resetGuideCount(){
+        guideCount = 0;
+        let container = document.getElementById('guideReviewContainer');
+    
+        while (container.firstChild) {
+            container.removeChild(container.firstChild); // ลบลูกทุกตัวออก
+        }
+    }
     function removeGuideReview(id) {
         let guideDiv = document.getElementById(`guideReview_${id}`);
         if (guideDiv) {
+            guideCount--;
             guideDiv.remove();
         }
     }
 
-    // ฟังก์ชันทำให้กดเลือกดาวได้จริง (สำหรับ Tour)
+    // ฟังก์ชันเลือกดาวของรีวิวทัวร์
     document.querySelectorAll('.tour-star').forEach(star => {
         star.addEventListener('click', function () {
             let value = this.getAttribute('data-value');
@@ -262,6 +287,14 @@
             });
         });
     });
+    function loadGuides(tourId) {
+        fetch(`/api/getGuideInTour?tour_id=${tourId}`)
+            .then(response => response.json())
+            .then(data => {
+                Alpine.store('guideList', data.guides);
+                console.log('Updated guideList:', data.guides);
+            });
+    }
 </script>
 
 

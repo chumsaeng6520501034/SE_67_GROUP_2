@@ -617,4 +617,34 @@ class UserListController extends Controller
     // ]);
     return view('customer.detailSearch',compact('path','totalMember','productData'));
   }
+  function insertRequest(Request $request){
+    $requestData=[
+      'user_list_account_id_account' => session('userID')->account_id_account,
+      'name'=>$request->tour_name,
+      'request_date'=>Carbon::now()->toDateString(),
+      'end_of_request_date'=>Carbon::now()->addDays(7)->toDateString(),
+      'start_tour_date'=>$request->start_date,
+      'end_tour_date'=>$request->end_date,
+      'max_price'=>$request->max_price,
+      'start_price'=>$request->min_price,
+      'guide_qty'=>$request->quantity_guide,
+      'size_tour'=>$request->quantity_people,
+      'contect'=>$request->contact,
+      'hotel_status'=> $request->hotel_status,
+      'travel_status'=>$request->travel_status ,
+      'request_status'=>'ongoing',
+      'description'=>$request->description,
+      'time'=>Carbon::now()->toDateTimeString()
+    ];
+    RequestTour::insert($requestData);
+    return redirect('/myRequest');
+  }
+  function getGuideInTour(Request $request){
+      $tourId = $request->query('tour_id');
+      $guides = TourHasGuideList::where('tour_id_tour', $tourId)
+      ->join('guide_list', 'Tour_has_guide_list.guide_list_account_id_account', '=', 'guide_list.account_id_account')
+      ->select('Tour_has_guide_list.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname')
+      ->get();
+      return response()->json(['guides' => $guides]);
+  }
 }

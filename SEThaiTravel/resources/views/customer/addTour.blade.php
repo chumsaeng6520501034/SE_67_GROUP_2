@@ -12,8 +12,8 @@
         <div class="bg-white bg-opacity-80 backdrop-blur-md p-10 rounded-2xl shadow-lg w-[900px]">
             <h2 class="text-center text-4xl font-bold text-[#002D62] mb-6">ADD TOUR</h2>
 
-            <form>
-    
+            <form action="/addRequest" method="POST">
+                @csrf
                 <!-- Row 1 -->
                 <div class="grid grid-cols-3 gap-4 mb-4">
                     <div>
@@ -63,17 +63,17 @@
                     <div>
                         <label class="block text-gray-700 font-medium">Travel Status*</label>
                         <select name="travel_status" class="w-full p-2 border rounded shadow-sm">
-                            <option>MUST HAVE</option>
-                            <option>MAY BE</option>
-                            <option>MUST NOT HAVE</option>
+                            <option value="mandatory">MUST HAVE</option>
+                            <option value="desirable">MAY BE</option>
+                            <option value="dispensable">MUST NOT HAVE</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-medium">Hotel Status*</label>
                         <select name="hotel_status" class="w-full p-2 border rounded shadow-sm">
-                            <option>MUST HAVE</option>
-                            <option>MAY BE</option>
-                            <option>MUST NOT HAVE</option>
+                            <option value="mandatory">MUST HAVE</option>
+                            <option value="desirable">MAY BE</option>
+                            <option value="dispensable">MUST NOT HAVE</option>
                         </select>
                     </div>
                 </div>

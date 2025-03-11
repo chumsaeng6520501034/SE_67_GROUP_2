@@ -19,4 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::middleware(['web'])->group(function () {
     Route::get('/Calendar', [UserListController::class, 'fetchCalendar']);
+    Route::get('/getGuideInTour',[UserListController::class,'getGuideInTour']);
 });
