@@ -66,6 +66,6 @@ Route::get('/userFilterSearch',[AccountController::class,'searchFilterTourActive
 Route::post('/customerViewProductDetail',[UserListController::class,'viewProductDetail']);
 Route::post('/userViewProductDetail',[AccountController::class,'viewProduct']);
 Route::post('/addRequest',[UserListController::class,'insertRequest']);
-Route::get('/his',function(){
-    return view('customer.history');
-});
+Route::post('/submitReview',[UserListController::class,'addReview']);
+Route::post('/customerViewReview',[UserListController::class,'viewReviewDetail']);
+Route::get('/searchHistory',[UserListController::class,'searchHistory']);

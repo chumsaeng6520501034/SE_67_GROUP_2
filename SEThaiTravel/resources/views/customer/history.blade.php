@@ -14,7 +14,7 @@
         <!-- Content -->
         <div class="w-3/5 p-6 ">
             <!-- Search and Filter -->
-            <form>
+            <form action="/searchHistory" method="GET">
                 <div class="flex items-center bg-white shadow-md p-4 rounded-lg mb-4 space-x-4 fixed top-4 left-1/2 transform -translate-x-1/2 w-3/5 z-50">
                     <div class="relative flex-1">
                         <label class="block text-sm font-medium">Tour name</label>
@@ -34,8 +34,8 @@
                         <select id="filterDropdown" name="status"
                             class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="" style="color: black;">All Status</option>
-                            <option value="paid" style="color: rgb(236, 12, 12);">NOT REVIEW</option>
-                            <option value="In process" style="color: rgb(15, 221, 8);">REVIEWED</option>
+                            <option value="notReview" style="color: rgb(236, 12, 12);">NOT REVIEW</option>
+                            <option value="Review" style="color: rgb(15, 221, 8);">REVIEWED</option>
                         </select>
                     </div>
                     <div>
@@ -54,7 +54,9 @@
                         "description" => $history->tourDes, // รายละเอียดทัวร์
                         "reviews_count" => $reviewCount,
                         "reviews" => $history->score, // คะแนนรีวิว (จากตาราง review)
-                        "price" => $history->total_price // ราคาทัวร์ (จาก booking หรือ tour)
+                        "price" => $history->total_price, // ราคาทัวร์ (จาก booking หรือ tour)
+                        "tour_id_tour"=> $history->tour_id_tour,
+                        "bookingId"=> $history->id_booking
                     ];
                 
                 }
@@ -67,7 +69,7 @@
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
 <!-- ครอบโค้ดด้วย x-data เพื่อควบคุม openModal -->
-<div x-data="{ openModal: false ,selectedTourId: null}">
+<div x-data="{ openModal: false ,selectedTourId: null, bookingId: null}">
     <!-- Tour List -->
     <div class="flex justify-center mt-40">
         <div class="space-y-6 w-[1400px]">
@@ -76,8 +78,15 @@
             
             @foreach ($tours as $tour)
             
-            <div class="bg-white rounded-lg shadow-md flex p-4 mx-auto w-full">
+            <div class="bg-white rounded-lg shadow-md flex p-4 mx-auto w-full relative">
                 <img src="{{ $tour['image_url'] }}" class="rounded-lg shadow-md w-1/3">
+                <form action="/customerViewReview" method="POST">
+                    @csrf
+                    <input type="hidden" name="tourID" value={{$tour['tour_id_tour']}}>
+                    <input type="hidden" name="bookingID" value={{$tour['bookingId']}}>
+                    <input type="hidden" name="path" value={{$path}}>
+                    <button type="submit" class="absolute inset-0 w-full h-full opacity-0 "></button>
+                </form>
                 <div class="ml-4 flex-1">
                     <h2 class="text-xl font-bold">{{ $tour['name'] }}</h2>
                     <p class="text-gray-600">{{ $tour['description'] }}</p>
@@ -100,10 +109,9 @@
 
                     <!-- ปุ่ม REVIEW -->
                     <div class="flex justify-end mt-2">
-                       
-
-                        <button @click="openModal = true" 
-                                class="bg-blue-600 text-white text-lg px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+                        {{-- ; selectedTourId = '{{ $tour-> }}'; loadGuides('{{ $tour['id'] }}' --}}
+                        <button @click="openModal = true; selectedTourId ='{{$tour['name']}}'; loadGuides('{{ $tour['tour_id_tour'] }}'); bookingId={{$tour['bookingId']}}" 
+                                class="bg-blue-600 text-white text-lg px-6 py-2 rounded-lg hover:bg-blue-700 transition z-[50]"
                                 @if ($tour['reviews']) disabled @endif>
                             @if ($tour['reviews'])
                                 Reviewed
@@ -122,11 +130,11 @@
     </div>
 
     <!-- Popup Modal -->
-    <form id="reviewForm" action="/submit-review" method="POST">
+    <form id="reviewForm" action="/submitReview" method="POST">
         @csrf
         <div x-show="openModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
             <div class="bg-white p-6 rounded-lg shadow-lg w-[700px] max-h-[80vh] overflow-y-auto">
-                <h2 class="text-xl font-bold mb-4">Review</h2>
+                <h2 class="text-xl font-bold mb-4" x-text="selectedTourId"></h2>
     
                 <!-- รีวิวทัวร์ -->
                 <div class="border p-4 rounded-lg shadow-md w-[600px] mx-auto mb-6">
@@ -138,18 +146,16 @@
                         <span class="star tour-star text-3xl cursor-pointer" data-value="4">⭐</span>
                         <span class="star tour-star text-3xl cursor-pointer" data-value="5">⭐</span>
                     </div>
-                    <input type="hidden" name="tour_rating" id="tourRatingInput">
+                    <input type="hidden" name="tour_rating" id="tourRatingInput" value={{5}}>
                     <textarea name="tour_review" class="w-full border p-2 rounded mb-4" rows="3" placeholder="Write your tour experience..."></textarea>
                 </div>
-    
+                <input type="hidden" name="bookingId" x-model="bookingId">
                 <!-- รีวิวไกด์ -->
                 <div id="guideReviewContainer">
                     <h3 class="text-lg font-bold mb-2">Guide Reviews</h3>
                 </div>
-    
                 <!-- ปุ่มเพิ่มรีวิวไกด์ -->
-                
-                <button type="button" onclick="addGuideReview()" class="mt-2 mb-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+                <button type="button" onclick="addGuideReview()" id="addGuide" class="mt-2 mb-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
                     + Add Guide Review
                 </button>
     
@@ -170,52 +176,56 @@
 
 <script>
     let guideCount = 0;
-    let guideNames = ["Alice", "Bob", "Charlie"]; // รายชื่อไกด์
-
     function addGuideReview() {
-        guideCount++;
-        let guideDiv = document.createElement('div');
-        guideDiv.classList.add('border', 'p-4', 'rounded-lg', 'shadow-md', 'w-[600px]', 'mx-auto', 'mb-4');
-        guideDiv.setAttribute('id', `guideReview_${guideCount}`);
-        // <template x-for="guide in guideList">
-        //             <option :value="guide.id" x-text="guide.name"></option>
-        //         </template>
-        // ${guideNames.map(name => `<option value="${name}">${name}</option>`).join('')}
-        guideDiv.innerHTML = `
-            <div class="flex justify-between items-center mb-2">
-                <label class="block font-bold">Guide Review #${guideCount}</label>
-                <button type="button" onclick="removeGuideReview(${guideCount})" class="text-red-500 text-xl font-bold hover:text-red-700">❌</button>
-            </div>
-            <select name="guide_reviews[${guideCount}][name]" class="w-full border p-2 rounded mb-2">
-                    <template x-for="guide in Alpine.store('guideList')" :key="guide.guide_list_account_id_account">
-                        <option :value="guide.guide_list_account_id_account" x-text="guide.guide_name"></option>
-                    </template>
-            </select>
-            <div class="flex justify-center mb-2">
-                <span class="star guide-star-${guideCount} text-3xl cursor-pointer" data-value="1">⭐</span>
-                <span class="star guide-star-${guideCount} text-3xl cursor-pointer" data-value="2">⭐</span>
-                <span class="star guide-star-${guideCount} text-3xl cursor-pointer" data-value="3">⭐</span>
-                <span class="star guide-star-${guideCount} text-3xl cursor-pointer" data-value="4">⭐</span>
-                <span class="star guide-star-${guideCount} text-3xl cursor-pointer" data-value="5">⭐</span>
-            </div>
-            <input type="hidden" name="guide_reviews[${guideCount}][rating]" id="guideRatingInput_${guideCount}">
-            <textarea name="guide_reviews[${guideCount}][review]" class="w-full border p-2 rounded mb-4" rows="3" placeholder="Write your guide experience..."></textarea>
-        `;
+        if(guideCount<1){
+                guideCount++;
+                let guideDiv = document.createElement('div');
+                guideDiv.classList.add('border', 'p-4', 'rounded-lg', 'shadow-md', 'w-[600px]', 'mx-auto', 'mb-4');
+                guideDiv.setAttribute('id', `guideReview_${guideCount}`);
+                // <template x-for="guide in guideList">
+                //             <option :value="guide.id" x-text="guide.name"></option>
+                //         </template>
+                // ${guideNames.map(name => `<option value="${name}">${name}</option>`).join('')}
+                guideDiv.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block font-bold">Guide Review #${guideCount}</label>
+                        <button type="button" onclick="removeGuideReview(${guideCount})" class="text-red-500 text-xl font-bold hover:text-red-700">❌</button>
+                    </div>
+                    <select name="guide_reviews[${guideCount}][id]" class="w-full border p-2 rounded mb-2">
+                            <template x-for="guide in Alpine.store('guideList')" :key="guide.guide_list_account_id_account">
+                                <option :value="guide.guide_list_account_id_account" x-text="guide.guide_name"></option>
+                            </template>
+                    </select>
+                    <div class="flex justify-center mb-2">
+                        <span class="star guide-star-${guideCount} text-3xl cursor-pointer" data-value="1">⭐</span>
+                        <span class="star guide-star-${guideCount} text-3xl cursor-pointer" data-value="2">⭐</span>
+                        <span class="star guide-star-${guideCount} text-3xl cursor-pointer" data-value="3">⭐</span>
+                        <span class="star guide-star-${guideCount} text-3xl cursor-pointer" data-value="4">⭐</span>
+                        <span class="star guide-star-${guideCount} text-3xl cursor-pointer" data-value="5">⭐</span>
+                    </div>
+                    <input type="hidden" value="5" name="guide_reviews[${guideCount}][rating]" id="guideRatingInput_${guideCount}">
+                    <textarea name="guide_reviews[${guideCount}][review]" class="w-full border p-2 rounded mb-4" rows="3" placeholder="Write your guide experience..."></textarea>
+                `;
 
-        document.getElementById('guideReviewContainer').appendChild(guideDiv);
+                document.getElementById('guideReviewContainer').appendChild(guideDiv);
 
-        // ทำให้กดเลือกดาวได้จริง
-        document.querySelectorAll(`.guide-star-${guideCount}`).forEach(star => {
-            star.addEventListener('click', function () {
-                let value = this.getAttribute('data-value');
-                document.getElementById(`guideRatingInput_${guideCount}`).value = value;
+                // ทำให้กดเลือกดาวได้จริง
+                document.querySelectorAll(`.guide-star-${guideCount}`).forEach(star => {
+                    star.addEventListener('click', function () {
+                        let value = this.getAttribute('data-value');
+                        document.getElementById(`guideRatingInput_${guideCount}`).value = value;
 
-                document.querySelectorAll(`.guide-star-${guideCount}`).forEach(s => {
-                    s.textContent = s.getAttribute('data-value') <= value ? '⭐' : '☆';
+                        document.querySelectorAll(`.guide-star-${guideCount}`).forEach(s => {
+                            s.textContent = s.getAttribute('data-value') <= value ? '⭐' : '☆';
+                        });
+                    });
                 });
-            });
-        });
-    }
+            }
+            if(guideCount==1)
+            {
+                document.getElementById('addGuide').innerHTML="Can add just ne Guide";
+            }
+        }
     function resetGuideCount(){
         guideCount = 0;
         let container = document.getElementById('guideReviewContainer');
@@ -252,8 +262,6 @@
             });
     }
 </script>
-
-
 </body>
 </html>
 <!-- https://d2e5ushqwiltxm.cloudfront.net/wp-content/uploads/sites/67/2023/07/20040349/Finding-the-best-areas-to-live-in-Bangkok.jpg  -->
