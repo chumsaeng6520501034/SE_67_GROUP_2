@@ -123,6 +123,28 @@ class UserListController extends Controller
     ->get();
     return view('customer.myBooking', compact('bookingData'));
   }
+  function viewHistory() {
+    $historyData = Booking::join('tour', 'booking.tour_id_tour', '=', 'tour.id_tour')
+        ->leftJoin('review', function($join) {
+            $join->on('review.booking_id_booking', '=', 'booking.id_booking')
+                 ->where('review.user_list_account_id_account', session('userID')->account_id_account); // เงื่อนไขกรองรีวิวที่ตรงกับผู้ใช้
+        })
+        ->where('booking.status', 'paid')
+        ->where('booking.user_list_account_id_account', session('userID')->account_id_account)
+        ->where('tour.end_tour_date', '<', now()) // กรองเฉพาะทัวร์ที่หมดเวลาแล้ว
+        ->select(
+            'booking.*', 
+            'tour.name as name', 
+            'tour.description as tourDes', 
+            DB::raw('COALESCE(review.score, 0) as score') // เพิ่มการใช้ COALESCE เพื่อให้ค่าของ score เป็น null ถ้าไม่มีรีวิว
+        )
+        ->get();
+        //dd($historyData);
+    return view('customer.history', compact('historyData'));
+}
+
+
+
 
   function searchBooking(Request $request){
     $status = $request->status;
@@ -587,6 +609,7 @@ class UserListController extends Controller
     $accountData = Account::where('id_account', $id)->first();
     $userData = UserList::where('account_id_account',$id)->first();
     return view('customer.profile',compact('accountData','userData'));
+  
   }
   function viewProductDetail(Request $request){
     $tourID = $request->tourID;
@@ -648,3 +671,5 @@ class UserListController extends Controller
       return response()->json(['guides' => $guides]);
   }
 }
+
+  
