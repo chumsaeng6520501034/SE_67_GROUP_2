@@ -42,15 +42,16 @@ class UserListController extends Controller
   //เพิ่มรีวิวในฐานข้อมูล//
   function addReview(Request $request){
     $reviewData = [
-      'booking_id_booking' => $request->bookingID,
+      'booking_id_booking' => $request->bookingId,
       'user_list_account_id_account' => session('userID')->account_id_account,
-      'guide_list_account_id_account' => $request->guideID,
-      'score' => $request->score,
-      'message' => $request->message,
-      'sp_score' => $request->sp_score
+      'guide_list_account_id_account' => $request->guide_reviews[1]['id'],
+      'score' => $request->tour_rating,
+      'message' => $request->tour_review,
+      'sp_score' => $request->guide_reviews[1]['rating'],
+      'guideReviewMessage' => $request->guide_reviews[1]['review']
     ];
-    // dd($reviewData);
     Review::insert($reviewData);
+    return redirect('/history');
   }
   function viewMyReview(Request $request)
   { //ดูรีวิวของฉันทั้งหมด
@@ -123,6 +124,29 @@ class UserListController extends Controller
     ->get();
     return view('customer.myBooking', compact('bookingData'));
   }
+  function viewHistory() {
+    $path = $_SERVER['REQUEST_URI'];
+    $historyData = Booking::join('tour', 'booking.tour_id_tour', '=', 'tour.id_tour')
+        ->leftJoin('review', function($join) {
+            $join->on('review.booking_id_booking', '=', 'booking.id_booking')
+                 ->where('review.user_list_account_id_account', session('userID')->account_id_account); // เงื่อนไขกรองรีวิวที่ตรงกับผู้ใช้
+        })
+        ->where('booking.status', 'paid')
+        ->where('booking.user_list_account_id_account', session('userID')->account_id_account)
+        ->where('tour.end_tour_date', '<', now()) // กรองเฉพาะทัวร์ที่หมดเวลาแล้ว
+        ->select(
+            'booking.*', 
+            'tour.name as name', 
+            'tour.description as tourDes', 
+            DB::raw('COALESCE(review.score, 0) as score') // เพิ่มการใช้ COALESCE เพื่อให้ค่าของ score เป็น null ถ้าไม่มีรีวิว
+        )
+        ->get();
+        // dd($historyData);
+    return view('customer.history', compact('historyData','path'));
+}
+
+
+
 
   function searchBooking(Request $request){
     $status = $request->status;
@@ -601,6 +625,7 @@ class UserListController extends Controller
     $accountData = Account::where('id_account', $id)->first();
     $userData = UserList::where('account_id_account',$id)->first();
     return view('customer.profile',compact('accountData','userData'));
+  
   }
   function viewProductDetail(Request $request){
     $tourID = $request->tourID;
@@ -631,4 +656,118 @@ class UserListController extends Controller
     // ]);
     return view('customer.detailSearch',compact('path','totalMember','productData'));
   }
+  function insertRequest(Request $request){
+    $requestData=[
+      'user_list_account_id_account' => session('userID')->account_id_account,
+      'name'=>$request->tour_name,
+      'request_date'=>Carbon::now()->toDateString(),
+      'end_of_request_date'=>Carbon::now()->addDays(7)->toDateString(),
+      'start_tour_date'=>$request->start_date,
+      'end_tour_date'=>$request->end_date,
+      'max_price'=>$request->max_price,
+      'start_price'=>$request->min_price,
+      'guide_qty'=>$request->quantity_guide,
+      'size_tour'=>$request->quantity_people,
+      'contect'=>$request->contact,
+      'hotel_status'=> $request->hotel_status,
+      'travel_status'=>$request->travel_status ,
+      'request_status'=>'ongoing',
+      'description'=>$request->description,
+      'time'=>Carbon::now()->toDateTimeString()
+    ];
+    RequestTour::insert($requestData);
+    return redirect('/myRequest');
+  }
+  function getGuideInTour(Request $request){
+      $tourId = $request->query('tour_id');
+      $guides = TourHasGuideList::where('tour_id_tour', $tourId)
+      ->join('guide_list', 'Tour_has_guide_list.guide_list_account_id_account', '=', 'guide_list.account_id_account')
+      ->select('Tour_has_guide_list.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname')
+      ->get();
+      return response()->json(['guides' => $guides]);
+  }
+  function viewReviewDetail(Request $request){
+    $tourID = $request->tourID;
+    $bookingID = $request->bookingID;
+    $path = $request->path;
+    $tourData = Tour::where('id_tour',$tourID)->first();
+    switch($tourData->from_owner){
+      case "guide": $productData = Tour::join('guide_list', 'tour.owner_id', '=', 'guide_list.account_id_account')
+                                            ->where('tour.id_tour', $tourID)
+                                            ->select('tour.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname')
+                                            ->first(); break;
+      case "corp":  $productData = Tour::join('corp_list', 'tour.owner_id', '=', 'corp_list.account_id_account')
+                                            ->where('tour.id_tour', $tourID)
+                                            ->select('tour.*', 'corp_list.name as corp_name')
+                                            ->first(); break; 
+    }
+    $totalMember = Booking::where('tour_id_tour', $tourID ) //TourID ใช้ของที่กดจองมา
+                            ->where('status', 'NOT LIKE', 'cancel')
+                            ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
+                            ->value('Total_Member');
+    $myReview = Review::where('review.user_list_account_id_account', session('userID')->account_id_account)
+                        ->where('booking_id_booking', $bookingID)
+                        ->join('booking', 'booking.id_booking', '=', 'review.booking_id_booking')
+                        ->select('review.*') // เลือกคอลัมน์ที่ต้องการ
+                        ->get();
+    $anotherReview =Review::join('booking', 'booking.id_booking', '=', 'review.booking_id_booking')
+                        ->join('tour', 'tour.id_tour', '=', 'booking.tour_id_tour')
+                        ->join('user_list', 'user_list.account_id_account', '=', 'review.user_list_account_id_account')
+                        ->where('tour.id_tour', $tourID)
+                        ->where('booking.user_list_account_id_account', '!=', session('userID')->account_id_account)
+                        ->select('review.*','user_list.*') // เลือกเฉพาะคอลัมน์ที่ต้องการ
+                        ->get();
+      // dd($anotherReview);
+      return view('customer.historyDetail',compact('anotherReview','myReview','totalMember','productData','path'));
+  }
+  function searchHistory(Request $request){
+    $name = $request->name;
+    $startDate = $request->startDate;
+    $endDate = $request->endDate;
+    $path = $_SERVER['REQUEST_URI'];
+    $historyData = Booking::join('tour', 'booking.tour_id_tour', '=', 'tour.id_tour')
+        ->leftJoin('review', function($join) {
+            $join->on('review.booking_id_booking', '=', 'booking.id_booking')
+                 ->where('review.user_list_account_id_account', session('userID')->account_id_account); // เงื่อนไขกรองรีวิวที่ตรงกับผู้ใช้
+        })
+        ->where('booking.status', 'paid')
+        ->where('booking.user_list_account_id_account', session('userID')->account_id_account)
+        ->where('tour.end_tour_date', '<', now()) // กรองเฉพาะทัวร์ที่หมดเวลาแล้ว
+        ->select(
+            'booking.*', 
+            'tour.name as name', 
+            'tour.description as tourDes',
+            'tour.start_tour_date',
+            'tour.end_tour_date',
+            DB::raw('COALESCE(review.score, 0) as score') // เพิ่มการใช้ COALESCE เพื่อให้ค่าของ score เป็น null ถ้าไม่มีรีวิว
+        );
+        if (!empty($name)) {
+          $historyData->whereRaw('LOWER(tour.name) LIKE LOWER(?)', ["%$name%"]);
+      }
+      
+      // ✅ กรองวันที่เริ่มต้นทัวร์
+      if (!empty($startDate)) {
+          $historyData->whereDate('tour.start_tour_date', $startDate);
+      }
+      
+      // ✅ กรองวันที่สิ้นสุดทัวร์
+      if (!empty($endDate)) {
+          $historyData->whereDate('tour.end_tour_date', $endDate);
+      }
+      
+      // ✅ กรองสถานะรีวิว
+      if ($request->status === 'notReview') {
+          $historyData->having('score', '=', 0);
+      } elseif ($request->status === 'Review') {
+          $historyData->having('score', '!=', 0);
+      }
+      
+      // ดึงข้อมูลออกมา
+      $historyData = $historyData->get();
+       
+    // dd($historyData);
+    return view('customer.history', compact('historyData','path'));
+  }
 }
+
+  

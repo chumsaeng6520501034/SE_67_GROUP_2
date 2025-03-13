@@ -48,10 +48,12 @@ Route::get('/deleteAccount',[AccountController::class,'deleteAccount']);
 Route::match(['get', 'post'],'/detailBooking',[UserListController::class,'getDetailBooking']);
 Route::match(['get', 'post'],'/editAddtour',[UserListController::class,'viewEditRequestTour']);
 Route::match(['get', 'post'],'/editAdd',[UserListController::class,'changeRequestTour']);
+Route::match(['get', 'post'],'/detailBooking',[UserListController::class,'getUserBuyHistory']);
+Route::get('/history',[UserListController::class,'viewHistory']);
 // Route::get('/setSession/{booking_id}', [UserListController::class, 'setSessionAndRedirect'])
 //     ->name('setSessionAndRedirect');
 Route::get('/de', function () {
-    return view('customer.detailSearch');
+    return view('customer.history');
 });
 
 // Route::get('/addTour',[UserListController::class,'']);
@@ -66,3 +68,7 @@ Route::get('/userSearch',[AccountController::class,'search']);
 Route::get('/userFilterSearch',[AccountController::class,'searchFilterTourActive']);
 Route::post('/customerViewProductDetail',[UserListController::class,'viewProductDetail']);
 Route::post('/userViewProductDetail',[AccountController::class,'viewProduct']);
+Route::post('/addRequest',[UserListController::class,'insertRequest']);
+Route::post('/submitReview',[UserListController::class,'addReview']);
+Route::post('/customerViewReview',[UserListController::class,'viewReviewDetail']);
+Route::get('/searchHistory',[UserListController::class,'searchHistory']);
