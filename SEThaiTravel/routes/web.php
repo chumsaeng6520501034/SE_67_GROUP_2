@@ -46,6 +46,8 @@ Route::get('/myRequest',[UserListController::class,'getAllRequestTour']);
 Route::get('/payments',[UserListController::class,'getUserPaymentHistory']);
 Route::get('/deleteAccount',[AccountController::class,'deleteAccount']);
 Route::match(['get', 'post'],'/detailBooking',[UserListController::class,'getDetailBooking']);
+Route::match(['get', 'post'],'/editAddtour',[UserListController::class,'viewEditRequestTour']);
+Route::match(['get', 'post'],'/editAdd',[UserListController::class,'changeRequestTour']);
 // Route::get('/setSession/{booking_id}', [UserListController::class, 'setSessionAndRedirect'])
 //     ->name('setSessionAndRedirect');
 Route::get('/de', function () {

@@ -204,7 +204,7 @@ class UserListController extends Controller
 //-----------------------------------------------------------------------------------------------------------
   //ตรวจสอบประวัติการซื้อทัวร์ *
   function getDetailBooking(Request $request)
-{
+  {
     // dd($request->tourID);
     $name = $request->input('name');
     $idAccount = session('userID')->account_id_account;
@@ -252,8 +252,8 @@ class UserListController extends Controller
         ]);
 
     return view('customer.detailBooking', compact('history'));
-}
-  
+  }
+
   //ทัวร์ที่กำลังวางขายอยู่ *
   function getTourActive()
   {
@@ -516,10 +516,10 @@ class UserListController extends Controller
   //แก้ไขรีเควสท์ในฐานข้อมูล มีแก้อีก
   function changeRequestTour(Request $request){
     $requestData = [
-      'id_request_tour ' => $request->requestID,
+      // 'id_request_tour' => $request->requestID,
       'user_list_account_id_account' => session('userID')->account_id_account,
       'name' => $request->nameRequest,
-      'end_of_request_date' => $request->endDateRequest,
+      // 'end_of_request_date' => $request->endDateRequest,
       'start_tour_date' => $request->startTourDate,
       'end_tour_date' => $request->endTourDate,
       'max_price' => $request->maxPrice,
@@ -529,15 +529,19 @@ class UserListController extends Controller
       'contect' => $request->contect,
       'hotel_status' => $request->hotelStatus,
       'travel_status' => $request->travelStatus,
-      'request_status' => $request->requestStatus,
+      // 'request_status' => $request->requestStatus,
       'description' => $request->description,
-      'time' => $request->time
+      // 'time' => $request->time
     ];
     // dd($requestData);
-    RequestTour::where('id_request_tour', $request->bookingID)
+    $idAccount = session('userID')->account_id_account;
+    RequestTour::where('id_request_tour', $request->requestID)
       ->where('user_list_account_id_account', session('userID')->account_id_account)
       ->update($requestData);
-    // return "redirect ไปหน้าที่ต้องการ";
+
+      $All_req = RequestTour::where('user_list_account_id_account', $idAccount)
+      ->get();
+     return redirect('/myRequest');
   }
   //หน้าสำหรับแก้ไขรีเควสท์ มีแก้อีก
   function changeRequestForm(Request $request){
@@ -545,6 +549,7 @@ class UserListController extends Controller
     $tourID = $request->tourID;
     $userID = session('userID')->account_id_account;
     $guideID = $request->guideID;
+    dd($tourID,$userID);
     $guideInTour = TourHasGuideList::where('tour_id_tour', $tourID)
       ->join('guide_list', 'Tour_has_guide_list.guide_list_account_id_account ', '=', 'guide_list.account_id_account')
       ->select('Tour_has_guide_list.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname')
@@ -554,7 +559,16 @@ class UserListController extends Controller
       ->where('guide_list_account_id_account', $guideID)->first();
     return view('changeRequest', compact('reviewData', 'guideInTour', 'guideID', '$bookingID'));
   }
-
+  
+  function viewEditRequestTour(Request $request){
+    $tourID = $request->input('tourID');
+    $idAccount = session('userID')->account_id_account;
+    $edit = RequestTour::where('user_list_account_id_account', $idAccount)
+        ->where('id_request_tour', $tourID)
+        ->first(); // ใช้ first() เพื่อให้ได้แค่รายการเดียวที่ตรงกับ tourID
+    // dd($edit);
+    return view('customer.editAddtour', compact('edit'));
+  }
   //หน้าสำหรับเพิ่มรีเควสท์
   //เพิ่มรีเควสท์ใหม่เข้าฐานข้อมูล
 
