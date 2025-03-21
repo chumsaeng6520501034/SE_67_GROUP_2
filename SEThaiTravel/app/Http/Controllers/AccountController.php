@@ -54,7 +54,7 @@ class AccountController extends Controller
                   $guide= GuideList::find($account->id_account);
                   session(['userID' => $guide]);
                   // dd($guide);
-                return view('guidePage');
+                return view('guide.home');
           }
         }
       }

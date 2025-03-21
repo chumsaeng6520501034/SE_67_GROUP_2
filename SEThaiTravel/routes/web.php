@@ -72,3 +72,8 @@ Route::post('/addRequest',[UserListController::class,'insertRequest']);
 Route::post('/submitReview',[UserListController::class,'addReview']);
 Route::post('/customerViewReview',[UserListController::class,'viewReviewDetail']);
 Route::get('/searchHistory',[UserListController::class,'searchHistory']);
+
+
+
+//guide section
+Route::get('/guideAddTour',[GuideListController::class,'getAddTour']);

@@ -9,16 +9,9 @@ use App\Models\TourHasGuideList;
 use App\Models\Payment;
 use App\Models\Offer;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 class GuideListController extends Controller
 {
-    function checkTable(){
-        if (Schema::hasTable((new GuideList)->getTable())) {
-            echo "Guide exists!";
-        } 
-        else{
-            echo "Table does not exist!";
-        }
-    }
     function checkTourSale(Request $request){
         $userID = session('userID')->account_id_account;
         $tourData = Tour::where('owner_id',$userID)->where('status','ongoing')->get();
@@ -60,8 +53,51 @@ class GuideListController extends Controller
         // Offer::insert($offerData);
     }
 
+    public function getProvinces()
+    {
+        $response = Http::withHeaders([
+            'accept' => 'application/json',
+            'Accept-Language' => 'th',
+            'x-api-key' => env('TAT_API_KEY') // ใช้ค่า API Key จาก .env
+        ])->get('https://tatdataapi.io/api/v2/location/provinces');
 
+        if ($response->successful()) {
+            return response()->json($response->json());
+        } else {
+            return response()->json(['error' => 'Failed to fetch provinces'], 500);
+        }
+    }
+    public function getHotelsByProvince($provinceId)
+    {
+        $response = Http::withHeaders([
+            'accept' => 'application/json',
+            'Accept-Language' => 'th',
+            'x-api-key' => env('TAT_API_KEY')
+        ])->get("https://tatdataapi.io/api/v2/places?province_id=$provinceId&place_category_id=2&limit=300");
 
+        if ($response->successful()) {
+            return response()->json($response->json());
+        } else {
+            return response()->json(['error' => 'ไม่สามารถดึงข้อมูลโรงแรมได้'], 500);
+        }
+    }
+    public function getLocationsByProvince($provinceId)
+    {
+        $response = Http::withHeaders([
+            'accept' => 'application/json',
+            'Accept-Language' => 'th',
+            'x-api-key' => env('TAT_API_KEY')
+        ])->get("https://tatdataapi.io/api/v2/places?province_id=$provinceId&place_category_id=3&limit=300");
+
+        if ($response->successful()) {
+            return response()->json($response->json());
+        } else {
+            return response()->json(['error' => 'ไม่สามารถดึงข้อมูลสถานที่ท่องเที่ยวได้'], 500);
+        }
+    }
+    function getAddTour(){
+        return view('guide.addTour');
+    }
     function addTour (Request $request){
         $requestTourID = $request->requestTourID;
         $offerData = [

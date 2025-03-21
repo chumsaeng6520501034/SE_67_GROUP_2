@@ -25,12 +25,12 @@
         <!-- User Profile -->
         <div class="p-6 text-center">
             <img class="h-16 w-16 rounded-full mx-auto border-2 border-white" src="https://avatars.githubusercontent.com/u/64538277" alt="avatar" />
-            <h2 class="text-lg font-bold mt-2">User Name</h2>
+            <h2 class="text-lg font-bold mt-2">{{session('userID')->name}}</h2>
         </div>
 
         <!-- Menu Items -->
         <nav class="flex flex-col space-y-2">
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">ADD TOUR</a>
+            <a href="/guideAddTour" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">ADD TOUR</a>
             <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">MY TOUR</a>
             <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">MY JOB</a>
             <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">MY OFFER</a>
@@ -43,7 +43,7 @@
 
         <!-- Log Out -->
         <div class="mt-auto">
-            <a href="#" class="flex items-center justify-between py-3 px-6 hover:bg-red-700 transition duration-300 rounded">
+            <a href="/logOut" class="flex items-center justify-between py-3 px-6 hover:bg-red-700 transition duration-300 rounded">
                 <span>LOG OUT</span>
                 <svg class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
