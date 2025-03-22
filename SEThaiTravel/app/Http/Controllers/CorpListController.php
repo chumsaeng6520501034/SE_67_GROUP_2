@@ -9,6 +9,8 @@ use Carbon\Carbon;
 use App\Models\TourHasGuideList;
 use App\Models\Tour;
 use App\Models\LocationInTour;
+use App\Models\Payment;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class CorpListController extends Controller
@@ -20,6 +22,10 @@ class CorpListController extends Controller
         } else {
             echo "Table does not exist!";
         }
+    }
+    function getAddTour()
+    {
+        return view('corporation.addTour');
     }
     function addTour(Request $request)
     {
@@ -59,5 +65,66 @@ class CorpListController extends Controller
             LocationInTour::insert($locationInTourData);
         }
         return redirect('/guideHomePage');
+    }
+
+    function getOffer()
+    {
+        $idAccount = session('userID')->account_id_account;
+        $offers = DB::table('offer')
+        ->where('from_who_offer', 'LIKE', 'corp')
+        ->where('id_who_offer', $idAccount)
+        ->get();
+        dd($offers);
+        return view('???', compact('offers'));
+    }
+
+    function getStaffInCorp()
+    {
+        $idAccount = session('userID')->account_id_account;
+        $guides = DB::table('guide_list')
+        ->where('corp_list_account_id_account', $idAccount)
+        ->get();
+        dd($guides);
+        return view('???', compact('guides'));
+    }
+
+    //เอารายการจ่ายทั้งหมด
+    function getAllPaymentHistory()
+    {
+        $idAccount = session('userID')->account_id_account;
+        $payments = DB::table('payment as p')
+        ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
+        ->join('tour as t', 't.id_tour', '=', 'b.tour_id_tour')
+        ->join('corp_list as c', function ($join) {
+            $join->on('c.account_id_account', '=', 't.owner_id')
+                ->where('t.from_owner', 'LIKE', 'corp');
+        })
+        ->where('c.account_id_account', $idAccount)
+        ->select(
+            'p.id_payment',
+            'p.booking_Tour_id_Tour',
+            'p.booking_user_list_account_id_account',
+            'p.payment_date',
+            'p.checknumber',
+            'p.total_price'
+        )
+        ->get();
+        dd($payments);
+        return view('???', compact('payments'));
+    }
+
+    //รายละเอียดการโอนเงินครั้งใด ๆ ที่โดนเลือก//
+    function getPaymentDetails(Request $request)
+    {
+        $idAccount = session('userID')->account_id_account;
+        $idPayment = $request->paymentID;
+        $bill = payment::table('payment as p')
+            ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
+            ->join('user_list as u', 'u.account_id_account', '=', 'p.booking_user_list_account_id_account')
+            ->where('p.booking_user_list_account_id_account', $idAccount)
+            ->where('p.id_payment', $idPayment)
+            ->get();
+        dd($bill);
+        return view('???', compact('bill'));
     }
 }

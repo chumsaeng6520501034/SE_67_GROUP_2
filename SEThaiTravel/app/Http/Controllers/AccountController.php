@@ -62,7 +62,6 @@ class AccountController extends Controller
   }
   function viewSignIn()
   { // Redirect ไปที่ หน้า signIn หน้าแรกที่มีให้เลือกประเภทการ SignIn
-
     return view('account.signUp');
   }
   function signIn(Request $request)
