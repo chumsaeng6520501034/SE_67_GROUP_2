@@ -69,11 +69,11 @@
 
         <div id="mainContent" class="flex-1 p-10 transition-all duration-300 overflow-y-auto ml-2">
             <!-- Search and Filter -->
-            <form>
+            <form action="/guideSearchMyTour" method="GET">
                 <div class="flex items-center bg-white shadow-md p-4 rounded-lg mb-4 space-x-4">
                     <div class="relative flex-1">
                         <label>Tour name</label>
-                        <input type="text" id="searchBar" name="name" placeholder="Search Booking tours..."
+                        <input type="text" id="searchBar" name="name" placeholder="Search Tours name..."
                             class="w-full p-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <span class="absolute left-3 top-8 text-gray-500">🔍</span>
                     </div>
@@ -92,9 +92,10 @@
                         <select id="filterDropdown" name="status"
                             class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="" style="color: black;">All Status</option>
-                            <option value="paid" style="color: rgb(12, 236, 12);">PAID</option>
-                            <option value="In process" style="color: rgb(255, 255, 44);">IN PROCESS</option>
-                            <option value="cancel" style="color: rgb(255, 41, 41);">CANCEL</option>
+                            <option value="ongoing" style="color:#007BFF;">ON GOING</option>
+                            <option value="finish" style="color:#28A745;">FINISH</option>
+                            <option value="collect" style="color: #FFC107;">COLLECT</option>
+                            <option value="cancal" style="color: #FF5733;">CANCEL</option>
                         </select>
                     </div>
                     <div>
@@ -108,29 +109,32 @@
                 @foreach ($tourData as $tour)
                     <div class="card-container m-4">
                         <div class="card bg-white rounded-lg shadow-lg flex overflow-hidden">
-                            @if(is_null($tour->tourImage))
-                            <img src="https://quintessentially.com/assets/noted/Header_2023-04-12-154210_sigz.webp"
-                                alt="Bangkok" class="w-1/3 object-cover">
+                            @if (is_null($tour->tourImage))
+                                <img src="https://quintessentially.com/assets/noted/Header_2023-04-12-154210_sigz.webp"
+                                    alt="Bangkok" class="w-1/3 object-cover">
                             @else
-                            <img src="{{ asset('storage/' . $tour->tourImage) }}"
-                                alt="image" class="w-1/3 object-cover">
+                                <img src="{{ asset('storage/' . $tour->tourImage) }}" alt="image"
+                                    class="w-1/3 object-cover">
                             @endif
                             <div class="p-6 flex-1">
-                                    <h2 class="text-2xl font-bold text-black-600">
-                                            {{ ucwords($tour->name) }}
-                                    </h2>
+                                <h2 class="text-2xl font-bold text-black-600">
+                                    {{ ucwords($tour->name) }}
+                                </h2>
                                 <p class="text-gray-600 mt-1">{{ $tour->description }}</p>
                                 @switch($tour->status)
-                                    @case("ongoing")
+                                    @case('ongoing')
                                         <p class="text-[#007BFF] text-sm mt-2 font-bold">{{ ucwords($tour->status) }}</p>
                                     @break
-                                    @case("cancal")
+
+                                    @case('cancal')
                                         <p class="text-[#FF5733] text-sm mt-2 font-bold">{{ ucwords($tour->status) }}</p>
                                     @break
-                                    @case("finish")
+
+                                    @case('finish')
                                         <p class="text-[#28A745] text-sm mt-2 font-bold">{{ ucwords($tour->status) }}</p>
                                     @break
-                                    @case("collect")
+
+                                    @case('collect')
                                         <p class="text-[#FFC107] text-sm mt-2 font-bold">{{ ucwords($tour->status) }}</p>
                                     @break
                                 @endswitch
@@ -139,23 +143,54 @@
                             </div>
                             <div class="p-6 bg-gray-100 w-1/4 text-right rounded-r-lg">
                                 <p class="text-gray-800 text-md font-bold">Release Date</p>
-                                <p class="text-gray-600 font-semibold">{{$tour->Release_date}}</p>
+                                <p class="text-gray-600 font-semibold">{{ $tour->Release_date }}</p>
                                 <p class="text-gray-800 text-md font-bold">Expiration Date</p>
                                 <p class="text-gray-600 text-md font-semibold">
                                     {{ $tour->End_of_sale_date }}</p>
-                                <p class="text-gray-800 m-2 text-md font-bold">{{  number_format($tour->price) }} ฿</p>
-                                <button class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
+                                <p class="text-gray-800 m-2 text-md font-bold">{{ number_format($tour->price) }} ฿</p>
+                                <div class="flex justify-end space-x-2">
+                                    <form>
+                                        <button class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
+                                        <input type="hidden" value={{$tour->id_tour}}>
+                                    </form>
+                                    <!-- Delete Button -->
+                                    <button onclick="openModal({{$tour->id_tour}})"
+                                        class="bg-red-600 text-white px-4 py-2 rounded-md font-bold">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="deleteModal{{$tour->id_tour}}" class="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 hidden">
+                        <div class="bg-white p-6 rounded-md shadow-lg w-1/3">
+                            <h3 class="text-lg font-semibold text-gray-800">Are you sure you want to delete?</h3>
+                            <p class="text-sm text-gray-600">{{$tour->name}}</p>
+                            <div class="mt-4 flex justify-between">
+                                <!-- Cancel Button -->
+                                <button onclick="closeModal({{$tour->id_tour}})" class="bg-gray-400 text-white px-4 py-2 rounded-md">Cancel</button>
+                                <!-- Confirm Button (Form for Deleting) -->
+                                <form action="/guideDeleteMyTour" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="tourID" value={{$tour->id_tour}}>
+                                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md">Confirm
+                                        Delete</button>
+                                </form>
                             </div>
                         </div>
                     </div>
                 @endforeach
                 {{ $tourData->links() }}
             </div>
-            
         </div>
     </div>
 
     <script>
+        function openModal(id) {
+            document.getElementById('deleteModal'+ id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById('deleteModal'+ id).classList.add('hidden');
+        }
         document.getElementById('toggleSidebar').addEventListener('click', function() {
             let sidebar = document.getElementById('sidebar');
             let mainContent = document.getElementById('mainContent');
@@ -164,13 +199,14 @@
         document.getElementById("filterDropdown").addEventListener("change", function() {
             const colors = {
                 "": "text-black",
-                "paid": "text-green-500",
-                "In process": "text-yellow-500",
-                "cancel": "text-red-500"
+                "ongoing": "text-[#007BFF]",
+                "collect": "text-[#FFC107]",
+                "finish": "text-[#28A745]",
+                "cancal": "text-[#FF5733]"
             };
 
             // ลบสีเก่าก่อน
-            this.classList.remove("text-black", "text-green-500", "text-yellow-500", "text-red-500");
+            this.classList.remove("text-black", "text-[#007BFF]", "text-[#FFC107]", "text-[#28A745]","text-[#FF5733]");
 
             // เพิ่มสีใหม่ตามค่าที่เลือก
             this.classList.add(colors[this.value] || "text-black");

@@ -172,11 +172,42 @@ class GuideListController extends Controller
         }
         return redirect('/guideHomePage');
     }
+    }
     function getMytour(Request $request){
         $tourData = Tour::where('owner_id',session('userID')->account_id_account)
                          ->paginate(10)->appends($request->query());
         return view('guide.myTour',compact('tourData'));
 
     }
+    function searchMyTour(Request $request){
+        $status = $request->status;
+        $name = $request->name;
+        $startDate = $request->startDate;
+        $endDate = $request->endDate;
+        $tourData = Tour::where('owner_id',session('userID')->account_id_account)
+                        ->where('status', 'LIKE', '%' . $status . '%');
+        if (!empty($name)) {
+            $tourData->whereRaw('LOWER(tour.name) LIKE LOWER(?)', ["%$name%"]);
+          }
+      
+          // ✅ กรองวันที่เริ่มต้นทัวร์
+        if (!empty($startDate)) {
+            $tourData->whereDate('tour.start_tour_date', $startDate);
+        }
+      
+          // ✅ กรองวันที่สิ้นสุดทัวร์
+        if (!empty($endDate)) {
+            $tourData->whereDate('tour.end_tour_date', $endDate);
+        }
+        $tourData = $tourData->paginate(10)->appends($request->query());
+        return view('guide.myTour',compact('tourData'));
+    }
+    function deleteMyTour(Request $request){
+        $tourData = [
+            "status"=>'cancal'
+        ];
+        Tour::where('id_tour',$request->tourID)->update($tourData);
+        return redirect('/guideMyTour');
+
     }
 }

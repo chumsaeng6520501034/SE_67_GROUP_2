@@ -80,3 +80,5 @@ Route::get('/guideHomePage',[GuideListController::class,'getHomePage']);
 Route::get('/guideAddTourPage',[GuideListController::class,'getAddTour']);
 Route::post('/guideAddTour',[GuideListController::class,'addTour']);
 Route::get('/guideMyTour',[GuideListController::class,'getMytour']);
+Route::get('/guideSearchMyTour',[GuideListController::class,'searchMyTour']);
+Route::post('/guideDeleteMyTour',[GuideListController::class,'deleteMyTour']);

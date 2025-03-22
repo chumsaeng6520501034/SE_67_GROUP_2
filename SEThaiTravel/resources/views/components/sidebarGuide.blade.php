@@ -21,7 +21,7 @@
     </button>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed top-0 left-0 w-64 h-screen bg-[#0F588C] text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300 z-50">
+    <aside id="sidebar" class="fixed top-0 left-0 w-64 h-screen bg-[#0F588C] text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300  z-50">
         <!-- User Profile -->
         <div class="p-6 text-center">
             <img class="h-16 w-16 rounded-full mx-auto border-2 border-white" src="https://avatars.githubusercontent.com/u/64538277" alt="avatar" />
