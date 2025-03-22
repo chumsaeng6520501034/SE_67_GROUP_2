@@ -110,27 +110,50 @@ class GuideListController extends Controller
     {
         return view('guide.addTour');
     }
-    function addTour(Request $request)
-    {
-        $locationInTourAPI = $request->location;
-        $tourData = [
-            "from_owner" => 'guide',
-            "owner_id" => session('userID')->account_id_account,
-            "name" => $request->tour_name,
-            "Release_date" => Carbon::now()->toDateString(),
-            "End_of_sale_date" => Carbon::now()->addDays(7)->toDateString(),
-            "start_tour_date" => $request->start_date,
-            "end_tour_date" => $request->end_date,
-            "price" => $request->price,
-            "tour_capacity" => $request->quantity,
-            "contect" => $request->contact,
-            "hotel" => $request->hotel,
-            "hotel_price" => $request->hotelPrice,
-            "description" => $request->description,
-            "travel_by" => $request->travel_by,
-            "status" => 'ongoing',
-            "offer_id_offer" => NULL,
-            "type_tour" => 'public'
+    function addTour (Request $request){
+        $request->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+        if($request->hasFile('image')) {
+            $image = $request->file('image');
+            $path = $image->store('images', 'public');
+        }
+        else{
+            $path = NULL;
+        }
+       $locationInTourAPI =$request->location;
+       $tourData = [
+        "from_owner" => 'guide',
+        "owner_id" => session('userID')->account_id_account,
+        "name" =>$request->tour_name,
+        "Release_date"=>Carbon::now()->toDateString(),
+        "End_of_sale_date"=>Carbon::now()->addDays(7)->toDateString(),
+        "start_tour_date"=>$request->start_date,
+        "end_tour_date"=>$request->end_date,
+        "price"=>$request->price,
+        "tour_capacity"=>$request->quantity,
+        "contect"=>$request->contact,
+        "hotel"=>$request->hotel,
+        "hotel_price"=>$request->hotelPrice,
+        "description"=>$request->description,
+        "travel_by"=>$request->travel_by,
+        "status"=>'ongoing',
+        "offer_id_offer"=>NULL,
+        "type_tour"=>'public',
+        "tourImage"=> $path
+       ];
+       $tour= new Tour($tourData);
+       $tour->save();
+       $tourId = $tour->id_tour;
+       $tourHasGuideData = [
+        "guide_list_account_id_account"=>session('userID')->account_id_account,
+        "tour_id_tour"=> $tourId
+       ];
+       TourHasGuideList::insert($tourHasGuideData);
+       foreach($locationInTourAPI as $api){
+        $locationInTourData =[
+            "loc_api"=>"https://tatdataapi.io/api/v2/places/$api",
+            "tour_id_tour"=> $tourId
         ];
         $tour = new Tour($tourData);
         $tour->save();
@@ -148,5 +171,12 @@ class GuideListController extends Controller
             LocationInTour::insert($locationInTourData);
         }
         return redirect('/guideHomePage');
+    }
+    function getMytour(Request $request){
+        $tourData = Tour::where('owner_id',session('userID')->account_id_account)
+                         ->paginate(10)->appends($request->query());
+        return view('guide.myTour',compact('tourData'));
+
+    }
     }
 }

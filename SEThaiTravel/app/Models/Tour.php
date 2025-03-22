@@ -16,7 +16,7 @@ class Tour extends Model
         'from_owner', 'owner_id', 'name', 'Release_date',
         'End_of_sale_date', 'start_tour_date', 'end_tour_date',
         'price', 'tour_capacity', 'contect', 'hotel', 'hotel_price',
-        'description', 'travel_by', 'status', 'offer_id_offer', 'type_tour'
+        'description', 'travel_by', 'status', 'offer_id_offer', 'type_tour','tourImage'
     ];
     use HasFactory;
 }
