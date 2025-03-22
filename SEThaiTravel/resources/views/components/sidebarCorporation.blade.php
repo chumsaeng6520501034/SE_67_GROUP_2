@@ -36,14 +36,14 @@
 
         <!-- Menu Items -->
         <nav class="flex flex-col space-y-2">
-            <a href="/home" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
             <a href="/addTour" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
-            <a href="/myRequest" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REQUEST</a>
-            <a href="/history" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">HISTORY</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REVIEW</a>
-            <a href="/myBooking" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY BOOKING</a>
-            <a href="/calendar" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">CALENDAR</a>
-            <a href="/payments" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY PAYMENT</a>
+            <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY TOUR</a>
+            <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">HISTORY</a>
+            <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SELL HISTORY</a>
+            <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY OFFER</a>
+            <a href="/myStaf" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY STAFF</a>
+            <a href="/allPayments" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ALL PAYMENT</a>
+            <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">STATISTIC</a>
         </nav>
 
         <!-- Log Out -->

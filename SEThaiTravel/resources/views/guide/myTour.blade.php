@@ -65,48 +65,11 @@
 
 <body>
     <div class="flex">
-        <button id="toggleSidebar" class="fixed top-4 left-4 bg-blue-500 text-white p-2 rounded-md z-50">
-            ☰
-        </button>
-
-        <!-- Sidebar -->
-        <aside id="sidebar"
-            class="fixed top-0 left-0 w-64 h-screen bg-blue-900 text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300 open">
-            <div class="p-6 text-center">
-                <a href="/userProfile">
-                    <img class="h-16 w-16 rounded-full mx-auto" src="https://avatars.githubusercontent.com/u/64538277"
-                    alt="avatar" />
-                </a>
-                <h2 class="text-lg font-bold mt-2">{{ session('userID')->name }}</h2>
-            </div>
-            <nav class="flex flex-col space-y-2">
-                <a href="/home" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
-                <a href="/addTour" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
-                <a href="/myRequest" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REQUEST</a>
-                <a href="/history" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">HISTORY</a>
-                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REVIEW</a>
-                <a href="/myBooking" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY BOOKING</a>
-                <a href="/calendar" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">CALENDAR</a>
-                <a href="/payments" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY PAYMENT</a>
-            </nav>
-            <div class="mt-auto">
-                <a href="/logOut"
-                    class="flex items-center justify-between py-3 px-6 hover:bg-red-700 transition duration-300 rounded">
-                    <span>LOG OUT</span>
-                    <svg class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                        <polyline points="16 17 21 12 16 7" />
-                        <line x1="21" y1="12" x2="9" y2="12" />
-                    </svg>
-                </a>
-            </div>
-        </aside>
+        @include('components.sidebarGuide')
 
         <div id="mainContent" class="flex-1 p-10 transition-all duration-300 overflow-y-auto ml-2">
             <!-- Search and Filter -->
-            <form action="/searchBooking" method="POST">
-                @csrf
+            <form>
                 <div class="flex items-center bg-white shadow-md p-4 rounded-lg mb-4 space-x-4">
                     <div class="relative flex-1">
                         <label>Tour name</label>
@@ -142,50 +105,51 @@
             </form>
 
             <div class="card-wrapper">
-                @foreach ($bookingData as $booking)
+                @foreach ($tourData as $tour)
                     <div class="card-container m-4">
                         <div class="card bg-white rounded-lg shadow-lg flex overflow-hidden">
+                            @if(is_null($tour->tourImage))
                             <img src="https://quintessentially.com/assets/noted/Header_2023-04-12-154210_sigz.webp"
                                 alt="Bangkok" class="w-1/3 object-cover">
+                            @else
+                            <img src="{{ asset('storage/' . $tour->tourImage) }}"
+                                alt="image" class="w-1/3 object-cover">
+                            @endif
                             <div class="p-6 flex-1">
-                                {{-- ฟอร์มเพื่อส่งชื่อไปด้วย --}}
-                                <form action="/detailBooking" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="name" value="{{ $booking->name }}">
-                                    <!-- <input type="hidden" name="tourID" value={{ $booking->tour_id_tour}}> -->
-                                    <h2 class="text-2xl font-bold text-blue-600 hover:underline cursor-pointer">
-                                        <button type="submit" class="text-blue-600">
-                                            {{ ucwords($booking->name) }}
-                                        </button>
+                                    <h2 class="text-2xl font-bold text-black-600">
+                                            {{ ucwords($tour->name) }}
                                     </h2>
-                                </form>
-                                
-                                <p class="text-gray-600 mt-1">{{ $booking->tourDes }}</p>
-                                @switch($booking->status)
-                                    @case("paid")
-                                        <p class="text-green-500 text-sm mt-2 font-bold">{{ ucwords($booking->status) }}</p>
+                                <p class="text-gray-600 mt-1">{{ $tour->description }}</p>
+                                @switch($tour->status)
+                                    @case("ongoing")
+                                        <p class="text-[#007BFF] text-sm mt-2 font-bold">{{ ucwords($tour->status) }}</p>
                                     @break
-            
-                                    @case("In process")
-                                        <p class="text-yellow-500 text-sm mt-2 font-bold">{{ ucwords($booking->status) }}</p>
+                                    @case("cancal")
+                                        <p class="text-[#FF5733] text-sm mt-2 font-bold">{{ ucwords($tour->status) }}</p>
                                     @break
-                                    @case("cancel")
-                                        <p class="text-red-500 text-sm mt-2 font-bold">{{ ucwords($booking->status) }}</p>
+                                    @case("finish")
+                                        <p class="text-[#28A745] text-sm mt-2 font-bold">{{ ucwords($tour->status) }}</p>
+                                    @break
+                                    @case("collect")
+                                        <p class="text-[#FFC107] text-sm mt-2 font-bold">{{ ucwords($tour->status) }}</p>
                                     @break
                                 @endswitch
+                                <p class="text-gray-400 text-xs mt-1">Start Date: {{ $tour->start_tour_date }}</p>
+                                <p class="text-gray-400 text-xs  mt-1">End Date: {{ $tour->end_tour_date }}</p>
                             </div>
                             <div class="p-6 bg-gray-100 w-1/4 text-right rounded-r-lg">
-                                <p class="text-gray-800 text-md font-bold">Booking Date</p>
-                                <p class="text-gray-600 font-semibold">{{ $booking->booked_date }}</p>
+                                <p class="text-gray-800 text-md font-bold">Release Date</p>
+                                <p class="text-gray-600 font-semibold">{{$tour->Release_date}}</p>
                                 <p class="text-gray-800 text-md font-bold">Expiration Date</p>
                                 <p class="text-gray-600 text-md font-semibold">
-                                    {{ date('Y-m-d', strtotime($booking->payment_date)) }}</p>
-                                <p class="text-gray-800 m-2 text-md font-bold">{{ $booking->total_price }} ฿</p>
-                                <button class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">PAY NOW</button>
+                                    {{ $tour->End_of_sale_date }}</p>
+                                <p class="text-gray-800 m-2 text-md font-bold">{{  number_format($tour->price) }} ฿</p>
+                                <button class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
                             </div>
                         </div>
                     </div>
                 @endforeach
+                {{ $tourData->links() }}
             </div>
             
         </div>

@@ -8,7 +8,7 @@
 </head>
 <body class="bg-cover bg-center bg-no-repeat bg-gray-100" style="background-image: url('https://cms.thailandprivilege.co.th/stocks/privilege_categorys/o0x0/2k/1f/8nvp2k1ftw3/Travel.jpg');">
     <!-- Sidebar -->
-    @include('components.sidebarCustomer')
+    @include('components.sidebarCorporation')
 
     <div class="flex justify-center items-center min-h-screen">
         <!-- Content -->
