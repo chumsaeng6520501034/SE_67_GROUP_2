@@ -21,7 +21,7 @@
             class="bg-white bg-opacity-80 backdrop-blur-md p-10 rounded-2xl shadow-lg w-[600px] my-5 max-h-[90vh] overflow-y-auto">
             <h2 class="text-center text-4xl font-bold text-[#002D62] mb-6">ADD TOUR</h2>
 
-            <form action="/guideAddTour" method="POST">
+            <form action="/guideAddTour" method="POST" enctype="multipart/form-data">
                 @csrf
                 <!-- Row 1 -->
                 <div class="grid grid-cols-2 gap-4 mb-4">
@@ -98,6 +98,10 @@
                         <label class="block text-gray-700 font-medium">Contact</label>
                         <input type="text" name="contact" class="w-full p-2 border rounded shadow-sm">
                     </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium">Image</label>
+                    <input type="file" name="image" class="w-full p-2 border rounded shadow-sm">
                 </div>
 
                 <div class="flex justify-center mt-6 space-x-4">
