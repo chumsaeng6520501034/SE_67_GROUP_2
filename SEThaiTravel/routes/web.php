@@ -29,8 +29,11 @@ Route::get('/customer', function () {
     return view('customer.myRequest');
 });
 
-Route::get('/cor', function () {
-    return view('corporation.home');
+Route::get('/addTour', function () {
+    return view('corporation.addTour');
+});
+Route::get('/myTour', function () {
+    return view('corporation.myTour');
 });
 
 Route::get('/us',[UserListController::class,'getRequestTour']);
