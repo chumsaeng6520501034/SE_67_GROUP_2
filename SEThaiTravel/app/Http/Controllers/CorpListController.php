@@ -29,6 +29,15 @@ class CorpListController extends Controller
     }
     function addTour(Request $request)
     {
+        $request->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $path = $image->store('images', 'public');
+        } else {
+            $path = NULL;
+        }
         $locationInTourAPI = $request->location;
         $tourData = [
             "from_owner" => 'corp',
@@ -47,7 +56,8 @@ class CorpListController extends Controller
             "travel_by" => $request->travel_by,
             "status" => 'ongoing',
             "offer_id_offer" => NULL,
-            "type_tour" => 'public'
+            "type_tour" => 'public',
+            "tourImage" => $path
         ];
         $tour = new Tour($tourData);
         $tour->save();
@@ -62,11 +72,50 @@ class CorpListController extends Controller
                 "loc_api" => "https://tatdataapi.io/api/v2/places/$api",
                 "tour_id_tour" => $tourId
             ];
-            LocationInTour::insert($locationInTourData);
+            $tour = new Tour($tourData);
+            $tour->save();
+            $tourId = $tour->id_tour;
+            $tourHasGuideData = [
+                "guide_list_account_id_account" => session('userID')->account_id_account,
+                "tour_id_tour" => $tourId
+            ];
+            TourHasGuideList::insert($tourHasGuideData);
+            foreach ($locationInTourAPI as $api) {
+                $locationInTourData = [
+                    "loc_api" => "https://tatdataapi.io/api/v2/places/$api",
+                    "tour_id_tour" => $tourId
+                ];
+                LocationInTour::insert($locationInTourData);
+            }
+            return redirect('/guideHomePage');
         }
-        return redirect('/guideHomePage');
     }
 
+    //เอารายการสินค้าทั้งหมด
+    function getTour()
+    {
+        $idAccount = session('userID')->account_id_account;
+        $tours = DB::table('tour')
+        ->where('from_owner', 'LIKE', 'corp')
+        ->where('owner_id', $idAccount)
+        ->where('end_tour_date', '>', now())
+        ->get();
+        dd($tours);
+        return view('???', compact('tours'));
+    }
+    //เอารายการสินค้าที่หมดอายุทั้งหมด
+    function getHistory()
+    {
+        $idAccount = session('userID')->account_id_account;
+        $histours = DB::table('tour')
+        ->where('from_owner', 'LIKE', 'corp')
+        ->where('owner_id', $idAccount)
+        ->where('end_tour_date', '<', now())
+        ->get();
+        dd($histours);
+        return view('???', compact('histours'));
+    }
+    //เอารายการข้อเสนอทั้งหมด
     function getOffer()
     {
         $idAccount = session('userID')->account_id_account;
@@ -78,6 +127,7 @@ class CorpListController extends Controller
         return view('???', compact('offers'));
     }
 
+    //เอาพนักงานในบ.
     function getStaffInCorp()
     {
         $idAccount = session('userID')->account_id_account;
@@ -113,7 +163,7 @@ class CorpListController extends Controller
         return view('???', compact('payments'));
     }
 
-    //รายละเอียดการโอนเงินครั้งใด ๆ ที่โดนเลือก//
+    //ยังไม่เสร็จ
     function getPaymentDetails(Request $request)
     {
         $idAccount = session('userID')->account_id_account;

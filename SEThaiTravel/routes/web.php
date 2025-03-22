@@ -73,6 +73,16 @@ Route::post('/submitReview',[UserListController::class,'addReview']);
 Route::post('/customerViewReview',[UserListController::class,'viewReviewDetail']);
 Route::get('/searchHistory',[UserListController::class,'searchHistory']);
 
+//corp section
+Route::get('/corpHomepage',[CorpListController::class,'getHomePage']);
+Route::get('/corpAddTourPage',[CorpListController::class,'getAddTour']);
+Route::post('/corpAddTour',[CorpListController::class,'addTour']);
+Route::get('/corpMyTour',[CorpListController::class,'getTour']);
+Route::get('/corpHistory',[CorpListController::class,'getHistory']);
+Route::get('/corpOffer',[CorpListController::class,'getOffer']);
+Route::get('/corpStaff',[CorpListController::class,'getStaffInCorp']);
+Route::get('/corpPayments',[CorpListController::class,'getAllPaymentHistory']);
+
 
 
 //guide section
