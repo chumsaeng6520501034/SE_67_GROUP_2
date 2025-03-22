@@ -30,7 +30,7 @@
 
         <!-- Menu Items -->
         <nav class="flex flex-col space-y-2">
-            <a href="/guideAddTour" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">ADD TOUR</a>
+            <a href="/guideAddTourPage" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">ADD TOUR</a>
             <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">MY TOUR</a>
             <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">MY JOB</a>
             <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">MY OFFER</a>

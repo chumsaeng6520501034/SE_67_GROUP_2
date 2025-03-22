@@ -21,7 +21,8 @@
             class="bg-white bg-opacity-80 backdrop-blur-md p-10 rounded-2xl shadow-lg w-[600px] my-5 max-h-[90vh] overflow-y-auto">
             <h2 class="text-center text-4xl font-bold text-[#002D62] mb-6">ADD TOUR</h2>
 
-            <form>
+            <form action="/guideAddTour" method="POST">
+                @csrf
                 <!-- Row 1 -->
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
@@ -52,14 +53,21 @@
                     </select>
                 </div>
                 <!-- Row 3 -->
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-medium">Hotel</label>
-                    <select name="hotel" id="hotelSelect" class="w-full p-2 border rounded shadow-sm">
-                    </select>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-gray-700 font-medium">Hotel</label>
+                        <select name="hotel" id="hotelSelect" class="w-full p-2 border rounded shadow-sm">
+                            <option value="" selected>Select a Hotel</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium">Hotel price</label>
+                        <input type="number" name="hotelPrice" min="1" class="w-full p-2 border rounded shadow-sm">
+                    </div>
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium">Location in Tour</label>
-                    <select id="locationSelect" name="location[]" class="w-full p-2 border rounded shadow-sm">
+                    <select id="locationSelect"  name="location[]"class="w-full p-2 border rounded shadow-sm">
                     </select>
                     <div id="selectedLocations" class="mt-3 flex flex-wrap gap-2"></div>
                 </div>
@@ -92,10 +100,15 @@
                     </div>
                 </div>
 
-                <div class="mt-6 text-center">
-                    <button type="submit"
-                        class="bg-blue-600 text-white px-6 py-2 rounded shadow-lg text-lg hover:bg-blue-800 transition">
-                        Next
+                <div class="flex justify-center mt-6 space-x-4">
+                    <!-- ปุ่ม BACK -->
+                    <a href="/guideHomePage" class="bg-gray-500 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-red-700 transition">
+                        BACK
+                    </a>
+    
+                    <!-- ปุ่ม SUBMIT -->
+                    <button type="submit" class="bg-[#0F3557] text-white font-bold py-2 px-6 rounded shadow-md hover:bg-blue-700 transition">
+                        ADD TOUR
                     </button>
                 </div>
             </form>
@@ -123,7 +136,6 @@
         const selectedLocations = [];
 
         function loadLocations(provinceId) {
-            locationSelect.innerHTML = '';
 
             fetch(`/api/locationsInprovince/${provinceId}`)
                 .then(res => res.json())
@@ -183,8 +195,6 @@
                 const provinceId = $(this).val();
                 console.log("🌈 Province changed:", provinceId); // ต้องโชว์!
                 const hotelSelect = document.getElementById('hotelSelect');
-                hotelSelect.innerHTML = '';
-                console.log("1");
                 if (!provinceId) return;
                 selectedLocations.length = 0; // เคลียร์รายการเก่าที่เลือกไว้
                 updateSelectedLocations(); // เคลียร์แท็กที่แสดง

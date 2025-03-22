@@ -76,4 +76,6 @@ Route::get('/searchHistory',[UserListController::class,'searchHistory']);
 
 
 //guide section
-Route::get('/guideAddTour',[GuideListController::class,'getAddTour']);
+Route::get('/guideHomePage',[GuideListController::class,'getHomePage']);
+Route::get('/guideAddTourPage',[GuideListController::class,'getAddTour']);
+Route::post('/guideAddTour',[GuideListController::class,'addTour']);
