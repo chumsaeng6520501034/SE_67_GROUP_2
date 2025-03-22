@@ -44,7 +44,7 @@ class AccountController extends Controller
               case "corp"  :
                   $corp= CorpList::find($account->id_account);
                   session(['userID' => $corp]);
-                return view('corpPage');
+                return view('corporation.home');
               case "user"  : 
                   $user= UserList::find($account->id_account);
                   // dd($user);
