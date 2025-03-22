@@ -152,7 +152,7 @@
                                 <form action="/detailBooking" method="POST">
                                     @csrf
                                     <input type="hidden" name="name" value="{{ $booking->name }}">
-                                    <input type="hidden" name="tourID" value={{ $booking->tour_id_tour}}>
+                                    <!-- <input type="hidden" name="tourID" value={{ $booking->tour_id_tour}}> -->
                                     <h2 class="text-2xl font-bold text-blue-600 hover:underline cursor-pointer">
                                         <button type="submit" class="text-blue-600">
                                             {{ ucwords($booking->name) }}

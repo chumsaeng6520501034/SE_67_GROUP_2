@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Http\Request;
 use App\Models\GuideList;
@@ -11,21 +12,25 @@ use App\Models\Payment;
 use App\Models\Offer;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+
 class GuideListController extends Controller
 {
-    function getHomePage(){
+    function getHomePage()
+    {
         return view('guide.home');
     }
-    function checkTourSale(Request $request){
+    function checkTourSale(Request $request)
+    {
         $userID = session('userID')->account_id_account;
-        $tourData = Tour::where('owner_id',$userID)->where('status','ongoing')->get();
+        $tourData = Tour::where('owner_id', $userID)->where('status', 'ongoing')->get();
         dd($tourData);
     }
-    function checkWorkInTour(Request $request){
+    function checkWorkInTour(Request $request)
+    {
         $userID = session('userID')->account_id_account;
-        $workInTourData = TourHasGuideList::where('guide_list_account_id_account',$userID)->get();//ได้มาหลายข้อมูลเป็น array แน่ๆ
-        $toursID =  $workInTourData->pluck('tour_id_tour');//ทำการนำ tourID ทั้งหมดที่ guide เคยทำมารวบอยู่ในตัวแปรเดียวเพื่อนำไป query ต่อ
-        $tourData = Tour::whereIn('id_tour',$toursID)->where('status','finish');//เอาทัวร์ที่เสร็จแล้วเพราะเป็นอดีต
+        $workInTourData = TourHasGuideList::where('guide_list_account_id_account', $userID)->get(); //ได้มาหลายข้อมูลเป็น array แน่ๆ
+        $toursID =  $workInTourData->pluck('tour_id_tour'); //ทำการนำ tourID ทั้งหมดที่ guide เคยทำมารวบอยู่ในตัวแปรเดียวเพื่อนำไป query ต่อ
+        $tourData = Tour::whereIn('id_tour', $toursID)->where('status', 'finish'); //เอาทัวร์ที่เสร็จแล้วเพราะเป็นอดีต
         // return view('workHistory',compact('tourData'));
     }
     // function checkAllPayment(Request $request){
@@ -33,11 +38,13 @@ class GuideListController extends Controller
     //     $toursIOwn = Tour::where('owner_id',$userID)->where('status','ongoing')->get();
     //     $paymentInTour = Payment::where('booking_Tour_id_Tour',);
     // }  
-    function Offer(Request $request){
+    function Offer(Request $request)
+    {
         $requestTourID = 1; // ของจริงจะได้มาจากตอนกด offer  ex $request->requestTourId
-        return view('offerPage',compact('requestTourID'));
+        return view('offerPage', compact('requestTourID'));
     }
-    function addOffer(Request $request){
+    function addOffer(Request $request)
+    {
         $requestTourID = $request->requestTourID;
         $offerData = [
             "request_tour_id_request_tour" => $requestTourID,
@@ -99,7 +106,8 @@ class GuideListController extends Controller
             return response()->json(['error' => 'ไม่สามารถดึงข้อมูลสถานที่ท่องเที่ยวได้'], 500);
         }
     }
-    function getAddTour(){
+    function getAddTour()
+    {
         return view('guide.addTour');
     }
     function addTour (Request $request){
@@ -147,14 +155,28 @@ class GuideListController extends Controller
             "loc_api"=>"https://tatdataapi.io/api/v2/places/$api",
             "tour_id_tour"=> $tourId
         ];
-        LocationInTour::insert($locationInTourData);
-       }
-       return redirect('/guideHomePage');
+        $tour = new Tour($tourData);
+        $tour->save();
+        $tourId = $tour->id_tour;
+        $tourHasGuideData = [
+            "guide_list_account_id_account" => session('userID')->account_id_account,
+            "tour_id_tour" => $tourId
+        ];
+        TourHasGuideList::insert($tourHasGuideData);
+        foreach ($locationInTourAPI as $api) {
+            $locationInTourData = [
+                "loc_api" => "https://tatdataapi.io/api/v2/places/$api",
+                "tour_id_tour" => $tourId
+            ];
+            LocationInTour::insert($locationInTourData);
+        }
+        return redirect('/guideHomePage');
     }
     function getMytour(Request $request){
         $tourData = Tour::where('owner_id',session('userID')->account_id_account)
                          ->paginate(10)->appends($request->query());
         return view('guide.myTour',compact('tourData'));
 
+    }
     }
 }

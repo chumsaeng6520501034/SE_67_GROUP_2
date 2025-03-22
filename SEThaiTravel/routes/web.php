@@ -29,6 +29,10 @@ Route::get('/customer', function () {
     return view('customer.myRequest');
 });
 
+Route::get('/cor', function () {
+    return view('corporation.home');
+});
+
 Route::get('/us',[UserListController::class,'getRequestTour']);
 // Route::get('/ac',[AccountController::class,'checkTable']);
 // Route::get('/bk',[BookingController::class,'checkTable']);
@@ -56,10 +60,6 @@ Route::get('/de', function () {
     return view('customer.history');
 });
 
-// Route::get('/addTour',[UserListController::class,'']);
-Route::get('/addTour', function () {
-    return view('customer.addTour');
-});
 
 
 Route::get('/customerSearch',[UserListController::class,'searchAllTourActive']);
