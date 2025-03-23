@@ -8,7 +8,7 @@
 </head>
 <body class="bg-cover bg-center bg-no-repeat bg-gray-100" style="background-image: url('https://cms.thailandprivilege.co.th/stocks/privilege_categorys/o0x0/2k/1f/8nvp2k1ftw3/Travel.jpg');">
     <!-- Sidebar -->
-    @include('components.sidebarCorporation')
+    @include('components.sidebarCustomer')
 
     <div class="flex justify-center items-center min-h-screen">
         <!-- Content -->
@@ -76,7 +76,7 @@
             {{-- ทำตรงนี้ --}}
 
             
-            @foreach ($tours as $tour)
+            @foreach ($histours as $tour)
             
             <div class="bg-white rounded-lg shadow-md flex p-4 mx-auto w-full relative">
                 <img src="{{ $tour['image_url'] }}" class="rounded-lg shadow-md w-1/3">

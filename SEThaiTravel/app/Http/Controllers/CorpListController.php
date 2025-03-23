@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Http\Request;
 use App\Models\CorpList;
 use Carbon\Carbon;
+use App\Models\RequestTour;
 use App\Models\TourHasGuideList;
 use App\Models\Tour;
 use App\Models\LocationInTour;
@@ -23,10 +24,19 @@ class CorpListController extends Controller
             echo "Table does not exist!";
         }
     }
+    function getHomePage()
+    {
+        return view('corporation.home');
+    }
     function getAddTour()
     {
-        return view('corporation.addTour');
+        $idAccount = session('userID')->account_id_account;
+        $guides = DB::table('guide_list')
+            ->where('corp_list_account_id_account', $idAccount)
+            ->get();
+        return view('corporation.addTour', compact('guides'));
     }
+    
     function addTour(Request $request)
     {
         $request->validate([
@@ -39,6 +49,7 @@ class CorpListController extends Controller
             $path = NULL;
         }
         $locationInTourAPI = $request->location;
+        $guideInCorp = $request->guideList;
         $tourData = [
             "from_owner" => 'corp',
             "owner_id" => session('userID')->account_id_account,
@@ -62,83 +73,78 @@ class CorpListController extends Controller
         $tour = new Tour($tourData);
         $tour->save();
         $tourId = $tour->id_tour;
-        $tourHasGuideData = [
-            "guide_list_account_id_account" => session('userID')->account_id_account,
-            "tour_id_tour" => $tourId
-        ];
-        TourHasGuideList::insert($tourHasGuideData);
+        foreach ($guideInCorp as $guide) {
+            $guideInTour = [
+                "guide_list_account_id_account " => $guide,
+                "tour_id_tour" => $tourId
+            ];
+            TourHasGuideList::insert($guideInTour);
+        }
+
         foreach ($locationInTourAPI as $api) {
             $locationInTourData = [
                 "loc_api" => "https://tatdataapi.io/api/v2/places/$api",
                 "tour_id_tour" => $tourId
             ];
-            $tour = new Tour($tourData);
-            $tour->save();
-            $tourId = $tour->id_tour;
-            $tourHasGuideData = [
-                "guide_list_account_id_account" => session('userID')->account_id_account,
-                "tour_id_tour" => $tourId
-            ];
-            TourHasGuideList::insert($tourHasGuideData);
-            foreach ($locationInTourAPI as $api) {
-                $locationInTourData = [
-                    "loc_api" => "https://tatdataapi.io/api/v2/places/$api",
-                    "tour_id_tour" => $tourId
-                ];
-                LocationInTour::insert($locationInTourData);
-            }
-            return redirect('/guideHomePage');
+            LocationInTour::insert($locationInTourData);
         }
+
+        return redirect('/corpHomepage');
+    }
+    function getHomePage()
+    {
+        return view('corporation.home');
     }
 
-    //เอารายการสินค้าทั้งหมด
-    function getTour()
+    //เอารายการสินค้าทั้งหมด ทำเเล้ว
+    function getTour(Request $request)
     {
         $idAccount = session('userID')->account_id_account;
         $tours = DB::table('tour')
         ->where('from_owner', 'LIKE', 'corp')
         ->where('owner_id', $idAccount)
         ->where('end_tour_date', '>', now())
-        ->get();
-        dd($tours);
-        return view('???', compact('tours'));
+        ->paginate(10)->appends($request->query());
+        // dd($tours);
+        return view('corporation.myTour', compact('tours'));
     }
     //เอารายการสินค้าที่หมดอายุทั้งหมด
     function getHistory()
     {
         $idAccount = session('userID')->account_id_account;
         $histours = DB::table('tour')
-        ->where('from_owner', 'LIKE', 'corp')
-        ->where('owner_id', $idAccount)
-        ->where('end_tour_date', '<', now())
-        ->get();
+            ->where('from_owner', 'LIKE', 'corp')
+            ->where('owner_id', $idAccount)
+            ->where('end_tour_date', '<', now())
+            ->get();
         dd($histours);
-        return view('???', compact('histours'));
-    }
-    //เอารายการข้อเสนอทั้งหมด
-    function getOffer()
-    {
-        $idAccount = session('userID')->account_id_account;
-        $offers = DB::table('offer')
-        ->where('from_who_offer', 'LIKE', 'corp')
-        ->where('id_who_offer', $idAccount)
-        ->get();
-        dd($offers);
-        return view('???', compact('offers'));
+        return view('corporation.sellHistory', compact('histours'));
     }
 
-    //เอาพนักงานในบ.
+    //เอารายการข้อเสนอทั้งหมด
+    function getOffer(Request $request)
+    {
+        $idAccount = session('userID')->account_id_account;
+        $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
+            ->where('o.id_who_offer', $idAccount)
+            ->select('request_tour.*') // Select all columns from request_tour
+            ->get();
+        dd($requestTours);
+        return view('???', compact('requestTours'));
+    }
+
+    //เอาพนักงานในบ. ทำเเล้ว
     function getStaffInCorp()
     {
         $idAccount = session('userID')->account_id_account;
         $guides = DB::table('guide_list')
         ->where('corp_list_account_id_account', $idAccount)
         ->get();
-        dd($guides);
-        return view('???', compact('guides'));
+        // dd($guides);
+        return view('corporation.myStaf', compact('guides'));
     }
 
-    //เอารายการจ่ายทั้งหมด
+    //เอารายการจ่ายทั้งหมด ทำเเล้ว
     function getAllPaymentHistory()
     {
         $idAccount = session('userID')->account_id_account;
@@ -159,8 +165,8 @@ class CorpListController extends Controller
             'p.total_price'
         )
         ->get();
-        dd($payments);
-        return view('???', compact('payments'));
+        // dd($payments);
+        return view('corporation.allPayments', compact('payments'));
     }
 
     //ยังไม่เสร็จ

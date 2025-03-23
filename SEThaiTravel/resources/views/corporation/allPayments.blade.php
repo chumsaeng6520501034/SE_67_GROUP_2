@@ -78,14 +78,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($paymentHistory as $index => $payment)
+                        @foreach($payments as $index => $payments)
                         <tr class="text-center">
                             <td class="border border-gray-300 px-4 py-2">{{ $index + 1 }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $payment->checknumber }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $payment->payment_date }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $payment->booking_user_list_account_id_account }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $payment->booking_Tour_id_Tour }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $payment->total_price}}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $payments->checknumber }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $payments->payment_date }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $payments->booking_Tour_id_Tour }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $payments->tour_id_tour}}</td>
                         </tr>
                         @endforeach 
 
