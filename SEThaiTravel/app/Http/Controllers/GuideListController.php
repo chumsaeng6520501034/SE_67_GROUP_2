@@ -357,8 +357,87 @@ class GuideListController extends Controller
     public function getJobHistory(Request $request){
         $tourData = Tour::join('Tour_has_guide_list', 'tour.id_tour', '=', 'Tour_has_guide_list.tour_id_tour')
         ->where('Tour_has_guide_list.guide_list_account_id_account', session('userID')->account_id_account)
-        ->where('tour.status','LIKE','ongoing')
+        ->where('tour.status','LIKE','finish')
         ->paginate(10)->appends($request->query());
-        return view('guide.myJob',compact('tourData'));
+        return view('guide.jobHistory',compact('tourData'));
     }
+    public function getJobHistoryDetail(Request $request){
+        $tourID = $request->tourID;
+        $tour = Tour::where('id_tour', $tourID)->first();
+        switch ($tour->from_owner) {
+            case "guide":
+              $tourData = Tour::join('guide_list', 'tour.owner_id', '=', 'guide_list.account_id_account')
+                ->where('tour.id_tour', $tourID)
+                ->select('tour.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname')
+                ->first();
+              break;
+            case "corp":
+              $tourData = Tour::join('corp_list', 'tour.owner_id', '=', 'corp_list.account_id_account')
+                ->where('tour.id_tour', $tourID)
+                ->select('tour.*', 'corp_list.name as corp_name')
+                ->first();
+              break;
+        }
+        $totalMember = Booking::where('tour_id_tour', $tourID) //TourID ใช้ของที่กดจองมา
+        ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
+        ->value('Total_Member');
+        $anotherReview = Review::join('booking', 'booking.id_booking', '=', 'review.booking_id_booking')
+                        ->join('tour', 'tour.id_tour', '=', 'booking.tour_id_tour')
+                        ->join('user_list', 'user_list.account_id_account', '=', 'review.user_list_account_id_account')
+                        ->where('tour.id_tour', $tourID)
+                        ->select('review.*', 'user_list.*') // เลือกเฉพาะคอลัมน์ที่ต้องการ
+                        ->get();
+        $locationInTourAPI = LocationInTour::where('tour_id_tour',$tourID)->get();
+        $locations = [];
+        foreach($locationInTourAPI as $api){
+            $locations[] = $this->getLocationsById($api->loc_api);
+        }
+        return view('guide.detailJobHistory', compact('totalMember', 'tourData','anotherReview','locations'));
+    }
+    public function searchMyJobHistory(Request $request){
+        $status = $request->status;
+        $name = $request->name;
+        $startDate = $request->startDate;
+        $endDate = $request->endDate;
+        $tourData=Tour::join('Tour_has_guide_list', 'tour.id_tour', '=', 'Tour_has_guide_list.tour_id_tour')
+            ->where('Tour_has_guide_list.guide_list_account_id_account', session('userID')->account_id_account)
+            ->where('tour.status', 'LIKE', '%' . $status . '%');
+        if (!empty($name)) {
+            $tourData->whereRaw('LOWER(tour.name) LIKE LOWER(?)', ["%$name%"]);
+          }
+      
+          // ✅ กรองวันที่เริ่มต้นทัวร์
+        if (!empty($startDate)) {
+            $tourData->whereDate('tour.start_tour_date', $startDate);
+        }
+      
+          // ✅ กรองวันที่สิ้นสุดทัวร์
+        if (!empty($endDate)) {
+            $tourData->whereDate('tour.end_tour_date', $endDate);
+        }
+        $tourData = $tourData->paginate(10)->appends($request->query());
+        return view('guide.jobHistory',compact('tourData'));
+    }
+    function viewCalendar()
+  {
+    return view('guide.calendar');
+  }
+  function fetchCalendar()
+  { //ดึงข้อมูลมาทำปฏิทิน
+    $tourDatas = Tour::join('Tour_has_guide_list', 'tour.id_tour', '=', 'Tour_has_guide_list.tour_id_tour')
+    ->where('Tour_has_guide_list.guide_list_account_id_account', session('userID')->account_id_account)
+    ->where('tour.status','LIKE','ongoing')->get();
+    // ดึงข้อมูล Tour ทั้งหมดที่อยู่ใน Booking (Query เดียว)
+
+    // จัดรูปแบบข้อมูลให้เหมาะกับ FullCalendar
+    $formattedEvents = $tourDatas->map(function ($tour) {
+      return [
+        'title' => $tour->name,
+        'start' => $tour->start_tour_date,
+        'end' => Carbon::parse($tour->end_tour_date)->addDay()->format('Y-m-d'),
+      ];
+    });
+
+    return response()->json($formattedEvents);
+  }
 }

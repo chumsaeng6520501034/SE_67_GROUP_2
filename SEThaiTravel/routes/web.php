@@ -101,3 +101,7 @@ Route::post('/guideDetailMyTour',[GuideListController::class,'getMyTourDetail'])
 Route::get('/guideMyJop',[GuideListController::class,'getMyJob']);
 Route::post('/guideMyJopDetail',[GuideListController::class,'getMyJobDetail']);
 Route::get('/guideSearchMyJob',[GuideListController::class,'searchMyJob']);
+Route::get('/guideJobHistory',[GuideListController::class,'getJobHistory']);
+Route::post('/guideMyJopHistoryDetail',[GuideListController::class,'getJobHistoryDetail']);
+Route::get('/guideSearchMyJobHistory',[GuideListController::class,'searchMyJobHistory']);
+Route::get('/guideCalendar',[GuideListController::class,'viewCalendar']);

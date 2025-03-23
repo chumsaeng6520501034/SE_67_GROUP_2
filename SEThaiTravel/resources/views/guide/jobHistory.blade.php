@@ -69,7 +69,7 @@
 
         <div id="mainContent" class="flex-1 p-10 transition-all duration-300 overflow-y-auto ml-2">
             <!-- Search and Filter -->
-            <form action="/guideSearchMyJob" method="GET">
+            <form action="/guideSearchMyJobHistory" method="GET">
                 <div class="flex items-center bg-white shadow-md p-4 rounded-lg mb-4 space-x-4">
                     <div class="relative flex-1">
                         <label>Tour name</label>
@@ -149,7 +149,7 @@
                                     {{ $tour->End_of_sale_date }}</p>
                                 <p class="text-gray-800 m-2 text-md font-bold">{{ number_format($tour->price) }} ฿</p>
                                 <div class="flex justify-end space-x-2 ">
-                                    <form action="/guideMyJopDetail" method="POST">
+                                    <form action="/guideMyJopHistoryDetail" method="POST">
                                         @csrf
                                         <button
                                             class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold hover:bg-blue-700" type="submit">INFO</button>

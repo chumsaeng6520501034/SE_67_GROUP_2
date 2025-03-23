@@ -30,15 +30,16 @@
 
         <!-- Menu Items -->
         <nav class="flex flex-col space-y-2">
-            <a href="/guideAddTourPage" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">ADD TOUR</a>
-            <a href="/guideMyTour" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">MY TOUR</a>
-            <a href="/guideMyJop" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">MY JOB</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">MY OFFER</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">JOB HISTORY</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">SELL HISTORY</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">CALENDAR</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">ALL PAYMENT</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">STATISTIC</a>
+            <a href="/guideHomePage" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">SEARCH</a>
+            <a href="/guideAddTourPage" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">ADD TOUR</a>
+            <a href="/guideMyTour" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">MY TOUR</a>
+            <a href="/guideMyJop" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">MY JOB</a>
+            <a href="#" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">MY OFFER</a>
+            <a href="/guideJobHistory" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">JOB HISTORY</a>
+            <a href="#" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">SELL HISTORY</a>
+            <a href="/guideCalendar" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">CALENDAR</a>
+            <a href="#" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">ALL PAYMENT</a>
+            <a href="#" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">STATISTIC</a>
         </nav>
 
         <!-- Log Out -->
