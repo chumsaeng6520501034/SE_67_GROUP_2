@@ -24,6 +24,10 @@ class CorpListController extends Controller
             echo "Table does not exist!";
         }
     }
+    function getHomePage()
+    {
+        return view('corporation.home');
+    }
     function getAddTour()
     {
         $idAccount = session('userID')->account_id_account;
@@ -84,7 +88,7 @@ class CorpListController extends Controller
             LocationInTour::insert($locationInTourData);
         }
 
-        return redirect('/guideHomePage');
+        return redirect('/corpHomepage');
     }
 
 
@@ -112,6 +116,7 @@ class CorpListController extends Controller
         dd($histours);
         return view('???', compact('histours'));
     }
+
     //เอารายการข้อเสนอทั้งหมด
     function getOffer()
     {
