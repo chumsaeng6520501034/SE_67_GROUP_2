@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Http\Request;
 use App\Models\CorpList;
 use Carbon\Carbon;
+use App\Models\RequestTour;
 use App\Models\TourHasGuideList;
 use App\Models\Tour;
 use App\Models\LocationInTour;
@@ -25,7 +26,11 @@ class CorpListController extends Controller
     }
     function getAddTour()
     {
-        return view('corporation.addTour');
+        $idAccount = session('userID')->account_id_account;
+        $guides = DB::table('guide_list')
+            ->where('corp_list_account_id_account', $idAccount)
+            ->get();
+        return view('corporation.addTour', compact('guides'));
     }
     function addTour(Request $request)
     {
@@ -39,6 +44,7 @@ class CorpListController extends Controller
             $path = NULL;
         }
         $locationInTourAPI = $request->location;
+        $guideInCorp = $request->guideList;
         $tourData = [
             "from_owner" => 'corp',
             "owner_id" => session('userID')->account_id_account,
@@ -62,44 +68,35 @@ class CorpListController extends Controller
         $tour = new Tour($tourData);
         $tour->save();
         $tourId = $tour->id_tour;
-        $tourHasGuideData = [
-            "guide_list_account_id_account" => session('userID')->account_id_account,
-            "tour_id_tour" => $tourId
-        ];
-        TourHasGuideList::insert($tourHasGuideData);
+        foreach ($guideInCorp as $guide) {
+            $guideInTour = [
+                "guide_list_account_id_account " => $guide,
+                "tour_id_tour" => $tourId
+            ];
+            TourHasGuideList::insert($guideInTour);
+        }
+
         foreach ($locationInTourAPI as $api) {
             $locationInTourData = [
                 "loc_api" => "https://tatdataapi.io/api/v2/places/$api",
                 "tour_id_tour" => $tourId
             ];
-            $tour = new Tour($tourData);
-            $tour->save();
-            $tourId = $tour->id_tour;
-            $tourHasGuideData = [
-                "guide_list_account_id_account" => session('userID')->account_id_account,
-                "tour_id_tour" => $tourId
-            ];
-            TourHasGuideList::insert($tourHasGuideData);
-            foreach ($locationInTourAPI as $api) {
-                $locationInTourData = [
-                    "loc_api" => "https://tatdataapi.io/api/v2/places/$api",
-                    "tour_id_tour" => $tourId
-                ];
-                LocationInTour::insert($locationInTourData);
-            }
-            return redirect('/guideHomePage');
+            LocationInTour::insert($locationInTourData);
         }
+
+        return redirect('/guideHomePage');
     }
+
 
     //เอารายการสินค้าทั้งหมด
     function getTour()
     {
         $idAccount = session('userID')->account_id_account;
         $tours = DB::table('tour')
-        ->where('from_owner', 'LIKE', 'corp')
-        ->where('owner_id', $idAccount)
-        ->where('end_tour_date', '>', now())
-        ->get();
+            ->where('from_owner', 'LIKE', 'corp')
+            ->where('owner_id', $idAccount)
+            ->where('end_tour_date', '>', now())
+            ->get();
         dd($tours);
         return view('???', compact('tours'));
     }
@@ -108,10 +105,10 @@ class CorpListController extends Controller
     {
         $idAccount = session('userID')->account_id_account;
         $histours = DB::table('tour')
-        ->where('from_owner', 'LIKE', 'corp')
-        ->where('owner_id', $idAccount)
-        ->where('end_tour_date', '<', now())
-        ->get();
+            ->where('from_owner', 'LIKE', 'corp')
+            ->where('owner_id', $idAccount)
+            ->where('end_tour_date', '<', now())
+            ->get();
         dd($histours);
         return view('???', compact('histours'));
     }
@@ -119,12 +116,12 @@ class CorpListController extends Controller
     function getOffer()
     {
         $idAccount = session('userID')->account_id_account;
-        $offers = DB::table('offer')
-        ->where('from_who_offer', 'LIKE', 'corp')
-        ->where('id_who_offer', $idAccount)
-        ->get();
-        dd($offers);
-        return view('???', compact('offers'));
+        $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
+            ->where('o.id_who_offer', $idAccount)
+            ->select('request_tour.*') // Select all columns from request_tour
+            ->get();
+        dd($requestTours);
+        return view('???', compact('requestTours'));
     }
 
     //เอาพนักงานในบ.
@@ -132,8 +129,8 @@ class CorpListController extends Controller
     {
         $idAccount = session('userID')->account_id_account;
         $guides = DB::table('guide_list')
-        ->where('corp_list_account_id_account', $idAccount)
-        ->get();
+            ->where('corp_list_account_id_account', $idAccount)
+            ->get();
         dd($guides);
         return view('???', compact('guides'));
     }
@@ -143,22 +140,22 @@ class CorpListController extends Controller
     {
         $idAccount = session('userID')->account_id_account;
         $payments = DB::table('payment as p')
-        ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
-        ->join('tour as t', 't.id_tour', '=', 'b.tour_id_tour')
-        ->join('corp_list as c', function ($join) {
-            $join->on('c.account_id_account', '=', 't.owner_id')
-                ->where('t.from_owner', 'LIKE', 'corp');
-        })
-        ->where('c.account_id_account', $idAccount)
-        ->select(
-            'p.id_payment',
-            'p.booking_Tour_id_Tour',
-            'p.booking_user_list_account_id_account',
-            'p.payment_date',
-            'p.checknumber',
-            'p.total_price'
-        )
-        ->get();
+            ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
+            ->join('tour as t', 't.id_tour', '=', 'b.tour_id_tour')
+            ->join('corp_list as c', function ($join) {
+                $join->on('c.account_id_account', '=', 't.owner_id')
+                    ->where('t.from_owner', 'LIKE', 'corp');
+            })
+            ->where('c.account_id_account', $idAccount)
+            ->select(
+                'p.id_payment',
+                'p.booking_Tour_id_Tour',
+                'p.booking_user_list_account_id_account',
+                'p.payment_date',
+                'p.checknumber',
+                'p.total_price'
+            )
+            ->get();
         dd($payments);
         return view('???', compact('payments'));
     }
