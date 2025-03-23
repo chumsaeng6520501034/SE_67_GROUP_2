@@ -85,7 +85,7 @@ class UserListController extends Controller
   //หน้าแก้ไขรีวิว
   function changeReviewForm(Request $request)
   {
-    $bookingID = $request->$bookingID;
+    $bookingID = $request->bookingID;
     $tourID = $request->tourID;
     $userID = session('userID')->account_id_account;
     $guideID = $request->guideID;
@@ -590,7 +590,7 @@ class UserListController extends Controller
   //หน้าสำหรับแก้ไขรีเควสท์ มีแก้อีก
   function changeRequestForm(Request $request)
   {
-    $bookingID = $request->$bookingID;
+    $bookingID = $request->bookingID;
     $tourID = $request->tourID;
     $userID = session('userID')->account_id_account;
     $guideID = $request->guideID;
