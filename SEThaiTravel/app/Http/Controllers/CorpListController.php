@@ -91,10 +91,6 @@ class CorpListController extends Controller
 
         return redirect('/corpHomepage');
     }
-    function getHomePage()
-    {
-        return view('corporation.home');
-    }
 
     //เอารายการสินค้าทั้งหมด ทำเเล้ว
     function getTour(Request $request)
