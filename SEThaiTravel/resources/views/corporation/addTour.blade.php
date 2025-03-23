@@ -82,6 +82,16 @@
                     </select>
                 </div>
 
+                <!-- เลือกไกด์ -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium">Guide</label>
+                    <select name="guideList[]" class="w-full p-2 border rounded shadow-sm">
+                    @foreach ($guides as $guide)
+                        <option value="{{ $guide->account_id_account }}">{{ $guide->name }} {{ $guide->surname }}</option>
+                    @endforeach
+                    </select>
+                </div>
+
                 <!-- Row 5 (Description) -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium">Description</label>

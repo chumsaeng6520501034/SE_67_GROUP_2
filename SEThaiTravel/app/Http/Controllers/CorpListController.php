@@ -75,7 +75,7 @@ class CorpListController extends Controller
         $tourId = $tour->id_tour;
         foreach ($guideInCorp as $guide) {
             $guideInTour = [
-                "guide_list_account_id_account " => $guide,
+                "guide_list_account_id_account" => $guide,
                 "tour_id_tour" => $tourId
             ];
             TourHasGuideList::insert($guideInTour);
@@ -90,10 +90,6 @@ class CorpListController extends Controller
         }
 
         return redirect('/corpHomepage');
-    }
-    function getHomePage()
-    {
-        return view('corporation.home');
     }
 
     //เอารายการสินค้าทั้งหมด ทำเเล้ว
@@ -117,7 +113,7 @@ class CorpListController extends Controller
             ->where('owner_id', $idAccount)
             ->where('end_tour_date', '<', now())
             ->get();
-        dd($histours);
+        // dd($histours);
         return view('corporation.sellHistory', compact('histours'));
     }
 
@@ -130,7 +126,7 @@ class CorpListController extends Controller
             ->select('request_tour.*') // Select all columns from request_tour
             ->get();
         dd($requestTours);
-        return view('???', compact('requestTours'));
+        return view('corporation.myOffer', compact('requestTours'));
     }
 
     //เอาพนักงานในบ. ทำเเล้ว

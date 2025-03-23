@@ -8,7 +8,7 @@
 </head>
 <body class="bg-cover bg-center bg-no-repeat bg-gray-100" style="background-image: url('https://cms.thailandprivilege.co.th/stocks/privilege_categorys/o0x0/2k/1f/8nvp2k1ftw3/Travel.jpg');">
     <!-- Sidebar -->
-    @include('components.sidebarCustomer')
+    @include('components.sidebarCorporation')
 
     <div class="flex justify-center items-center min-h-screen">
         <!-- Content -->
@@ -46,7 +46,7 @@
             @php
             $tours = [];
 
-                foreach ($historyData as $history) {
+                foreach ($histours as $history) {
                     $reviewCount = \App\Models\Review::where('booking_id_booking', $history->id_booking)->count();
                     $tours[] = [
                     "image_url" => "https://www.treehouse-villas.com/wp-content/uploads/2024/01/%E0%B8%84%E0%B8%B9%E0%B9%88%E0%B8%A1%E0%B8%B7%E0%B8%AD%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B9%80%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%A2%E0%B8%A7%E0%B8%A0%E0%B8%B9%E0%B9%80%E0%B8%81%E0%B9%87%E0%B8%95%E0%B8%89%E0%B8%9A%E0%B8%B1%E0%B8%9A%E0%B8%9A%E0%B8%84%E0%B8%99%E0%B8%A1%E0%B8%B2%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B9%81%E0%B8%A3%E0%B8%81-2024.webp",
