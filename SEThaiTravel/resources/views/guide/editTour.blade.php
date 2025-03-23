@@ -19,19 +19,21 @@
         <!-- กล่องเนื้อหาที่อาจยาวจนต้อง scroll -->
         <div
             class="bg-white bg-opacity-80 backdrop-blur-md p-10 rounded-2xl shadow-lg w-[600px] my-5 max-h-[90vh] overflow-y-auto">
-            <h2 class="text-center text-4xl font-bold text-[#002D62] mb-6">ADD TOUR</h2>
+            <h2 class="text-center text-4xl font-bold text-[#002D62] mb-6">EDIT TOUR</h2>
 
-            <form action="/guideAddTour" method="POST" enctype="multipart/form-data">
+            <form action="/guideEditTour" method="POST" enctype="multipart/form-data">
                 @csrf
                 <!-- Row 1 -->
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block text-gray-700 font-medium">Tour Name*</label>
-                        <input type="text" name="tour_name" class="w-full p-2 border rounded shadow-sm">
+                        <input type="text" name="tour_name" class="w-full p-2 border rounded shadow-sm"
+                            value={{ $tourData->name }}>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-medium">Price*</label>
-                        <input type="number" name="price" class="w-full p-2 border rounded shadow-sm">
+                        <input type="number" name="price" class="w-full p-2 border rounded shadow-sm"
+                            value={{ $tourData->price }}>
                     </div>
                 </div>
 
@@ -39,11 +41,13 @@
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block text-gray-700 font-medium">Start Date*</label>
-                        <input type="date" name="start_date" class="w-full p-2 border rounded shadow-sm">
+                        <input type="date" name="start_date" class="w-full p-2 border rounded shadow-sm"
+                            value="{{ $tourData->start_tour_date }}">
                     </div>
                     <div>
                         <label class="block text-gray-700 font-medium">End Date*</label>
-                        <input type="date" name="end_date" class="w-full p-2 border rounded shadow-sm">
+                        <input type="date" name="end_date" class="w-full p-2 border rounded shadow-sm"
+                            value="{{ $tourData->end_tour_date }}">
                     </div>
                 </div>
                 <div class="mb-4">
@@ -62,12 +66,13 @@
                     </div>
                     <div>
                         <label class="block text-gray-700 font-medium">Hotel price</label>
-                        <input type="number" name="hotelPrice" min="1" class="w-full p-2 border rounded shadow-sm">
+                        <input type="number" name="hotelPrice" min="1"
+                            class="w-full p-2 border rounded shadow-sm" value="{{ $tourData->hotel_price }}">
                     </div>
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium">Location in Tour</label>
-                    <select id="locationSelect"  name="location[]"class="w-full p-2 border rounded shadow-sm">
+                    <select id="locationSelect" name="location[]"class="w-full p-2 border rounded shadow-sm">
                     </select>
                     <div id="selectedLocations" class="mt-3 flex flex-wrap gap-2"></div>
                 </div>
@@ -76,68 +81,140 @@
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium">Travel By</label>
                     <select name="travel_by" class="w-full p-2 border rounded shadow-sm">
-                        <option>BUS</option>
-                        <option>TAXI</option>
-                        <option>CAR</option>
+                        <option @if ($tourData->travel_by == 'BUS') {{ 'selected' }} @endif value="BUS">BUS</option>
+                        <option @if ($tourData->travel_by == 'TAXI') {{ 'selected' }} @endif value="TAXI">TAXI
+                        </option>
+                        <option @if ($tourData->travel_by == 'CAR') {{ 'selected' }} @endif value="CAR">CAR</option>
                     </select>
                 </div>
 
                 <!-- Row 5 (Description) -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium">Description</label>
-                    <textarea name="description" class="w-full p-2 border rounded shadow-sm h-24"></textarea>
+                    <textarea name="description" class="w-full p-2 border rounded shadow-sm h-24">{{ $tourData->description }}</textarea>
                 </div>
 
                 <!-- Row 6 -->
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block text-gray-700 font-medium">Quantity</label>
-                        <input type="number" name="quantity" class="w-full p-2 border rounded shadow-sm">
+                        <input type="number" name="quantity" class="w-full p-2 border rounded shadow-sm"
+                            value="{{ $tourData->tour_capacity }}">
                     </div>
                     <div>
                         <label class="block text-gray-700 font-medium">Contact</label>
-                        <input type="text" name="contact" class="w-full p-2 border rounded shadow-sm">
+                        <input type="text" name="contact" class="w-full p-2 border rounded shadow-sm"
+                            value="{{ $tourData->contect }}">
                     </div>
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium">Image</label>
-                    <input type="file" name="image" class="w-full p-2 border rounded shadow-sm">
+                    <input type="file" id="imageInput" name="image" class="w-full p-2 border rounded shadow-sm" >
+                </div>
+                <div class="mt-2">
+                    @if (is_null($tourData->tourImage))
+                        <img src="https://quintessentially.com/assets/noted/Header_2023-04-12-154210_sigz.webp"
+                            alt="Bangkok" class="w-full object-cover mt-2" id="imagePreview">
+                    @else
+                        <img src="{{ asset('storage/' . $tourData->tourImage) }}" alt="image"
+                            class="w-full object-cover mt-2" id="imagePreview">
+                    @endif
                 </div>
 
                 <div class="flex justify-center mt-6 space-x-4">
                     <!-- ปุ่ม BACK -->
-                    <a href="/guideHomePage" class="bg-gray-500 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-red-700 transition">
+                    <a href="/guideMyTour"
+                        class="bg-gray-500 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-red-700 transition">
                         BACK
                     </a>
-    
+                    <input type="hidden" name="Release" value="{{$tourData->Release_date}}">
+                    <input type="hidden" name="End" value="{{$tourData->End_of_sale_date}}">
+                    <input type="hidden" name="tourID" value="{{$tourData->id_tour}}">
+                    <input type="hidden" name="tourImage" value="{{$tourData->tourImage}}">
                     <!-- ปุ่ม SUBMIT -->
-                    <button type="submit" class="bg-[#0F3557] text-white font-bold py-2 px-6 rounded shadow-md hover:bg-blue-700 transition">
-                        ADD TOUR
+                    <button type="submit"
+                        class="bg-[#0F3557] text-white font-bold py-2 px-6 rounded shadow-md hover:bg-blue-700 transition">
+                        UPDATE TOUR
                     </button>
                 </div>
             </form>
         </div>
     </div>
     <script>
+        const locationSelect = document.getElementById('locationSelect');
+        const selectedContainer = document.getElementById('selectedLocations');
+        let selectedLocations = [];
+        $(locationSelect).select2();
         document.addEventListener("DOMContentLoaded", function() {
             fetch('/api/provinces')
                 .then(response => response.json())
                 .then(data => {
                     const select = document.getElementById('provinceSelect');
+                    const selectedProvinceId = @json($provinceId);
                     if (data && data.length > 0) {
                         data.forEach(province => {
                             let option = document.createElement('option');
                             option.value = province.id;
                             option.textContent = province.name;
+                            if (province.id === selectedProvinceId) {
+                                option.selected = true;
+                            }
                             select.appendChild(option);
                         });
                     }
                 })
                 .catch(error => console.error('Error fetching provinces:', error));
+            const hotelSelected = document.getElementById('hotelSelect');
+            const hotelName = @json($tourData->hotel);
+            fetch(`/api/hotelsInprovince/${@json($provinceId)}`)
+                .then(res => res.json())
+                .then(data => {
+                    data.data.forEach(hotel => {
+                        const option = document.createElement('option');
+                        option.value = hotel.name;
+                        option.textContent = hotel.name;
+                        if (option.value === hotelName) {
+                            option.selected = true;
+                        }
+                        hotelSelected.appendChild(option);
+                    });
+                });
+            const locationsSelected = @json($locations);
+            console.log(locationsSelected);
+            fetch(`/api/locationsInprovince/${@json($provinceId)}`)
+                .then(res => res.json())
+                .then(locations => {
+                    locations.data.forEach(loc => {
+                        const option = document.createElement('option');
+                        option.value = loc.placeId;
+                        option.textContent = loc.name;
+                        locationSelect.appendChild(option);
+                        locationsSelected.forEach(location => {
+                            const selectedId = parseInt(location.original.placeId);
+                            const selectedName = loc.name;
+                            if (option.value === location.original.placeId) {
+                                selectedLocations.push({
+                                    id: selectedId,
+                                    name: selectedName
+                                });
+                                const optionToDisable = locationSelect.querySelector(
+                                    `option[value="${selectedId}"]`);
+                                if (optionToDisable) {
+                                    optionToDisable.disabled = true;
+                                }
+                            }
+                        });
+                    });
+                    selectedLocations = selectedLocations.filter(item => !isNaN(item.id));
+                    updateSelectedLocations();
+                    locationSelect.value = ''; // รีเซ็ตค่า select
+                    console.log(selectedLocations);
+                })
+                .catch(err => {
+                    console.error('❌ error loading locations:', err);
+                    locationSelect.innerHTML = '<option disabled>โหลดไม่สำเร็จ</option>';
+                });
         });
-        const locationSelect = document.getElementById('locationSelect');
-        const selectedContainer = document.getElementById('selectedLocations');
-        const selectedLocations = [];
 
         function loadLocations(provinceId) {
 
@@ -177,6 +254,17 @@
             updateSelectedLocations();
             $(`#locationSelect option[value="${removed.id}"]`).prop('disabled', false);
         }
+        document.getElementById('imageInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // ใช้ FileReader เพื่อแสดงตัวอย่างภาพที่เลือก
+                    document.getElementById('imagePreview').src = e.target.result;
+                };
+                reader.readAsDataURL(file); // อ่านไฟล์เป็น data URL
+            }
+        });
 
         $(document).ready(function() {
             console.log("✅ jQuery ready");

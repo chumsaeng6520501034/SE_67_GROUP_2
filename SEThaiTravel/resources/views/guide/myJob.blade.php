@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Tour</title>
+    <title>My Job</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -69,7 +69,7 @@
 
         <div id="mainContent" class="flex-1 p-10 transition-all duration-300 overflow-y-auto ml-2">
             <!-- Search and Filter -->
-            <form action="/guideSearchMyTour" method="GET">
+            <form action="/guideSearchMyJob" method="GET">
                 <div class="flex items-center bg-white shadow-md p-4 rounded-lg mb-4 space-x-4">
                     <div class="relative flex-1">
                         <label>Tour name</label>
@@ -117,13 +117,9 @@
                                     class="w-1/3 object-cover">
                             @endif
                             <div class="p-6 flex-1">
-                                <form action="/guideDetailMyTour" method="POST">
-                                    @csrf
-                                    <h2 class="text-2xl font-bold text-black-600 hover:text-blue-500">
-                                        <input type="hidden" name="tourID" value={{$tour->id_tour}}>
-                                        <button type="submit"> {{ ucwords($tour->name) }} </button>
-                                    </h2>
-                                </form>
+                                <h2 class="text-2xl font-bold text-black-600 ">
+                                    {{ ucwords($tour->name) }}
+                                </h2>
                                 <p class="text-gray-600 mt-1">{{ $tour->description }}</p>
                                 @switch($tour->status)
                                     @case('ongoing')
@@ -152,35 +148,14 @@
                                 <p class="text-gray-600 text-md font-semibold">
                                     {{ $tour->End_of_sale_date }}</p>
                                 <p class="text-gray-800 m-2 text-md font-bold">{{ number_format($tour->price) }} ฿</p>
-                                <div class="flex justify-end space-x-2">
-                                    <form action="/guideEditTourPage" method="GET">
+                                <div class="flex justify-end space-x-2 ">
+                                    <form action="/guideMyJopDetail" method="POST">
+                                        @csrf
                                         <button
-                                            class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
-                                        <input type="hidden" name="tourID" value={{ $tour->id_tour }}>
+                                            class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold hover:bg-blue-700" type="submit">INFO</button>
+                                        <input type="hidden" name="tourID" value={{ $tour->id_tour}}>
                                     </form>
-                                    <!-- Delete Button -->
-                                    <button onclick="openModal({{ $tour->id_tour }})"
-                                        class="bg-red-600 text-white px-4 py-2 rounded-md font-bold">Delete</button>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="deleteModal{{ $tour->id_tour }}"
-                        class="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 hidden">
-                        <div class="bg-white p-6 rounded-md shadow-lg w-1/3">
-                            <h3 class="text-lg font-semibold text-gray-800">Are you sure you want to delete?</h3>
-                            <p class="text-sm text-gray-600">{{ $tour->name }}</p>
-                            <div class="mt-4 flex justify-between">
-                                <!-- Cancel Button -->
-                                <button onclick="closeModal({{ $tour->id_tour }})"
-                                    class="bg-gray-400 text-white px-4 py-2 rounded-md">Cancel</button>
-                                <!-- Confirm Button (Form for Deleting) -->
-                                <form action="/guideDeleteMyTour" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="tourID" value={{ $tour->id_tour }}>
-                                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md">Confirm
-                                        Delete</button>
-                                </form>
                             </div>
                         </div>
                     </div>
