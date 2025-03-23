@@ -72,20 +72,19 @@
                         <tr class="bg-blue-500 text-white">
                             <th class="border border-blue-500 px-4 py-2">NO.</th>
                             <th class="border border-blue-500 px-4 py-2">Name</th>
+                            <th class="border border-blue-500 px-4 py-2">Surname</th>
                             <th class="border border-blue-500 px-4 py-2">License</th>
                             <th class="border border-blue-500 px-4 py-2">Phone Number</th>
-                            <th class="border border-blue-500 px-4 py-2">Country</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($paymentHistory as $index => $payment)
+                        @foreach($guides as $index => $guides)
                         <tr class="text-center">
                             <td class="border border-gray-300 px-4 py-2">{{ $index + 1 }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $payment->checknumber }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $payment->payment_date }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $payment->booking_user_list_account_id_account }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $payment->booking_Tour_id_Tour }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $payment->total_price}}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $guides->name }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $guides->surname }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $guides->guide_license }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $guides->phonenumber }}</td>
                         </tr>
                         @endforeach 
 

@@ -27,6 +27,7 @@ class CorpListController extends Controller
     {
         return view('corporation.addTour');
     }
+    
     function addTour(Request $request)
     {
         $request->validate([
@@ -87,21 +88,25 @@ class CorpListController extends Controller
                 ];
                 LocationInTour::insert($locationInTourData);
             }
-            return redirect('/guideHomePage');
+            return redirect('/corpHomepage');
         }
     }
+    function getHomePage()
+    {
+        return view('corporation.home');
+    }
 
-    //เอารายการสินค้าทั้งหมด
-    function getTour()
+    //เอารายการสินค้าทั้งหมด ทำเเล้ว
+    function getTour(Request $request)
     {
         $idAccount = session('userID')->account_id_account;
         $tours = DB::table('tour')
         ->where('from_owner', 'LIKE', 'corp')
         ->where('owner_id', $idAccount)
         ->where('end_tour_date', '>', now())
-        ->get();
-        dd($tours);
-        return view('???', compact('tours'));
+        ->paginate(10)->appends($request->query());
+        // dd($tours);
+        return view('corporation.myTour', compact('tours'));
     }
     //เอารายการสินค้าที่หมดอายุทั้งหมด
     function getHistory()
@@ -113,32 +118,32 @@ class CorpListController extends Controller
         ->where('end_tour_date', '<', now())
         ->get();
         dd($histours);
-        return view('???', compact('histours'));
+        return view('corporation.sellHistory', compact('histours'));
     }
     //เอารายการข้อเสนอทั้งหมด
-    function getOffer()
+    function getOffer(Request $request)
     {
         $idAccount = session('userID')->account_id_account;
         $offers = DB::table('offer')
         ->where('from_who_offer', 'LIKE', 'corp')
         ->where('id_who_offer', $idAccount)
-        ->get();
-        dd($offers);
-        return view('???', compact('offers'));
+        ->paginate(10)->appends($request->query());
+        // dd($offers);
+        return view('corporation.myOffer', compact('offers'));
     }
 
-    //เอาพนักงานในบ.
+    //เอาพนักงานในบ. ทำเเล้ว
     function getStaffInCorp()
     {
         $idAccount = session('userID')->account_id_account;
         $guides = DB::table('guide_list')
         ->where('corp_list_account_id_account', $idAccount)
         ->get();
-        dd($guides);
-        return view('???', compact('guides'));
+        // dd($guides);
+        return view('corporation.myStaf', compact('guides'));
     }
 
-    //เอารายการจ่ายทั้งหมด
+    //เอารายการจ่ายทั้งหมด ทำเเล้ว
     function getAllPaymentHistory()
     {
         $idAccount = session('userID')->account_id_account;
@@ -159,8 +164,8 @@ class CorpListController extends Controller
             'p.total_price'
         )
         ->get();
-        dd($payments);
-        return view('???', compact('payments'));
+        // dd($payments);
+        return view('corporation.allPayments', compact('payments'));
     }
 
     //ยังไม่เสร็จ
