@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Http\Request;
 use App\Models\CorpList;
 use Carbon\Carbon;
+use App\Models\RequestTour;
 use App\Models\TourHasGuideList;
 use App\Models\Tour;
 use App\Models\LocationInTour;
@@ -25,7 +26,11 @@ class CorpListController extends Controller
     }
     function getAddTour()
     {
-        return view('corporation.addTour');
+        $idAccount = session('userID')->account_id_account;
+        $guides = DB::table('guide_list')
+            ->where('corp_list_account_id_account', $idAccount)
+            ->get();
+        return view('corporation.addTour', compact('guides'));
     }
     
     function addTour(Request $request)
@@ -40,6 +45,7 @@ class CorpListController extends Controller
             $path = NULL;
         }
         $locationInTourAPI = $request->location;
+        $guideInCorp = $request->guideList;
         $tourData = [
             "from_owner" => 'corp',
             "owner_id" => session('userID')->account_id_account,
@@ -63,33 +69,23 @@ class CorpListController extends Controller
         $tour = new Tour($tourData);
         $tour->save();
         $tourId = $tour->id_tour;
-        $tourHasGuideData = [
-            "guide_list_account_id_account" => session('userID')->account_id_account,
-            "tour_id_tour" => $tourId
-        ];
-        TourHasGuideList::insert($tourHasGuideData);
+        foreach ($guideInCorp as $guide) {
+            $guideInTour = [
+                "guide_list_account_id_account " => $guide,
+                "tour_id_tour" => $tourId
+            ];
+            TourHasGuideList::insert($guideInTour);
+        }
+
         foreach ($locationInTourAPI as $api) {
             $locationInTourData = [
                 "loc_api" => "https://tatdataapi.io/api/v2/places/$api",
                 "tour_id_tour" => $tourId
             ];
-            $tour = new Tour($tourData);
-            $tour->save();
-            $tourId = $tour->id_tour;
-            $tourHasGuideData = [
-                "guide_list_account_id_account" => session('userID')->account_id_account,
-                "tour_id_tour" => $tourId
-            ];
-            TourHasGuideList::insert($tourHasGuideData);
-            foreach ($locationInTourAPI as $api) {
-                $locationInTourData = [
-                    "loc_api" => "https://tatdataapi.io/api/v2/places/$api",
-                    "tour_id_tour" => $tourId
-                ];
-                LocationInTour::insert($locationInTourData);
-            }
-            return redirect('/corpHomepage');
+            LocationInTour::insert($locationInTourData);
         }
+
+        return redirect('/guideHomePage');
     }
     function getHomePage()
     {
@@ -113,10 +109,10 @@ class CorpListController extends Controller
     {
         $idAccount = session('userID')->account_id_account;
         $histours = DB::table('tour')
-        ->where('from_owner', 'LIKE', 'corp')
-        ->where('owner_id', $idAccount)
-        ->where('end_tour_date', '<', now())
-        ->get();
+            ->where('from_owner', 'LIKE', 'corp')
+            ->where('owner_id', $idAccount)
+            ->where('end_tour_date', '<', now())
+            ->get();
         dd($histours);
         return view('corporation.sellHistory', compact('histours'));
     }
@@ -124,12 +120,12 @@ class CorpListController extends Controller
     function getOffer(Request $request)
     {
         $idAccount = session('userID')->account_id_account;
-        $offers = DB::table('offer')
-        ->where('from_who_offer', 'LIKE', 'corp')
-        ->where('id_who_offer', $idAccount)
-        ->paginate(10)->appends($request->query());
-        // dd($offers);
-        return view('corporation.myOffer', compact('offers'));
+        $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
+            ->where('o.id_who_offer', $idAccount)
+            ->select('request_tour.*') // Select all columns from request_tour
+            ->get();
+        dd($requestTours);
+        return view('???', compact('requestTours'));
     }
 
     //เอาพนักงานในบ. ทำเเล้ว
