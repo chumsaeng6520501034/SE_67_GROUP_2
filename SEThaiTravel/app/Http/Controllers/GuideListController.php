@@ -12,6 +12,9 @@ use App\Models\Payment;
 use App\Models\Offer;
 use App\Models\Booking;
 use App\Models\Review;
+use App\Models\RequestTour;
+use App\Models\UserList;
+use App\Models\CorpList;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
@@ -440,4 +443,228 @@ class GuideListController extends Controller
 
     return response()->json($formattedEvents);
   }
+  public function searchAll(Request $request){
+    $name = $request->searchKey;
+    $startDate = $request->startDate;
+    $endDate = $request->endDate;
+    $type = $request->type;
+    $path = $_SERVER['REQUEST_URI'];
+    if($type == "tour"){
+        $searchTourData = Tour::where('status', 'LIKE', 'ongoing');
+        if(is_numeric($name)){
+            $searchTourData->where('offer_id_offer','=',$name)->where('type_tour', 'LIKE', 'private');
+            if (!empty($startDate)) {
+                $searchTourData->whereDate('tour.start_tour_date', $startDate);
+            }
+                  // ✅ กรองวันที่สิ้นสุดทัวร์
+            if (!empty($endDate)) {
+                $searchTourData->whereDate('tour.end_tour_date', $endDate);
+            }
+        }
+        else{
+            if (!empty($name)) {
+                $searchTourData->whereRaw('LOWER(tour.name) LIKE LOWER(?)', ["%$name%"]);
+            }
+            if (!empty($startDate)) {
+                $searchTourData->whereDate('tour.start_tour_date', $startDate);
+            }
+                  // ✅ กรองวันที่สิ้นสุดทัวร์
+            if (!empty($endDate)) {
+                $searchTourData->whereDate('tour.end_tour_date', $endDate);
+            }
+            $searchTourData->where('type_tour', 'LIKE', 'public');
+        }
+        $searchTourData = $searchTourData->paginate(5)->appends($request->query());
+        $totalData = $searchTourData->count();
+        $ownerData = [];
+        $totalMember = [];
+        $ownerScore = [];
+        for($i=0;$i<$totalData;$i++) { //อันนหาหาข้อมูลของเจ้าของทัวร์นั้นๆแล้วส่งไปใน view ด้วยเผื่อใช้
+            switch ($searchTourData[$i]->from_owner) {
+                case "guide":
+                $ownerData[] = GuideList::where('account_id_account','=',$searchTourData[$i]->owner_id)->first();
+                $ownerScore[] = Review::leftJoin('guide_list', 'review.guide_list_account_id_account', '=', 'guide_list.account_id_account')
+                    ->where('guide_list.account_id_account', $searchTourData[$i]->owner_id) // กรองเฉพาะ owner_id ที่ต้องการ
+                    ->selectRaw('COUNT(*) as total_reviews, AVG(review.sp_score) as average_score')
+                    ->first();
+                    break;
+                case "corp":
+                $ownerData[] = CorpList::find($searchTourData[$i]->owner_id)->first();
+                $ownerScore[] = Review::leftJoin('booking', 'review.booking_id_booking', '=', 'booking.id_booking')
+                    ->leftJoin('tour', function ($join) {
+                    $join->on('tour.id_tour', '=', 'booking.tour_id_tour')
+                    ->where('tour.from_owner', 'LIKE', 'corp');
+                    })
+                    ->leftJoin('corp_list', 'corp_list.account_id_account', '=', 'tour.owner_id')
+                    ->where('corp_list.account_id_account', $searchTourData[$i]->owner_id)
+                    ->selectRaw('COUNT(*) as total_reviews, AVG(review.sp_score) as average_score')
+                    ->first(); // ใช้ `first()` เพราะดึงแค่บริษัทเดียว
+                    break;
+                }
+                $totalMember[] = Booking::where('tour_id_tour', $searchTourData[$i]->id_tour) //TourID ใช้ของที่กดจองมา
+                ->where('status', 'NOT LIKE', 'cancel')
+                ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
+                ->value('Total_Member');
+        }
+        return view('guide.searchTour', compact('ownerData', 'searchTourData', 'totalMember', 'ownerScore', 'path'));
+    }
+    else{
+        $searchRequestData = RequestTour::where('request_status','ongoing');
+        if (!empty($name)) {
+            $searchRequestData->whereRaw('LOWER(request_tour.name) LIKE LOWER(?)', ["%$name%"]);
+        }
+        if (!empty($startDate)) {
+            $searchRequestData->whereDate('request_tour.start_tour_date', $startDate);
+        }
+              // ✅ กรองวันที่สิ้นสุดทัวร์
+        if (!empty($endDate)) {
+            $searchRequestData->whereDate('request_tour.end_tour_date', $endDate);
+        }
+        $searchRequestData = $searchRequestData->paginate(5)->appends($request->query());
+        $ownerData = [];
+        foreach ($searchRequestData as $data) { //อันนหาหาข้อมูลของเจ้าของทัวร์นั้นๆแล้วส่งไปใน view ด้วยเผื่อใช้
+            $ownerData[] =  UserList::where('account_id_account',$data->user_list_account_id_account)->first();
+        }
+        return view('guide.searchRequest', compact('ownerData', 'searchRequestData','path'));
+    }
+  }
+  public function searchFilter(Request $request){
+    $name = $request->searchKey;
+    $startDate = $request->startDate;
+    $endDate = $request->endDate;
+    $type = $request->type;
+    $minBudget = $request->minBudget;
+    $maxBudget = $request->maxBudget;
+    $path = $_SERVER['REQUEST_URI'];
+    if($type == "tour"){
+        $searchTourData = Tour::where('status', 'LIKE', 'ongoing');
+        if(is_numeric($name)){
+            $searchTourData->where('offer_id_offer','=',$name)->where('type_tour', 'LIKE', 'private');
+            if (!empty($startDate)) {
+                $searchTourData->whereDate('tour.start_tour_date', $startDate);
+            }
+                  // ✅ กรองวันที่สิ้นสุดทัวร์
+            if (!empty($endDate)) {
+                $searchTourData->whereDate('tour.end_tour_date', $endDate);
+            }
+        }
+        else{
+            if (!empty($name)) {
+                $searchTourData->whereRaw('LOWER(tour.name) LIKE LOWER(?)', ["%$name%"]);
+            }
+            if (!empty($startDate)) {
+                $searchTourData->whereDate('tour.start_tour_date', $startDate);
+            }
+                  // ✅ กรองวันที่สิ้นสุดทัวร์
+            if (!empty($endDate)) {
+                $searchTourData->whereDate('tour.end_tour_date', $endDate);
+            }
+            $searchTourData->whereBetween('tour.price', [floatval($minBudget), floatval($maxBudget)])
+                ->where('type_tour', 'LIKE', 'public');
+        }
+        $searchTourData = $searchTourData->paginate(5)->appends($request->query());
+        $totalData = $searchTourData->count();
+        $ownerData = [];
+        $totalMember = [];
+        $ownerScore = [];
+        for($i=0;$i<$totalData;$i++) { //อันนหาหาข้อมูลของเจ้าของทัวร์นั้นๆแล้วส่งไปใน view ด้วยเผื่อใช้
+            switch ($searchTourData[$i]->from_owner) {
+                case "guide":
+                $ownerData[] = GuideList::where('account_id_account','=',$searchTourData[$i]->owner_id)->first();
+                $ownerScore[] = Review::leftJoin('guide_list', 'review.guide_list_account_id_account', '=', 'guide_list.account_id_account')
+                    ->where('guide_list.account_id_account', $searchTourData[$i]->owner_id) // กรองเฉพาะ owner_id ที่ต้องการ
+                    ->selectRaw('COUNT(*) as total_reviews, AVG(review.sp_score) as average_score')
+                    ->first();
+                    break;
+                case "corp":
+                $ownerData[] = CorpList::find($searchTourData[$i]->owner_id)->first();
+                $ownerScore[] = Review::leftJoin('booking', 'review.booking_id_booking', '=', 'booking.id_booking')
+                    ->leftJoin('tour', function ($join) {
+                    $join->on('tour.id_tour', '=', 'booking.tour_id_tour')
+                    ->where('tour.from_owner', 'LIKE', 'corp');
+                    })
+                    ->leftJoin('corp_list', 'corp_list.account_id_account', '=', 'tour.owner_id')
+                    ->where('corp_list.account_id_account', $searchTourData[$i]->owner_id)
+                    ->selectRaw('COUNT(*) as total_reviews, AVG(review.sp_score) as average_score')
+                    ->first(); // ใช้ `first()` เพราะดึงแค่บริษัทเดียว
+                    break;
+                }
+                $totalMember[] = Booking::where('tour_id_tour', $searchTourData[$i]->id_tour) //TourID ใช้ของที่กดจองมา
+                ->where('status', 'NOT LIKE', 'cancel')
+                ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
+                ->value('Total_Member');
+        }
+        return view('guide.searchTour', compact('ownerData', 'searchTourData', 'totalMember', 'ownerScore', 'path'));
+    }
+    else{
+        $searchRequestData = RequestTour::where('request_status','ongoing');
+        if (!empty($name)) {
+            $searchRequestData->whereRaw('LOWER(request_tour.name) LIKE LOWER(?)', ["%$name%"]);
+        }
+        if (!empty($startDate)) {
+            $searchRequestData->whereDate('request_tour.start_tour_date', $startDate);
+        }
+              // ✅ กรองวันที่สิ้นสุดทัวร์
+        if (!empty($endDate)) {
+            $searchRequestData->whereDate('request_tour.end_tour_date', $endDate);
+        }
+        $searchRequestData->where('start_price','>=', floatval($minBudget))
+        ->where('max_price','<=',floatval($maxBudget));
+        $searchRequestData = $searchRequestData->paginate(5)->appends($request->query());
+        $ownerData = [];
+        foreach ($searchRequestData as $data) { //อันนหาหาข้อมูลของเจ้าของทัวร์นั้นๆแล้วส่งไปใน view ด้วยเผื่อใช้
+            $ownerData[] =  UserList::where('account_id_account',$data->user_list_account_id_account)->first();
+        }
+        return view('guide.searchRequest', compact('ownerData', 'searchRequestData','path'));
+    }
+  }
+  public function getSearchTourDetail(Request $request){
+    $tourID = $request->tourID;
+    $path = $request->path;
+    $tour = Tour::where('id_tour', $tourID)->first();
+    switch ($tour->from_owner) {
+        case "guide":
+          $tourData = Tour::join('guide_list', 'tour.owner_id', '=', 'guide_list.account_id_account')
+            ->where('tour.id_tour', $tourID)
+            ->select('tour.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname')
+            ->first();
+          $Review =  Review::join('user_list', 'review.user_list_account_id_account', '=', 'user_list.account_id_account')
+          ->where('guide_list_account_id_account',$tour->owner_id)
+          ->select('review.*', 'user_list.*') // เลือกคอลัมน์ทั้งหมดจากทั้ง 2 ตาราง
+          ->get();
+          break;
+        case "corp":
+          $tourData = Tour::join('corp_list', 'tour.owner_id', '=', 'corp_list.account_id_account')
+            ->where('tour.id_tour', $tourID)
+            ->select('tour.*', 'corp_list.name as corp_name')
+            ->first();
+          $Review = Review::select('user_list.name', 'user_list.surname', 'tour.from_owner', 'tour.owner_id', 'review.score', 'review.message')
+            ->join('booking', 'booking.id_booking', '=', 'review.booking_id_booking')
+            ->join('tour', 'tour.id_tour', '=', 'booking.tour_id_tour')
+            ->join('user_list', 'user_list.account_id_account', '=', 'review.user_list_account_id_account')
+            ->where('tour.owner_id',$tour->owner_id)
+            ->get();
+          break;
+    }
+    $totalMember = Booking::where('tour_id_tour', $tourID) //TourID ใช้ของที่กดจองมา
+    ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
+    ->value('Total_Member');
+    $locationInTourAPI = LocationInTour::where('tour_id_tour',$tourID)->get();
+    $locations = [];
+    foreach($locationInTourAPI as $api){
+        $locations[] = $this->getLocationsById($api->loc_api);
+    }
+    return view('guide.detailSearchTour', compact('totalMember', 'tourData','Review','locations','path'));
+  }
+  public function getSearchRequestDetail(Request $request){
+    $requestID = $request->requestID;
+    $path = $request->path;
+    $requestData = RequestTour::join('user_list', 'request_tour.user_list_account_id_account', '=', 'user_list.account_id_account')
+        ->where('id_request_tour',$requestID)
+        ->select('request_tour.*', 'user_list.name as uName','user_list.surname','user_list.phonenumber')  // เลือกคอลัมน์ทั้งหมดจากทั้ง 2 ตาราง
+        ->first();
+    return view('guide.detailSearchRequest',compact('requestData','path'));
+
+  }
+
 }
