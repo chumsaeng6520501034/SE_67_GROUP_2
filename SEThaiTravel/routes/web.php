@@ -85,6 +85,7 @@ Route::get('/corpHistory',[CorpListController::class,'getHistory']);
 Route::get('/corpOffer',[CorpListController::class,'getOffer']);
 Route::get('/corpStaff',[CorpListController::class,'getStaffInCorp']);
 Route::get('/corpPayments',[CorpListController::class,'getAllPaymentHistory']);
+Route::post('/corpDetailMyTour',[GuideListController::class,'getMyTourDetail']);
 
 
 
