@@ -83,7 +83,7 @@
                 <a href="/home" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
                 <a href="/addTour" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
                 <a href="/myRequest" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REQUEST</a>
-                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">HISTORY</a>
+                <a href="/history" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">HISTORY</a>
                 <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REVIEW</a>
                 <a href="/myBooking" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY BOOKING</a>
                 <a href="/calendar" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">CALENDAR</a>
@@ -152,7 +152,7 @@
                                 <form action="/detailBooking" method="POST">
                                     @csrf
                                     <input type="hidden" name="name" value="{{ $booking->name }}">
-                                    <input type="hidden" name="tourID" value={{ $booking->tour_id_tour}}>
+                                    <!-- <input type="hidden" name="tourID" value={{ $booking->tour_id_tour}}> -->
                                     <h2 class="text-2xl font-bold text-blue-600 hover:underline cursor-pointer">
                                         <button type="submit" class="text-blue-600">
                                             {{ ucwords($booking->name) }}

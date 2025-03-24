@@ -193,6 +193,16 @@
             @endforeach
         </div>
     </div>
+    
+    <!-- Tab Bar ด้านล่าง -->
+    <div class="fixed bottom-0 right-0 w-full bg-gray-900 p-4 shadow-lg flex justify-end items-center space-x-8">
+        <div class="flex items-center space-x-8">
+            <button class="bg-white text-black px-3 py-2 rounded-lg shadow-md text-xl font-bold" onclick="decreaseQuantity()">-</button>
+            <span id="quantity" class="text-xl font-bold text-white">1</span>
+            <button class="bg-white text-black px-3 py-2 rounded-lg shadow-md text-xl font-bold" onclick="increaseQuantity()">+</button>
+        </div>
+        <button class="bg-green-700 text-white px-4 py-2 rounded-lg shadow-md font-bold text-xl">Buy Now</button>
+    </div>
     <script>
         const minBudgetInput = document.getElementById("min_budget");
         const maxBudgetInput = document.getElementById("max_budget");

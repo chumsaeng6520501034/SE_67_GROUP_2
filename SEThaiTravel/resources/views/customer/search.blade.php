@@ -70,7 +70,7 @@
     @include('components.sidebarCustomer')
     <!-- Navbar -->
     <div id="mainContent">
-        <nav id="navbar" class="fixed top-0 left-0  w-full p-4 z-50 transition-all duration-300 ">
+        <nav id="navbar" class="fixed top-0 left-0  w-full p-4 z-[60] transition-all duration-300 ">
             <div class="max-w-7xl mx-auto flex flex-col space-y-3 p-4 bg-[#205781] rounded-lg">
                 <form action="/customerFilterSearch" method="GET">
                     <!-- บรรทัดแรก: แบรนด์ + ช่องค้นหา -->

@@ -32,6 +32,13 @@ Route::get('/customer', function () {
     return view('customer.myRequest');
 });
 
+Route::get('/addTour', function () {
+    return view('corporation.addTour');
+});
+Route::get('/myTour', function () {
+    return view('corporation.myTour');
+});
+
 Route::get('/us',[UserListController::class,'getRequestTour']);
 // Route::get('/ac',[AccountController::class,'checkTable']);
 // Route::get('/bk',[BookingController::class,'checkTable']);
@@ -59,10 +66,6 @@ Route::get('/de', function () {
     return view('customer.history');
 });
 
-// Route::get('/addTour',[UserListController::class,'']);
-Route::get('/addTour', function () {
-    return view('customer.addTour');
-});
 
 
 Route::get('/customerSearch',[UserListController::class,'searchAllTourActive']);
@@ -103,3 +106,37 @@ Route::post('/deleteGuide', [AdminListController::class, 'deleteGuide'])->name('
 Route::match(['get', 'post'],'/editCorp',[AdminListController::class,'viewEditCorp']);
 Route::post('/updateCorp',[AdminListController::class,'updateCorp']);
 Route::post('/deleteCorp', [AdminListController::class, 'deleteCorp'])->name('deleteCorp');
+//corp section
+Route::get('/corpHomepage',[CorpListController::class,'getHomePage']);
+Route::get('/corpAddTourPage',[CorpListController::class,'getAddTour']);
+Route::post('/corpAddTour',[CorpListController::class,'addTour']);
+Route::get('/corpMyTour',[CorpListController::class,'getTour']);
+Route::get('/corpHistory',[CorpListController::class,'getHistory']);
+Route::get('/corpOffer',[CorpListController::class,'getOffer']);
+Route::get('/corpStaff',[CorpListController::class,'getStaffInCorp']);
+Route::get('/corpPayments',[CorpListController::class,'getAllPaymentHistory']);
+Route::post('/corpDetailMyTour',[GuideListController::class,'getMyTourDetail']);
+
+
+
+//guide section
+Route::get('/guideHomePage',[GuideListController::class,'getHomePage']);
+Route::get('/guideAddTourPage',[GuideListController::class,'getAddTour']);
+Route::post('/guideAddTour',[GuideListController::class,'addTour']);
+Route::get('/guideMyTour',[GuideListController::class,'getMytour']);
+Route::get('/guideSearchMyTour',[GuideListController::class,'searchMyTour']);
+Route::post('/guideDeleteMyTour',[GuideListController::class,'deleteMyTour']);
+Route::get('/guideEditTourPage',[GuideListController::class,'editMyTourPage']);
+Route::post('/guideEditTour',[GuideListController::class,'updateMyTour']);
+Route::post('/guideDetailMyTour',[GuideListController::class,'getMyTourDetail']);
+Route::get('/guideMyJop',[GuideListController::class,'getMyJob']);
+Route::post('/guideMyJopDetail',[GuideListController::class,'getMyJobDetail']);
+Route::get('/guideSearchMyJob',[GuideListController::class,'searchMyJob']);
+Route::get('/guideJobHistory',[GuideListController::class,'getJobHistory']);
+Route::post('/guideMyJopHistoryDetail',[GuideListController::class,'getJobHistoryDetail']);
+Route::get('/guideSearchMyJobHistory',[GuideListController::class,'searchMyJobHistory']);
+Route::get('/guideCalendar',[GuideListController::class,'viewCalendar']);
+Route::get('/guideSearch',[GuideListController::class,'searchAll']);
+Route::get('/guideSearchFilter',[GuideListController::class,'searchFilter']);
+Route::post('/guideSearchTourDetail',[GuideListController::class,'getSearchTourDetail']);
+Route::post('/guideSearchRequestDetail',[GuideListController::class,'getSearchRequestDetail']);
