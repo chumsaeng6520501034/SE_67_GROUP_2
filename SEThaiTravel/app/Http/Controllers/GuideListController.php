@@ -307,13 +307,13 @@ class GuideListController extends Controller
             case "guide":
               $tourData = Tour::join('guide_list', 'tour.owner_id', '=', 'guide_list.account_id_account')
                 ->where('tour.id_tour', $tourID)
-                ->select('tour.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname')
+                ->select('tour.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname','guide_list.phonenumber')
                 ->first();
               break;
             case "corp":
               $tourData = Tour::join('corp_list', 'tour.owner_id', '=', 'corp_list.account_id_account')
                 ->where('tour.id_tour', $tourID)
-                ->select('tour.*', 'corp_list.name as corp_name')
+                ->select('tour.*', 'corp_list.name as corp_name','corp_list.phone_number')
                 ->first();
               break;
         }
@@ -371,13 +371,13 @@ class GuideListController extends Controller
             case "guide":
               $tourData = Tour::join('guide_list', 'tour.owner_id', '=', 'guide_list.account_id_account')
                 ->where('tour.id_tour', $tourID)
-                ->select('tour.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname')
+                ->select('tour.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname','guide_list.phonenumber')
                 ->first();
               break;
             case "corp":
               $tourData = Tour::join('corp_list', 'tour.owner_id', '=', 'corp_list.account_id_account')
                 ->where('tour.id_tour', $tourID)
-                ->select('tour.*', 'corp_list.name as corp_name')
+                ->select('tour.*', 'corp_list.name as corp_name','corp_list.phone_number')
                 ->first();
               break;
         }
@@ -626,7 +626,7 @@ class GuideListController extends Controller
         case "guide":
           $tourData = Tour::join('guide_list', 'tour.owner_id', '=', 'guide_list.account_id_account')
             ->where('tour.id_tour', $tourID)
-            ->select('tour.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname')
+            ->select('tour.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname','guide_list.phonenumber')
             ->first();
           $Review =  Review::join('user_list', 'review.user_list_account_id_account', '=', 'user_list.account_id_account')
           ->where('guide_list_account_id_account',$tour->owner_id)
@@ -636,7 +636,7 @@ class GuideListController extends Controller
         case "corp":
           $tourData = Tour::join('corp_list', 'tour.owner_id', '=', 'corp_list.account_id_account')
             ->where('tour.id_tour', $tourID)
-            ->select('tour.*', 'corp_list.name as corp_name')
+            ->select('tour.*', 'corp_list.name as corp_name','corp_list.phone_number')
             ->first();
           $Review = Review::select('user_list.name', 'user_list.surname', 'tour.from_owner', 'tour.owner_id', 'review.score', 'review.message')
             ->join('booking', 'booking.id_booking', '=', 'review.booking_id_booking')

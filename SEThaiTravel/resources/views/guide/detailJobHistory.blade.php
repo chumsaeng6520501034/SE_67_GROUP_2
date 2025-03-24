@@ -13,6 +13,7 @@
     <nav
         class="fixed top-0 left-1/2 transform -translate-x-1/2 p-4 flex justify-start items-center space-x-6 z-50  bg-[#205781] w-full ">
         <a href="/guideJobHistory" class="text-2xl text-white font-bold">&#x2190;</a>
+        <span class="font-bold text-xl text-white">THAI TRAVEL & TOUR</span>
     </nav>
 
     <!-- Layout -->
@@ -96,21 +97,24 @@
         <div class="flex flex-col gap-4">
             <!-- Grid ของ Start-End Date, Post Date, Price -->
             <div class="grid grid-cols-3 gap-4 bg-white p-6 rounded-lg shadow-md">
-                <div>
-                    <p class="font-bold">Start - End Date</p>
-                    <div class="bg-blue-900 text-white px-4 py-2 text-center rounded-lg inline-block shadow-md">
+                <div class="flex flex-col h-full">
+                    <p class="font-bold text-center">Start - End Date</p>
+                    <div
+                        class="bg-blue-900 text-white px-4 py-2 text-center rounded-lg inline-block shadow-md w-full flex-1 flex items-center justify-center">
                         {{ $tourData->start_tour_date }}<br>To<br>{{ $tourData->end_tour_date }}
                     </div>
                 </div>
-                <div>
-                    <p class="font-bold">Post Date</p>
-                    <div class="bg-blue-900 text-white px-4 py-2 rounded-lg inline-block shadow-md">
+                <div class="flex flex-col h-full">
+                    <p class="font-bold text-center">Post Date</p>
+                    <div
+                        class="bg-blue-900 text-white px-4 py-2 rounded-lg inline-block shadow-md w-full flex-1 flex items-center justify-center">
                         {{ $tourData->Release_date }}
                     </div>
                 </div>
-                <div>
-                    <p class="font-bold">Price</p>
-                    <div class="bg-blue-900 text-white px-4 py-2 rounded-lg inline-block shadow-md">
+                <div class="flex flex-col h-full">
+                    <p class="font-bold text-center">Price</p>
+                    <div
+                        class="bg-blue-900 text-white px-4 py-2 rounded-lg inline-block shadow-md w-full flex-1 flex items-center justify-center">
                         {{ number_format($tourData->price) }}
                     </div>
                 </div>
@@ -125,6 +129,14 @@
                             {{ $tourData->corp_name }}
                         @endif
                     </span></p>
+                <p class="font-bold mt-2">Contact: <span class="font-normal">
+                        @if ($tourData->from_owner === 'guide')
+                            {{ $tourData->phonenumber }}
+                        @else
+                            {{ $tourData->phone_number }}
+                        @endif
+                    </span></p>
+                </p>
                 <p class="font-bold mt-2">Description:</p>
                 <p class="mt-2">{{ $tourData->description }}</p>
             </div>
