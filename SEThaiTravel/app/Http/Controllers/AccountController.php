@@ -39,8 +39,10 @@ class AccountController extends Controller
         {
           switch($account->permittion_acc){
               case "admin" : 
-                session(['userID' => $account]);
-                return view('adminPage'); //ของจริงจะใส่เป็น view('ชื่อของไฟล์ที่เป็นหน้า',compact('ตัวแปรที่เก็บข้อมูลของadmin'))
+                $accounts = Account::all();
+                // dd($account);
+                // session(['userID' => $account]);
+                return view('admin.home', compact('accounts')); //ของจริงจะใส่เป็น view('ชื่อของไฟล์ที่เป็นหน้า',compact('ตัวแปรที่เก็บข้อมูลของadmin'))
               case "corp"  :
                   $corp= CorpList::find($account->id_account);
                   session(['userID' => $corp]);
