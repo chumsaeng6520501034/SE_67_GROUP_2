@@ -106,71 +106,71 @@
             </form>
 
             <div class="card-wrapper">
-                @foreach ($offers as $offers)
+                @foreach ($requestTours as $offer)
                     <div class="card-container m-4">
                         <div class="card bg-white rounded-lg shadow-lg flex overflow-hidden">
-                            @if (is_null($offers->tourImage))
+                            @if (is_null($offer->tourImage))
                                 <img src="https://quintessentially.com/assets/noted/Header_2023-04-12-154210_sigz.webp"
                                     alt="Bangkok" class="w-1/3 object-cover">
                             @else
-                                <img src="{{ asset('storage/' . $offers->tourImage) }}" alt="image"
+                                <img src="{{ asset('storage/' . $offer->tourImage) }}" alt="image"
                                     class="w-1/3 object-cover">
                             @endif
                             <div class="p-6 flex-1">
                                 <h2 class="text-2xl font-bold text-black-600">
-                                    {{ ucwords($offers->name) }}
+                                    {{ ucwords($offer->name) }}
                                 </h2>
-                                <p class="text-gray-600 mt-1">{{ $offers->description }}</p>
-                                @switch($offers->status)
+                                <p class="text-gray-600 mt-1">{{ $offer->description }}</p>
+                                @switch($offer->status)
                                     @case('ongoing')
-                                        <p class="text-[#007BFF] text-sm mt-2 font-bold">{{ ucwords($offers->status) }}</p>
+                                        <p class="text-[#007BFF] text-sm mt-2 font-bold">{{ ucwords($offer->status) }}</p>
                                     @break
 
                                     @case('cancal')
-                                        <p class="text-[#FF5733] text-sm mt-2 font-bold">{{ ucwords($offers->status) }}</p>
+                                        <p class="text-[#FF5733] text-sm mt-2 font-bold">{{ ucwords($offer->status) }}</p>
                                     @break
 
                                     @case('finish')
-                                        <p class="text-[#28A745] text-sm mt-2 font-bold">{{ ucwords($offers->status) }}</p>
+                                        <p class="text-[#28A745] text-sm mt-2 font-bold">{{ ucwords($offer->status) }}</p>
                                     @break
 
                                     @case('collect')
-                                        <p class="text-[#FFC107] text-sm mt-2 font-bold">{{ ucwords($offers->status) }}</p>
+                                        <p class="text-[#FFC107] text-sm mt-2 font-bold">{{ ucwords($offer->status) }}</p>
                                     @break
                                 @endswitch
-                                <p class="text-gray-400 text-xs mt-1">Start Date: {{ $offers->start_tour_date }}</p>
-                                <p class="text-gray-400 text-xs  mt-1">End Date: {{ $offers->end_tour_date }}</p>
+                                <p class="text-gray-400 text-xs mt-1">Start Date: {{ $offer->start_tour_date }}</p>
+                                <p class="text-gray-400 text-xs  mt-1">End Date: {{ $offer->end_tour_date }}</p>
                             </div>
                             <div class="p-6 bg-gray-100 w-1/4 text-right rounded-r-lg">
                                 <p class="text-gray-800 text-md font-bold">Release Date</p>
-                                <p class="text-gray-600 font-semibold">{{ $offers->Release_date }}</p>
+                                <p class="text-gray-600 font-semibold">{{ $offer->Release_date }}</p>
                                 <p class="text-gray-800 text-md font-bold">Expiration Date</p>
                                 <p class="text-gray-600 text-md font-semibold">
-                                    {{ $offers->End_of_sale_date }}</p>
-                                <p class="text-gray-800 m-2 text-md font-bold">{{ number_format($offers->price) }} ฿</p>
+                                    {{ $offer->End_of_sale_date }}</p>
+                                <p class="text-gray-800 m-2 text-md font-bold">{{ number_format($offer->price) }} ฿</p>
                                 <div class="flex justify-end space-x-2">
                                     <form>
                                         <button class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
-                                        <input type="hidden" value={{$offers->id_tour}}>
+                                        <input type="hidden" value={{$offer->id_tour}}>
                                     </form>
                                     <!-- Delete Button -->
-                                    <button onclick="openModal({{$offers->id_tour}})"
+                                    <button onclick="openModal({{$offer->id_tour}})"
                                         class="bg-red-600 text-white px-4 py-2 rounded-md font-bold">Delete</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id="deleteModal{{$offers->id_tour}}" class="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 hidden">
+                    <div id="deleteModal{{$offer->id_tour}}" class="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 hidden">
                         <div class="bg-white p-6 rounded-md shadow-lg w-1/3">
                             <h3 class="text-lg font-semibold text-gray-800">Are you sure you want to delete?</h3>
-                            <p class="text-sm text-gray-600">{{$offers->name}}</p>
+                            <p class="text-sm text-gray-600">{{$offer->name}}</p>
                             <div class="mt-4 flex justify-between">
                                 <!-- Cancel Button -->
-                                <button onclick="closeModal({{$offers->id_tour}})" class="bg-gray-400 text-white px-4 py-2 rounded-md">Cancel</button>
+                                <button onclick="closeModal({{$offer->id_tour}})" class="bg-gray-400 text-white px-4 py-2 rounded-md">Cancel</button>
                                 <!-- Confirm Button (Form for Deleting) -->
                                 <form action="/guideDeleteMyTour" method="POST">
                                     @csrf
-                                    <input type="hidden" name="tourID" value={{$offers->id_tour}}>
+                                    <input type="hidden" name="tourID" value={{$offer->id_tour}}>
                                     <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md">Confirm
                                         Delete</button>
                                 </form>
@@ -178,7 +178,7 @@
                         </div>
                     </div>
                 @endforeach
-                {{ $offers->links() }}
+                {{ $requestTours->links() }}
             </div>
         </div>
     </div>

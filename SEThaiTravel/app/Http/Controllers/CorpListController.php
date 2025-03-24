@@ -105,15 +105,15 @@ class CorpListController extends Controller
         return view('corporation.myTour', compact('tours'));
     }
     //เอารายการสินค้าที่หมดอายุทั้งหมด
-    function getHistory()
+    function getHistory(Request $request)
     {
         $idAccount = session('userID')->account_id_account;
         $histours = DB::table('tour')
             ->where('from_owner', 'LIKE', 'corp')
             ->where('owner_id', $idAccount)
             ->where('end_tour_date', '<', now())
-            ->get();
-        // dd($histours);
+            ->paginate(10)->appends($request->query());
+        //dd($histours);
         return view('corporation.sellHistory', compact('histours'));
     }
 
@@ -124,24 +124,24 @@ class CorpListController extends Controller
         $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
             ->where('o.id_who_offer', $idAccount)
             ->select('request_tour.*') // Select all columns from request_tour
-            ->get();
-        dd($requestTours);
+            ->paginate(10)->appends($request->query());
+        //dd($requestTours);
         return view('corporation.myOffer', compact('requestTours'));
     }
 
     //เอาพนักงานในบ. ทำเเล้ว
-    function getStaffInCorp()
+    function getStaffInCorp(Request $request)
     {
         $idAccount = session('userID')->account_id_account;
         $guides = DB::table('guide_list')
         ->where('corp_list_account_id_account', $idAccount)
-        ->get();
+        ->paginate(25)->appends($request->query());
         // dd($guides);
         return view('corporation.myStaf', compact('guides'));
     }
 
     //เอารายการจ่ายทั้งหมด ทำเเล้ว
-    function getAllPaymentHistory()
+    function getAllPaymentHistory(Request $request)
     {
         $idAccount = session('userID')->account_id_account;
         $payments = DB::table('payment as p')
@@ -158,10 +158,11 @@ class CorpListController extends Controller
             'p.booking_user_list_account_id_account',
             'p.payment_date',
             'p.checknumber',
-            'p.total_price'
+            'p.total_price',
+            'b.tour_id_tour'
         )
-        ->get();
-        // dd($payments);
+        ->paginate(25)->appends($request->query());
+        //dd($payments);
         return view('corporation.allPayments', compact('payments'));
     }
 
