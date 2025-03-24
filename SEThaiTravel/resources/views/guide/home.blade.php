@@ -52,7 +52,7 @@
                 <h1 class="absolute top-[40%] left-1/2 transform -translate-x-1/2 text-white text-8xl font-bold ">TRAVEL</h1>
             
             <!-- Search Box -->
-            <form action="#" method="GET">
+            <form action="/guideSearch" method="GET">
                 <div class="absolute top-[110%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-100 p-10 rounded-lg shadow-lg w-3/4 mt-5">
                     <div class="flex items-center border border-gray-300 rounded p-4 bg-white">
                         <span class="text-gray-500 pr-2">🔍</span>
@@ -74,10 +74,12 @@
                             </div>
                         </div>
                         <div class="w-1/4">
-                            <label class="text-sm font-semibold">Person</label>
+                            <label class="text-sm font-semibold">Type</label>
                             <div class="flex items-center border border-gray-300 rounded p-4 bg-white">
-                                <span class="text-gray-500 pr-2">👤</span>
-                                <input type="number" name="capacity" class="outline-none w-full" min="1" value="1">
+                                <select name="type" class="h-full w-full">
+                                    <option value="request">REQUEST</option>
+                                    <option value="tour">TOUR</option>
+                                </select>
                             </div>
                         </div>
                     </div>
