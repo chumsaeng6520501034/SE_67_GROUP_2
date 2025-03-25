@@ -178,11 +178,12 @@
                                 <p class="text-base text-black-500">{{ number_format($item->start_price) }}</p>
                                 <p class="text-base text-black-500">to</p>
                                 <p class="text-base text-black-500">{{ number_format($item->max_price) }}</p>
-                                <form action="" method="GET">
+                                <form action="/corpToAddtour" method="GET">
                                     <button type="submit"
                                         class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm mt-2 relative z-[50]">
                                         OFFER
                                     </button>
+                                    <input type="hidden" name="tourID" value={{ $item->id_request_tour}}>
                                 </form>
                             </div>
                         </div>
