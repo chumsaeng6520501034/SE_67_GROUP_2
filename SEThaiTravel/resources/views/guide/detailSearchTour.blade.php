@@ -12,7 +12,7 @@
     <!-- Navbar -->
     <nav
         class="fixed top-0 left-1/2 transform -translate-x-1/2 p-4 flex justify-start items-center space-x-6 z-50  bg-[#205781] w-full ">
-        <a href="/guideMyTour" class="text-2xl text-white font-bold">&#x2190;</a>
+        <a href="{{ $path }}" class="text-2xl text-white font-bold">&#x2190;</a>
         <span class="font-bold text-xl text-white">THAI TRAVEL & TOUR</span>
     </nav>
 
@@ -123,10 +123,18 @@
             <!-- Owner of post และ Description -->
             <div class="bg-white p-6 rounded-lg shadow-md h-[300px]">
                 <p class="font-bold">Owner of post : <span class="font-normal">
-                        {{ session('userID')->name . ' ' . session('userID')->surname }}
+                        @if ($tourData->from_owner === 'guide')
+                            {{ $tourData->guide_name . ' ' . $tourData->guide_surname }}
+                        @else
+                            {{ $tourData->corp_name }}
+                        @endif
                     </span></p>
                 <p class="font-bold mt-2">Contact: <span class="font-normal">
-                        {{ session('userID')->phonenumber }}
+                        @if ($tourData->from_owner === 'guide')
+                            {{ $tourData->phonenumber }}
+                        @else
+                            {{ $tourData->phone_number }}
+                        @endif
                     </span></p>
                 </p>
                 <p class="font-bold mt-2">Description:</p>
@@ -145,6 +153,39 @@
         </div>
     </div>
 
+    <!-- รีวิวลูกค้า -->
+    <div class="bg-white py-6 px-6 rounded-lg shadow-md mt-4 w-[1485px] mx-auto mb-10">
+        <h4 class="text-2xl font-bold mb-3">Owner Reviews</h4>
+
+        <!-- กล่องรีวิวแบบเลื่อน -->
+        <div class="max-h-[300px] overflow-y-auto space-y-2 p-2 bg-gray-50 rounded-lg shadow-inner">
+            @foreach ($Review as $review)
+                <div class="bg-gray-100 p-3 rounded-lg shadow-sm">
+                    <strong>{{ $review->name . ' ' . $review->surname }}:</strong>
+                    @if ($tourData->from_owner === 'guide')
+                        <p>{{ $review->guideReviewMessage }}
+                            @for ($i = 0; $i < 5; $i++)
+                                @if ($i < $review->sp_score)
+                                    <span class=text-lg>⭐</span>
+                                @else
+                                    <span class=text-lg>☆</span>
+                                @endif
+                            @endfor
+                        </p>
+                    @else
+                        <p>{{ $review->message }}
+                            @for ($i = 0; $i < 5; $i++)
+                                @if ($i < $review->score)
+                                    <span class=text-lg>⭐</span>
+                                @else
+                                    <span class=text-lg>☆</span>
+                                @endif
+                            @endfor
+                        </p>
+                    @endif
+                </div>
+            @endforeach
+        </div>
     </div>
     <script>
         const minBudgetInput = document.getElementById("min_budget");

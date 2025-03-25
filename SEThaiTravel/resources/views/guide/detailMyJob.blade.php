@@ -13,6 +13,7 @@
     <nav
         class="fixed top-0 left-1/2 transform -translate-x-1/2 p-4 flex justify-start items-center space-x-6 z-50  bg-[#205781] w-full ">
         <a href="/guideMyJop" class="text-2xl text-white font-bold">&#x2190;</a>
+        <span class="font-bold text-xl text-white">THAI TRAVEL & TOUR</span>
     </nav>
 
     <!-- Layout -->
@@ -96,21 +97,24 @@
         <div class="flex flex-col gap-4">
             <!-- Grid ของ Start-End Date, Post Date, Price -->
             <div class="grid grid-cols-3 gap-4 bg-white p-6 rounded-lg shadow-md">
-                <div>
-                    <p class="font-bold">Start - End Date</p>
-                    <div class="bg-blue-900 text-white px-4 py-2 text-center rounded-lg inline-block shadow-md">
+                <div class="flex flex-col h-full">
+                    <p class="font-bold text-center">Start - End Date</p>
+                    <div
+                        class="bg-blue-900 text-white px-4 py-2 text-center rounded-lg inline-block shadow-md w-full flex-1 flex items-center justify-center">
                         {{ $tourData->start_tour_date }}<br>To<br>{{ $tourData->end_tour_date }}
                     </div>
                 </div>
-                <div>
-                    <p class="font-bold">Post Date</p>
-                    <div class="bg-blue-900 text-white px-4 py-2 rounded-lg inline-block shadow-md">
+                <div class="flex flex-col h-full">
+                    <p class="font-bold text-center">Post Date</p>
+                    <div
+                        class="bg-blue-900 text-white px-4 py-2 rounded-lg inline-block shadow-md w-full flex-1 flex items-center justify-center">
                         {{ $tourData->Release_date }}
                     </div>
                 </div>
-                <div>
-                    <p class="font-bold">Price</p>
-                    <div class="bg-blue-900 text-white px-4 py-2 rounded-lg inline-block shadow-md">
+                <div class="flex flex-col h-full">
+                    <p class="font-bold text-center">Price</p>
+                    <div
+                        class="bg-blue-900 text-white px-4 py-2 rounded-lg inline-block shadow-md w-full flex-1 flex items-center justify-center">
                         {{ number_format($tourData->price) }}
                     </div>
                 </div>
@@ -118,13 +122,21 @@
 
             <!-- Owner of post และ Description -->
             <div class="bg-white p-6 rounded-lg shadow-md h-[300px]">
-                <p class="font-bold">Owner of post : <span class="font-normal">
+                <p class="font-bold ">Owner of post : <span class="font-normal">
                         @if ($tourData->from_owner === 'guide')
                             {{ $tourData->guide_name . ' ' . $tourData->guide_surname }}
                         @else
                             {{ $tourData->corp_name }}
                         @endif
                     </span></p>
+                <p class="font-bold mt-2">Contact: <span class="font-normal">
+                        @if ($tourData->from_owner === 'guide')
+                            {{ $tourData->phonenumber }}
+                        @else
+                            {{ $tourData->phone_number }}
+                        @endif
+                    </span></p>
+                </p>
                 <p class="font-bold mt-2">Description:</p>
                 <p class="mt-2">{{ $tourData->description }}</p>
             </div>
@@ -141,42 +153,7 @@
         </div>
     </div>
 
-    <!-- รีวิวลูกค้า -->
-    <div class="bg-white py-6 px-6 rounded-lg shadow-md mt-4 w-[1485px] mx-auto mb-10">
-        <h4 class="text-2xl font-bold mb-3">Reviews</h4>
 
-        <!-- กล่องรีวิวแบบเลื่อน -->
-        <div class="max-h-[300px] overflow-y-auto space-y-2 p-2 bg-gray-50 rounded-lg shadow-inner">
-            @foreach ($anotherReview as $review)
-                <div class="bg-gray-100 p-3 rounded-lg shadow-sm">
-                    <strong>{{ $review->name . ' ' . $review->surname }}:</strong>
-                    <p>{{ $review->message }}
-                        @for ($i = 0; $i < 5; $i++)
-                            @if ($i < $review->score)
-                                <span class=text-lg>⭐</span>
-                            @else
-                                <span class=text-lg>☆</span>
-                            @endif
-                        @endfor
-                    </p>
-                </div>
-                @if (!is_null($review->guide_list_account_id_account))
-                    <div class="bg-gray-100 p-3 rounded-lg shadow-sm">
-                        <strong>{{ $review->name . ' ' . $review->surname }}:</strong>
-                        <p>{{ $review->guideReviewMessage }}
-                            @for ($i = 0; $i < 5; $i++)
-                                @if ($i < $review->sp_score)
-                                    <span class=text-lg>⭐</span>
-                                @else
-                                    <span class=text-lg>☆</span>
-                                @endif
-                            @endfor
-                        </p>
-                    </div>
-                @endif
-            @endforeach
-        </div>
-    </div>
     <script>
         const minBudgetInput = document.getElementById("min_budget");
         const maxBudgetInput = document.getElementById("max_budget");

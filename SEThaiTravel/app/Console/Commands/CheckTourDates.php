@@ -44,8 +44,22 @@ class CheckTourDates extends Command
             ->where('end_tour_date', '>', Carbon::now())
             ->whereNotIn('status', ['cancal', 'collect', 'finish'])
             ->get();
+        foreach ($collectTours as $tour) {
+            $tourStatus = ['status' => 'collect'];
+            $tour->update($tourStatus);
+
+            $this->info("Tour ID {$tour->id_tour} status updated to collect.");
+        }
+        $expiredBookings = Booking::where('payment_date', '<', Carbon::now())
+            ->whereNotIn('status', ['paid', 'cancel'])
+            ->get();
+        foreach ($expiredBookings as $booking) {
+            $bookingStatus = ['status' => 'cancel'];
+            $booking->update($bookingStatus);
+    
+            $this->info("Booking ID {$booking->id_booking} status updated to cancel.");
+        }
         // $request =;
-        // $booking =;
         // $offer =;
     }
 }

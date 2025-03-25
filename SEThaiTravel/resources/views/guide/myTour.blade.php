@@ -120,7 +120,7 @@
                                 <form action="/guideDetailMyTour" method="POST">
                                     @csrf
                                     <h2 class="text-2xl font-bold text-black-600 hover:text-blue-500">
-                                        <input type="hidden" name="tourID" value={{$tour->id_tour}}>
+                                        <input type="hidden" name="tourID" value={{ $tour->id_tour }}>
                                         <button type="submit"> {{ ucwords($tour->name) }} </button>
                                     </h2>
                                 </form>
@@ -153,14 +153,16 @@
                                     {{ $tour->End_of_sale_date }}</p>
                                 <p class="text-gray-800 m-2 text-md font-bold">{{ number_format($tour->price) }} ฿</p>
                                 <div class="flex justify-end space-x-2">
-                                    <form action="/guideEditTourPage" method="GET">
-                                        <button
-                                            class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
-                                        <input type="hidden" name="tourID" value={{ $tour->id_tour }}>
-                                    </form>
-                                    <!-- Delete Button -->
-                                    <button onclick="openModal({{ $tour->id_tour }})"
-                                        class="bg-red-600 text-white px-4 py-2 rounded-md font-bold">Delete</button>
+                                    @if ($tour->status == 'ongoing')
+                                        <form action="/guideEditTourPage" method="GET">
+                                            <button
+                                                class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
+                                            <input type="hidden" name="tourID" value={{ $tour->id_tour }}>
+                                        </form>
+                                        <!-- Delete Button -->
+                                        <button onclick="openModal({{ $tour->id_tour }})"
+                                            class="bg-red-600 text-white px-4 py-2 rounded-md font-bold">Delete</button>
+                                    @endif
                                 </div>
                             </div>
                         </div>

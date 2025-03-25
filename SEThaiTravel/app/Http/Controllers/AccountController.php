@@ -40,9 +40,11 @@ class AccountController extends Controller
       return redirect()->back()->withErrors(['login_failed' => 'Invalid username or password'])->withInput();
     } else {
       switch ($account->permittion_acc) {
-        case "admin":
-          session(['userID' => $account]);
-          return view('adminPage'); //ของจริงจะใส่เป็น view('ชื่อของไฟล์ที่เป็นหน้า',compact('ตัวแปรที่เก็บข้อมูลของadmin'))
+        case "admin" : 
+          $accounts = Account::all();
+          // dd($account);
+          // session(['userID' => $account]);
+          return view('admin.home', compact('accounts')); //ของจริงจะใส่เป็น view('ชื่อของไฟล์ที่เป็นหน้า',compact('ตัวแปรที่เก็บข้อมูลของadmin'))
         case "corp":
           $corp = CorpList::find($account->id_account);
           session(['userID' => $corp]);
@@ -60,76 +62,73 @@ class AccountController extends Controller
       }
     }
   }
-  function viewSignIn()
-  { // Redirect ไปที่ หน้า signIn หน้าแรกที่มีให้เลือกประเภทการ SignIn
-    return view('account.signUp');
-  }
-  function signIn(Request $request)
-  { // รับข้อมูลจากหน้า signIn หน้าเเรกแล้วมาแบ่งประเภทว่าจะ Redirect ไปหน้า signIn ที่เลือกมา
-    $request->validate(
-      [
-        'username' => 'required',
-        'password' => 'required',
-        'email' => 'required'
-      ],
-    );
-    $username = $request->username;
-    // $password=Hash::make($request->password);
-    $password = $request->password;
-    $email = $request->email;
-    $typeOfSign = $request->role;
-    $checkAcc = Account::where('username', $username)
-      ->orWhere('email', 'LIKE', $email)
-      ->first(); //ใช้ตรวจสอบ username email ว่ามีแล้วหรือยัง
-    $allCountry = $this->getCountry();
-    if (is_null($checkAcc)) {
-      switch ($typeOfSign) {
-        case 'corp':
-          return view('account.signUpCorperation', compact('username', 'password', 'typeOfSign', 'email', 'allCountry'));
-        case 'guide':
-          return view('account.signUpGuide', compact('username', 'password', 'typeOfSign', 'email', 'allCountry'));
-        case 'user':
-          return view('account.signUpCustomer', compact('username', 'password', 'typeOfSign', 'email', 'allCountry'));
+      function viewSignIn(){ // Redirect ไปที่ หน้า signIn หน้าแรกที่มีให้เลือกประเภทการ SignIn
+        
+        return view('account.signUp');
       }
-    } else {
-      return redirect()->back()->withErrors(['SignIn_failed' => 'username or email have used'])->withInput();
+      function signIn(Request $request){ // รับข้อมูลจากหน้า signIn หน้าเเรกแล้วมาแบ่งประเภทว่าจะ Redirect ไปหน้า signIn ที่เลือกมา
+          $request->validate([
+          'username'=>'required',
+          'password'=>'required',
+          'email'=>'required'
+          ],
+          );
+          $username= $request->username;
+          // $password=Hash::make($request->password);
+          $password= $request->password;
+          $email=$request->email;
+          $typeOfSign= $request->role;
+          $checkAcc=Account::where('username',$username)
+                             ->orWhere('email', 'LIKE', $email)
+                             ->first();//ใช้ตรวจสอบ username email ว่ามีแล้วหรือยัง
+          $allCountry = $this->getCountry();
+          if(is_null($checkAcc)){
+            switch($typeOfSign){
+              case 'corp': 
+                return view('account.signUpCorperation',compact('username','password','typeOfSign','email','allCountry'));
+              case 'guide': 
+                return view('account.signUpGuide',compact('username','password','typeOfSign','email','allCountry'));
+              case 'user': 
+                return view('account.signUpCustomer',compact('username','password','typeOfSign','email','allCountry'));
+            } 
+          }
+          else{
+            return redirect()->back()->withErrors(['SignIn_failed' => 'username or email have used'])->withInput();
+          }    
+      }
+      function insertCorp(Request $request){//เพิ่ม บริษัทเข้าฐานข้อมูลแล้ว Redirect ไปหน้า Home
+        $accountData=[
+          'permittion_acc'=>$request->typeOfSign,
+          'username'=>$request->username,
+          'password'=>$request->password,
+          'email'=>$request->email,
+          'status'=>'pending'
+        ];
+        // dd($accountData);
+        Account::insert($accountData);
+        $idAcc = Account::where('username',$request->username)->first();    
+        $corpData=[
+          'account_id_account'=> $idAcc->id_account,
+          'corp_license'=>$request->registNum,
+          'logo'=>"logo.png",
+          'name'=>$request->corpName,
+          'address'=> $request->address." ".$request->district." ".$request->subdistict.
+                      " ".$request->province,
+          'country'=> $request->country,
+          'postcode'=> $request->postalNum,
+          'phone_number'=>$request->phoneNumber,
+          'name_owner'=>$request->owner,
+          'nationality'=>$request->nation,
+          'dob'=>$request->dob,
+          'owner _address'=>$request->ownerAddress." ".$request->ownerDistrict." ".$request->ownerSubdistrict.
+                            " ".$request->ownerProvince." ".$request->ownerPostalNum,
+          'owner_country_code'=>1
+        ]; 
+        // dd($corpData);
+        CorpList::insert($corpData);
+        return view('home');
     }
-  }
-  function insertCorp(Request $request)
-  { //เพิ่ม บริษัทเข้าฐานข้อมูลแล้ว Redirect ไปหน้า Home
-    $accountData = [
-      'permittion_acc' => $request->typeOfSign,
-      'username' => $request->username,
-      'password' => $request->password,
-      'email' => $request->email,
-      'status' => 'pending'
-    ];
-    // dd($accountData);
-    Account::insert($accountData);
-    $idAcc = Account::where('username', $request->username)->first();
-    $corpData = [
-      'account_id_account' => $idAcc->id_account,
-      'corp_license' => $request->registNum,
-      'logo' => "logo.png",
-      'name' => $request->corpName,
-      'address' => $request->address . " " . $request->district . " " . $request->subdistict .
-        " " . $request->province,
-      'country' => $request->country,
-      'postcode' => $request->postalNum,
-      'phone_number' => $request->phoneNumber,
-      'name_owner' => $request->owner,
-      'nationality' => $request->nation,
-      'dob' => $request->dob,
-      'owner _address' => $request->ownerAddress . " " . $request->ownerDistrict . " " . $request->ownerSubdistrict .
-        " " . $request->ownerProvince . " " . $request->ownerPostalNum,
-      'owner_country_code' => 1
-    ];
-    // dd($corpData);
-    CorpList::insert($corpData);
-    return view('home');
-  }
-
-
+  
   function insertUser(Request $request)
   { //เพิ่ม ลูกค้าเข้าฐานข้อมูลแล้ว Redirect ไปหน้า Home
     $accountData = [
@@ -568,3 +567,4 @@ class AccountController extends Controller
     return view('user.search', compact('ownerData', 'searchTourData', 'totalMember', 'ownerScore', 'path'));
   }
 }
+

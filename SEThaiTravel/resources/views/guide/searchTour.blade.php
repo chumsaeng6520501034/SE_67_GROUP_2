@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Deals</title>
+    <title>Search Tour</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         #sidebar,
@@ -67,12 +67,12 @@
 
 <body>
     <!-- Sidebar -->
-    @include('components.sidebarUser')
+    @include('components.sidebarGuide')
     <!-- Navbar -->
     <div id="mainContent">
-        <nav id="navbar" class="fixed top-0 left-0  w-full p-4 z-[60] transition-all duration-300 ">
+        <nav id="navbar" class="fixed top-0 left-0 w-full p-4 z-[60] transition-all duration-300">
             <div class="max-w-7xl mx-auto flex flex-col space-y-3 p-4 bg-[#205781] rounded-lg">
-                <form action="/userFilterSearch" method="GET">
+                <form action="/guideSearchFilter" method="GET">
                     <!-- บรรทัดแรก: แบรนด์ + ช่องค้นหา -->
                     <div class="flex justify-between items-center w-full">
                         <div class="text-2xl text-white font-bold pl-4">TRAVEL</div>
@@ -83,42 +83,45 @@
                         <button type="submit"
                             class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition duration-300">SEARCH</button>
                     </div>
+                    <div class="mt-2 ">
+                        <!-- บรรทัดที่สอง: ตัวกรอง Filters -->
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-center ">
+                            <!-- วันที่ไป -->
+                            <div class="flex items-center justify-center space-x-1">
+                                <label for="start_date" class="text-yellow-500 font-semibold">From:</label>
+                                <input type="date" id="start_date" name="startDate"
+                                    class="border px-2 py-1 rounded-lg">
+                            </div>
 
-                    <!-- บรรทัดที่สอง: ตัวกรอง Filters -->
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-center mt-2">
-                        <!-- วันที่ไป -->
-                        <div class="flex items-center space-x-1">
-                            <label for="start_date" class="text-yellow-500 font-semibold">From:</label>
-                            <input type="date" id="start_date" name="startDate" class="border px-2 py-1 rounded-lg">
-                        </div>
+                            <!-- วันที่กลับ -->
+                            <div class="flex items-center justify-center space-x-1">
+                                <label for="end_date" class="text-yellow-500 font-semibold">To:</label>
+                                <input type="date" id="end_date" name="endDate" class="border px-2 py-1 rounded-lg">
+                            </div>
 
-                        <!-- วันที่กลับ -->
-                        <div class="flex items-center space-x-1">
-                            <label for="end_date" class="text-yellow-500 font-semibold">To:</label>
-                            <input type="date" id="end_date" name="endDate" class="border px-2 py-1 rounded-lg">
-                        </div>
+                            <div class="flex items-center space-x-1">
+                                <label for="people" class="text-yellow-500 font-semibold">Type:</label>
+                                <select name="type" class="h-full w-full rounded-lg">
+                                    <option value="request">REQUEST</option>
+                                    <option value="tour">TOUR</option>
+                                </select>
+                            </div>
 
-                        <!-- จำนวนคน -->
-                        <div class="flex items-center space-x-1">
-                            <label for="people" class="text-yellow-500 font-semibold">People:</label>
-                            <input type="number" id="people" min="1" value="1" name="capacity"
-                                class="border px-2 py-1 rounded-lg w-16">
-                        </div>
+                            <!-- งบประมาณขั้นต่ำ -->
+                            <div class="flex items-center justify-center space-x-1">
+                                <label for="min_budget" class="text-yellow-500 font-semibold">Min:</label>
+                                <input type="range" id="min_budget" name="minBudget" min="0" max="1000000"
+                                    value="0" step="10000" class="w-24" oninput="updateMinValue(this.value)">
+                                <span id="min_value" class="text-sm font-semibold text-white">0</span>
+                            </div>
 
-                        <!-- งบประมาณขั้นต่ำ -->
-                        <div class="flex items-center space-x-1">
-                            <label for="min_budget" class="text-yellow-500 font-semibold">Min:</label>
-                            <input type="range" id="min_budget" name="minBudget" min="0" max="1000000"
-                                value="0" step="10000" class="w-24" oninput="updateMinValue(this.value)">
-                            <span id="min_value" class="text-sm font-semibold text-white">0</span>
-                        </div>
-
-                        <!-- งบประมาณสูงสุด -->
-                        <div class="flex items-center space-x-1">
-                            <label for="max_budget" class="text-yellow-500 font-semibold">Max:</label>
-                            <input type="range" id="max_budget" name="maxBudget" min="0" max="1000000"
-                                value="1000000" step="10000" class="w-24" oninput="updateMaxValue(this.value)">
-                            <span id="max_value" class="text-sm font-semibold text-white">1,000,000</span>
+                            <!-- งบประมาณสูงสุด -->
+                            <div class="flex items-center justify-center space-x-1">
+                                <label for="max_budget" class="text-yellow-500 font-semibold">Max:</label>
+                                <input type="range" id="max_budget" name="maxBudget" min="0" max="1000000"
+                                    value="1000000" step="10000" class="w-24" oninput="updateMaxValue(this.value)">
+                                <span id="max_value" class="text-sm font-semibold text-white">1,000,000</span>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -139,9 +142,14 @@
                     <div
                         class="bg-white rounded-lg shadow-lg p-6 mb-6 flex relative cursor-pointer hover:shadow-xl transition">
                         <!-- รูปภาพ -->
-                        <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination"
-                            class="w-1/3 rounded-lg">
-                        <form action="/userViewProductDetail" method="POST">
+                        @if (is_null($item->tourImage))
+                            <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination"
+                                class="w-1/3 rounded-lg">
+                        @else
+                            <img src="{{ asset('storage/' . $item->tourImage) }}" alt="image"
+                                class="w-1/3 rounded-lg">
+                        @endif
+                        <form action="/guideSearchTourDetail" method="POST">
                             @csrf
                             <input type="hidden" name="tourID" value={{ $item->id_tour }}>
                             <input type="hidden" name="path" value={{ $path }}>
@@ -202,27 +210,26 @@
                             </div>
                             <div class="mt-auto">
                                 <p class="text-2xl font-bold text-green-600">{{ number_format($item->price) }}฿</p>
-                                @if ($status === 'Available')
-                                    <form action="/logIn" method="GET">
-                                        <button type="submit"
-                                            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm mt-2 relative z-[50]">
-                                            RESERVE NOW
-                                        </button>
-                                    </form>
-                                @else
-                                    <button
-                                        class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition text-sm mt-2 relative z-[50]">
-                                        FULL
+                                <form action="/guideSearchTourDetail" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="tourID" value={{ $item->id_tour }}>
+                                    <input type="hidden" name="path" value={{ $path }}>
+                                    <button type="submit"
+                                        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm mt-2 relative z-[50]">
+                                        INFO
                                     </button>
-                                @endif
+                                </form>
                                 <p
                                     class="text-base font-semibold mt-2 {{ $status === 'Available' ? 'text-green-500' : 'text-red-500' }}">
                                     NET AMOUNT:
-                                    {{ is_null($totalMember[$startArray]) ? 0 : $totalMember[$startArray++] }}/{{ $item->tour_capacity }}
+                                    {{ is_null($totalMember[$startArray]) ? 0 : $totalMember[$startArray] }}/{{ $item->tour_capacity }}
                                 </p>
                             </div>
                         </div>
                     </div>
+                    @php
+                        $startArray += 1;
+                    @endphp
                 @endforeach
                 {{ $searchTourData->links() }}
             </div>

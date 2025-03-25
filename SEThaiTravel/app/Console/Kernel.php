@@ -10,6 +10,9 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      */
+    protected $commands = [
+        \App\Console\Commands\CheckTourDates::class,  // เพิ่มคำสั่งที่คุณสร้างขึ้น
+    ];
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();

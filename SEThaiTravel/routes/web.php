@@ -5,6 +5,9 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CorpListController;
 use App\Http\Controllers\GuideListController;
 use App\Http\Controllers\UserListController;
+use App\Http\Controllers\AdminListController;
+use App\Models\Account;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,7 +58,7 @@ Route::get('/deleteAccount',[AccountController::class,'deleteAccount']);
 Route::match(['get', 'post'],'/detailBooking',[UserListController::class,'getDetailBooking']);
 Route::match(['get', 'post'],'/editAddtour',[UserListController::class,'viewEditRequestTour']);
 Route::match(['get', 'post'],'/editAdd',[UserListController::class,'changeRequestTour']);
-Route::match(['get', 'post'],'/detailBooking',[UserListController::class,'getUserBuyHistory']);
+// Route::match(['get', 'post'],'/detailBooking',[UserListController::class,'getUserBuyHistory']);
 Route::get('/history',[UserListController::class,'viewHistory']);
 // Route::get('/setSession/{booking_id}', [UserListController::class, 'setSessionAndRedirect'])
 //     ->name('setSessionAndRedirect');
@@ -76,6 +79,33 @@ Route::post('/submitReview',[UserListController::class,'addReview']);
 Route::post('/customerViewReview',[UserListController::class,'viewReviewDetail']);
 Route::get('/searchHistory',[UserListController::class,'searchHistory']);
 
+
+// Route::post('/toggle-status/{id}', function ($id) {
+//     $account = Account::findOrFail($id);
+    
+//     // สลับค่า status
+//     $account->status = ($account->status === 'available') ? 'disappear' : 'available';
+//     $account->save();
+
+//     return response()->json(['status' => $account->status]);
+// });
+Route::post('/statusChange',[AdminListController::class,'statusChange']);
+Route::get('/account',[AdminListController::class,'viewAccount'])->name('account');
+Route::get('/customer', [AdminListController::class, 'viewCustomer'])->name('customer');
+Route::get('/guide',[AdminListController::class,'viewGuide'])->name('guide');
+Route::get('/corporation',[AdminListController::class,'viewCorporation'])->name('corp');
+
+Route::match(['get', 'post'],'/editCustomer',[AdminListController::class,'viewEditCustomer']);
+Route::post('/updateCustomer',[AdminListController::class,'updateCustomer']);
+Route::post('/deleteCustomer', [AdminListController::class, 'deleteCustomer'])->name('deleteCustomer');
+
+Route::match(['get', 'post'],'/editGuide',[AdminListController::class,'viewEditGuide']);
+Route::post('/updateGuide',[AdminListController::class,'updateGuide']);
+Route::post('/deleteGuide', [AdminListController::class, 'deleteGuide'])->name('deleteGuide');
+
+Route::match(['get', 'post'],'/editCorp',[AdminListController::class,'viewEditCorp']);
+Route::post('/updateCorp',[AdminListController::class,'updateCorp']);
+Route::post('/deleteCorp', [AdminListController::class, 'deleteCorp'])->name('deleteCorp');
 //corp section
 Route::get('/corpHomepage',[CorpListController::class,'getHomePage']);
 Route::get('/corpAddTourPage',[CorpListController::class,'getAddTour']);
@@ -85,6 +115,7 @@ Route::get('/corpHistory',[CorpListController::class,'getHistory']);
 Route::get('/corpOffer',[CorpListController::class,'getOffer']);
 Route::get('/corpStaff',[CorpListController::class,'getStaffInCorp']);
 Route::get('/corpPayments',[CorpListController::class,'getAllPaymentHistory']);
+Route::post('/corpDetailMyTour',[GuideListController::class,'getMyTourDetail']);
 
 
 
@@ -101,3 +132,11 @@ Route::post('/guideDetailMyTour',[GuideListController::class,'getMyTourDetail'])
 Route::get('/guideMyJop',[GuideListController::class,'getMyJob']);
 Route::post('/guideMyJopDetail',[GuideListController::class,'getMyJobDetail']);
 Route::get('/guideSearchMyJob',[GuideListController::class,'searchMyJob']);
+Route::get('/guideJobHistory',[GuideListController::class,'getJobHistory']);
+Route::post('/guideMyJopHistoryDetail',[GuideListController::class,'getJobHistoryDetail']);
+Route::get('/guideSearchMyJobHistory',[GuideListController::class,'searchMyJobHistory']);
+Route::get('/guideCalendar',[GuideListController::class,'viewCalendar']);
+Route::get('/guideSearch',[GuideListController::class,'searchAll']);
+Route::get('/guideSearchFilter',[GuideListController::class,'searchFilter']);
+Route::post('/guideSearchTourDetail',[GuideListController::class,'getSearchTourDetail']);
+Route::post('/guideSearchRequestDetail',[GuideListController::class,'getSearchRequestDetail']);
