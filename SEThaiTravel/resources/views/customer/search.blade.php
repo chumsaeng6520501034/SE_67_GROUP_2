@@ -56,7 +56,7 @@
         }
 
         body {
-            background-image: url('https://blog.bangkokair.com/wp-content/uploads/2023/09/Cover_krabi-travel-guide-top-destinations.jpg');
+            background-image: url('https://newsroom.aaa.com/wp-content/uploads/2023/10/iStock-816320512-1024x453.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -70,60 +70,52 @@
     @include('components.sidebarCustomer')
     <!-- Navbar -->
     <div id="mainContent">
-        <nav id="navbar" class="fixed top-0 left-0  w-full p-4 z-[60] transition-all duration-300 ">
-            <div class="max-w-7xl mx-auto flex flex-col space-y-3 p-4 bg-[#205781] rounded-lg">
-                <form action="/customerFilterSearch" method="GET">
-                    <!-- บรรทัดแรก: แบรนด์ + ช่องค้นหา -->
-                    <div class="flex justify-between items-center w-full">
-                        <div class="text-2xl text-white font-bold pl-4">TRAVEL</div>
-                        <div class="flex-grow mx-4">
-                            <input type="text" name="searchKey" placeholder="Search tour name..."
-                                class="w-full px-4 py-2 border rounded-lg">
-                        </div>
-                        <button type="submit"
-                            class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition duration-300">SEARCH</button>
+    <nav id="navbar" class="fixed top-0 left-0 w-full p-4 z-[60] transition-all duration-300">
+        <div class="max-w-7xl mx-auto flex flex-col space-y-3 p-4 rounded-lg">
+            <form action="/customerFilterSearch" method="GET">
+                <!-- บรรทัดแรก: แบรนด์ + ช่องค้นหา -->
+                <div class="flex justify-between items-center w-full">
+                    <div class="text-2xl text-white font-bold pl-4">TRAVEL</div>
+                    <div class="flex-grow mx-4">
+                        <input type="text" name="searchKey" placeholder="Search tour name..."
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                    <button type="submit"
+                        class="bg-blue-700 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-900 transition duration-300">
+                        SEARCH
+                    </button>
+                </div>
+
+                <!-- บรรทัดที่สอง: ตัวกรอง Filters -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-1 items-center mt-4 mx-6">
+                    <!-- From + To -->
+                    <div class="flex items-center space-x-1">
+                        <label for="start_date" class="text-black font-bold">From:</label>
+                        <input type="date" id="start_date" name="startDate" class="border px-2 py-1 rounded-lg">
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <label for="end_date" class="text-black font-bold">To:</label>
+                        <input type="date" id="end_date" name="endDate" class="border px-2 py-1 rounded-lg">
                     </div>
 
-                    <!-- บรรทัดที่สอง: ตัวกรอง Filters -->
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-center mt-2">
-                        <!-- วันที่ไป -->
-                        <div class="flex items-center space-x-1">
-                            <label for="start_date" class="text-yellow-500 font-semibold">From:</label>
-                            <input type="date" id="start_date" name="startDate" class="border px-2 py-1 rounded-lg">
-                        </div>
-
-                        <!-- วันที่กลับ -->
-                        <div class="flex items-center space-x-1">
-                            <label for="end_date" class="text-yellow-500 font-semibold">To:</label>
-                            <input type="date" id="end_date" name="endDate" class="border px-2 py-1 rounded-lg">
-                        </div>
-
-                        <!-- จำนวนคน -->
-                        <div class="flex items-center space-x-1">
-                            <label for="people" class="text-yellow-500 font-semibold">People:</label>
-                            <input type="number" id="people" min="1" value="1" name="capacity"
-                                class="border px-2 py-1 rounded-lg w-16">
-                        </div>
-
-                        <!-- งบประมาณขั้นต่ำ -->
-                        <div class="flex items-center space-x-1">
-                            <label for="min_budget" class="text-yellow-500 font-semibold">Min:</label>
-                            <input type="range" id="min_budget" name="minBudget" min="0" max="1000000"
-                                value="0" step="10000" class="w-24" oninput="updateMinValue(this.value)">
-                            <span id="min_value" class="text-sm font-semibold text-white">0</span>
-                        </div>
-
-                        <!-- งบประมาณสูงสุด -->
-                        <div class="flex items-center space-x-1">
-                            <label for="max_budget" class="text-yellow-500 font-semibold">Max:</label>
-                            <input type="range" id="max_budget" name="maxBudget" min="0" max="1000000"
-                                value="1000000" step="10000" class="w-24" oninput="updateMaxValue(this.value)">
-                            <span id="max_value" class="text-sm font-semibold text-white">1,000,000</span>
-                        </div>
+                    <!-- Min + Max Budget -->
+                    <div class="flex items-center space-x-1">
+                        <label for="min_budget" class="text-black font-bold">Min:</label>
+                        <input type="range" id="min_budget" name="minBudget" min="0" max="1000000"
+                            value="0" step="10000" class="w-24" oninput="updateMinValue(this.value)">
+                        <span id="min_value" class="text-sm font-bold text-black">0</span>
                     </div>
-                </form>
-            </div>
-        </nav>
+                    <div class="flex items-center space-x-1">
+                        <label for="max_budget" class="text-black font-bold">Max:</label>
+                        <input type="range" id="max_budget" name="maxBudget" min="0" max="1000000"
+                            value="1000000" step="10000" class="w-24" oninput="updateMaxValue(this.value)">
+                        <span id="max_value" class="text-sm font-bold text-black">1,000,000</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </nav>
+
 
 
         <!-- Hero Section -->
@@ -146,8 +138,7 @@
 
             <div class="relative top-[-90%] p-10 rounded-lg w-2/3 mt-20 mx-auto">
                 @foreach ($searchTourData as $item)
-                    <div
-                        class="bg-white rounded-lg shadow-lg p-6 mb-6 flex relative cursor-pointer hover:shadow-xl transition">
+                    <div class="bg-white rounded-lg shadow-lg p-6 mb-6 flex relative cursor-pointer hover:shadow-xl transition">
                         <!-- รูปภาพ -->
                         <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination"
                             class="w-1/3 rounded-lg">

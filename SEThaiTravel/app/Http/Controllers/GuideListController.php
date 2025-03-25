@@ -455,7 +455,6 @@ class GuideListController extends Controller
 
     return response()->json($formattedEvents);
   }
-  
   public function searchAll(Request $request){
     $name = $request->searchKey;
     $startDate = $request->startDate;
@@ -541,7 +540,6 @@ class GuideListController extends Controller
         return view('guide.searchRequest', compact('ownerData', 'searchRequestData','path'));
     }
   }
-
   public function searchFilter(Request $request){
     $name = $request->searchKey;
     $startDate = $request->startDate;
@@ -673,11 +671,25 @@ class GuideListController extends Controller
   public function getSearchRequestDetail(Request $request){
     $requestID = $request->requestID;
     $path = $request->path;
+    $offerInRequest = Offer::where('request_tour_id_request_tour', $requestID)->get();
+    $offerData = [];
+    foreach($offerInRequest as $offer){
+        switch($offer->from_who_offer){
+            case 'corp': $offerData[] = $offer->join('corp_list','corp_list.account_id_account','=','offer.id_who_offer')
+                                               ->where('corp_list.account_id_account',$offer->id_who_offer)
+                                               ->first(); 
+            break;
+            case 'guide': $offerData[] = $offer->join('guide_list','guide_list.account_id_account','=','offer.id_who_offer')
+                                               ->where('guide_list.account_id_account',$offer->id_who_offer)
+                                               ->first();
+            break;
+        }
+    }
     $requestData = RequestTour::join('user_list', 'request_tour.user_list_account_id_account', '=', 'user_list.account_id_account')
         ->where('id_request_tour',$requestID)
         ->select('request_tour.*', 'user_list.name as uName','user_list.surname','user_list.phonenumber')  // เลือกคอลัมน์ทั้งหมดจากทั้ง 2 ตาราง
         ->first();
-    return view('guide.detailSearchRequest',compact('requestData','path'));
+    return view('guide.detailSearchRequest',compact('requestData','path','offerData'));
 
   }
   public function getStatistic(){
@@ -762,6 +774,7 @@ class GuideListController extends Controller
         'p.checknumber',
         'p.total_price',
         'b.tour_id_tour',
+        'b.id_booking',
         'user_list.name',
         'user_list.surname'
     )->get();
@@ -796,11 +809,22 @@ class GuideListController extends Controller
         'p.checknumber',
         'p.total_price',
         'b.tour_id_tour',
+        'b.id_booking',
         'user_list.name',
         'user_list.surname'
     )->get();
     // dd($payments);
     return view('guide.allPayment',compact('payments'));
   }
-
+  public function getPaymentDetail(Request $request){
+        $userID = $request->userID;
+        $tourID = $request->tourID;
+        $paymentID= $request->paymentID;
+        $bookingID= $request->bookingID;
+        $paymentData = Payment::where('id_payment',$paymentID)->first();
+        $tourData = Tour::where('id_tour',$tourID)->first();
+        $userData = UserList::where('account_id_account',$userID)->first();
+        $bookingData = Booking::where('id_booking',$bookingID)->first();
+        return view('guide.receipt',compact('paymentData','tourData','userData','bookingData'));
+  }
 }
