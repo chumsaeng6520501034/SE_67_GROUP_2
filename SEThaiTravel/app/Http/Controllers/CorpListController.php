@@ -124,16 +124,32 @@ class CorpListController extends Controller
         ->join('guide_list', 'guide_list.account_id_account', '=', 'Tour_has_guide_list.guide_list_account_id_account')
         ->where('Tour_has_guide_list.tour_id_tour', $tourID)
         ->get();
+
         $locationInTourAPI = LocationInTour::where('tour_id_tour',$tourID)->get();
         $locations = [];
         foreach($locationInTourAPI as $api){
             $locations[] = $this->getLocationsById($api->loc_api);
         }
 
-        dd($locations);
         return view('corporation.detailMyTour', compact('totalMember', 'tourData','guideintour','locations'));
     }
 
+    function getLocationsById($api)
+    {
+        $response = Http::withHeaders([
+            'accept' => 'application/json',
+            'Accept-Language' => 'th',
+            'x-api-key' => env('TAT_API_KEY')
+        ])->get("$api");
+
+        if ($response->successful()) {
+            return response()->json($response->json());
+        } else {
+            return response()->json(['error' => 'ไม่สามารถดึงข้อมูลสถานที่ท่องเที่ยวได้'], 500);
+        }
+    }
+
+    // ปุ้มยอนกลับไปหน้า myTour
     function getMytour()
     {
         return view('corporation.myTour');
