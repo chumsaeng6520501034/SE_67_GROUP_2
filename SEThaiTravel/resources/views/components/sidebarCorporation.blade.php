@@ -27,7 +27,7 @@
         class="fixed top-0 left-0 w-64 h-screen bg-blue-900 text-white shadow-lg flex flex-col transform z-50 transition-transform duration-300 ">
         <!-- User Profile -->
         <div class="p-6 text-center">
-            <a href="/userProfile">
+            <a href="/corpProfile">
                 <img class="h-16 w-16 rounded-full mx-auto" src="https://avatars.githubusercontent.com/u/64538277"
                 alt="avatar" />
             </a>
@@ -35,7 +35,7 @@
         </div>
         <!-- Menu Items -->
         <nav class="flex flex-col space-y-2">
-            <a href="/corpSearch" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
+            <a href="/corpHomepage" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
             <a href="/corpAddTourPage" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
             <a href="/corpMyTour" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY TOUR</a>
             <a href="/corpHistory" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SELL HISTORY</a>
