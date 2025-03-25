@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Payment</title>
+    <title>Payment Table</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;700&display=swap" rel="stylesheet">
 
@@ -51,7 +51,7 @@
         <div id="mainContent" class="flex-1 p-5 flex justify-center transition-all duration-300">
             <div class="bg-white bg-opacity-80 backdrop-blur-md p-6 rounded-2xl shadow-lg w-4/5 transition-all duration-300">
                 <!-- Search and Date Filter -->
-                <form action="/corpSearchAllPayment" method="get">
+                <form action="/guideSearchAllPayment" method="get">
                     <div class="flex items-center space-x-4 mb-4 bg-white bg-opacity-80 p-3 rounded-lg shadow-lg">
                         <div class="flex items-center border rounded px-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -78,18 +78,32 @@
                             <th class="border border-blue-500 px-4 py-2">NO.</th>
                             <th class="border border-blue-500 px-4 py-2">CHEQUE NO.</th>
                             <th class="border border-blue-500 px-4 py-2">DATE PAYMENT</th>
-                            <th class="border border-blue-500 px-4 py-2">BOOKING ID</th>
+                            <th class="border border-blue-500 px-4 py-2">CustomerName</th>
                             <th class="border border-blue-500 px-4 py-2">TOUR ID</th>
+                            <th class="border border-blue-500 px-4 py-2">Net price</th>
+                            <th class="border border-blue-500 px-4 py-2">Receipt</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($payments as $index => $payments)
+                        @foreach($payments as $index => $payment)
                         <tr class="text-center">
                             <td class="border border-gray-300 px-4 py-2">{{ $index + 1 }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $payments->checknumber }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $payments->payment_date }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $payments->booking_Tour_id_Tour }}</td>
-                            <td class="border border-gray-300 px-4 py-2">{{ $payments->tour_id_tour}}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $payment->checknumber }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $payment->payment_date }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $payment->name.' '.$payment->surname }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $payment->booking_Tour_id_Tour }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $payment->total_price }}</td>
+                            <td class="border border-gray-300 px-4 py-2">
+                                <form action="/corpPaymentDetail" method="GET">
+                                    <input type="hidden" name="userID" value={{$payment->booking_user_list_account_id_account}}>
+                                    <input type="hidden" name="tourID" value={{$payment->tour_id_tour}}>
+                                    <input type="hidden" name="paymentID" value={{$payment->id_payment}}>
+                                    <input type="hidden" name="bookingID" value={{$payment->id_booking}}>
+                                    <button type="submit" class="bg-green-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-300 transform hover:scale-105 active:scale-95">
+                                        INFO
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                         @endforeach 
 

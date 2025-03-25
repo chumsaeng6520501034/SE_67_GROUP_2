@@ -60,9 +60,8 @@
 </head>
 
 <body>
-@include('components.sidebarCorporation')
-
-<div class="flex h-screen">
+    @include('components.sidebarCorporation')
+    <div class="flex h-screen">
         <main class="p-6" id="mainContent">
             <!-- Row for graphs -->
             <div class="flex justify-between space-x-2 mb-6 w-full" id="chart">

@@ -141,8 +141,8 @@ Route::post('/corpUpdateOffer',[CorpListController::class,'updateMyOffer']);
 Route::get('/corpStaff',[CorpListController::class,'getStaffInCorp']); //หน้าพนักงานในบ.
 Route::get('/corpStaffDetail',[CorpListController::class,'staffDetail']);
 Route::get('/corpPayments',[CorpListController::class,'getAllPaymentHistory']);//หน้าใบเสร็จ
-//Route::get('/corpPaymentDetail',[CorpListController::class,'getAllPaymentHistory']);
-//Route::get('/corpStat',[CorpListController::class,'getAllPaymentHistory']);
+Route::get('/corpPaymentDetail',[CorpListController::class,'getPaymentDetail']);
+Route::get('/corpStatistic',[CorpListController::class,'getStatistic']);
 
 
 //guide section

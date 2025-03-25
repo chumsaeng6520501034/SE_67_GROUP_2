@@ -75,6 +75,7 @@
                             <th class="border border-blue-500 px-4 py-2">Surname</th>
                             <th class="border border-blue-500 px-4 py-2">License</th>
                             <th class="border border-blue-500 px-4 py-2">Phone Number</th>
+                            <th class="border border-blue-500 px-4 py-2">Profile</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,6 +86,14 @@
                             <td class="border border-gray-300 px-4 py-2">{{ $guides->surname }}</td>
                             <td class="border border-gray-300 px-4 py-2">{{ $guides->guide_license }}</td>
                             <td class="border border-gray-300 px-4 py-2">{{ $guides->phonenumber }}</td>
+                            <td class="border border-gray-300 px-4 py-2">
+                                <form action="/corpStaffDetail" method="GET">
+                                    <input type="hidden" name="guideID" value={{$guides->account_id_account}}>
+                                    <button type="submit" class="bg-green-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-300 transform hover:scale-105 active:scale-95">
+                                        INFO
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                         @endforeach 
 
