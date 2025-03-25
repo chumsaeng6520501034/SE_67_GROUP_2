@@ -17,6 +17,7 @@ use App\Models\UserList;
 use App\Models\CorpList;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 
 class GuideListController extends Controller
 {
@@ -665,6 +666,128 @@ class GuideListController extends Controller
         ->first();
     return view('guide.detailSearchRequest',compact('requestData','path'));
 
+  }
+  public function getStatistic(){
+    $userID = session('userID')->account_id_account;
+    $touristPerMonth =Booking::selectRaw("DATE_FORMAT(booked_date, '%Y-%m') as YM, SUM(adult_qty + kid_qty) as tourListPerMonth")
+    ->where('status', 'paid')
+    ->groupBy('YM')
+    ->orderBy('YM')
+    ->get();
+    $touristPerYear = DB::table('booking')
+    ->selectRaw("DATE_FORMAT(booking.booked_date, '%Y') as YM, SUM(booking.adult_qty + booking.kid_qty) as tourListPerYear")
+    ->where('booking.status', 'paid')
+    ->whereRaw("DATE_FORMAT(booking.booked_date, '%Y') = YEAR(NOW())")
+    ->groupBy(DB::raw("DATE_FORMAT(booking.booked_date, '%Y')"))
+    ->orderBy('YM')
+    ->get();
+    $revenuePerMonth= Booking::join('tour', 'tour.id_tour', '=', 'booking.tour_id_tour')
+    ->join('guide_list', 'guide_list.account_id_account', '=', 'tour.owner_id')
+    ->selectRaw("DATE_FORMAT(booking.booked_date, '%Y-%m') as YM, SUM(booking.total_price) as RevenuePerMonth")
+    ->where('booking.status', 'paid')
+    ->where('tour.owner_id', session('userID')->account_id_account)
+    ->groupBy('YM')
+    ->orderByDesc('YM')
+    ->get();
+    $revenuePerYear = DB::table(DB::raw("(
+        SELECT 
+            DATE_FORMAT(booking.booked_date, \"%Y-%m\") as YM, 
+            SUM(booking.total_price) as RevenuePerMonth
+        FROM booking
+        INNER JOIN tour ON tour.id_tour = booking.tour_id_tour
+        INNER JOIN guide_list ON guide_list.account_id_account = tour.owner_id
+        WHERE booking.status = \"paid\"
+        AND tour.owner_id = $userID
+        AND DATE_FORMAT(booking.booked_date, \"%Y\") = YEAR(NOW())
+        GROUP BY YM
+        ORDER BY YM DESC
+    ) AS revenue"))
+        ->selectRaw('SUM(revenue.RevenuePerMonth) AS revenuePerYear')
+        ->get();
+    
+    $avgTourist = DB::table(DB::raw('(SELECT DATE_FORMAT(booking.booked_date, "%Y-%m") as YM, 
+            SUM(booking.adult_qty + booking.kid_qty) as tourListPerMonth 
+            FROM booking 
+            WHERE booking.status = "paid"
+            GROUP BY YM 
+            ORDER BY YM DESC) AS Tourist'))
+    ->selectRaw('SUM(Tourist.tourListPerMonth) / 12 AS avgTourist')
+    ->get();
+    $avgRevenue = DB::table(DB::raw("(
+        SELECT 
+            DATE_FORMAT(booking.booked_date, \"%Y-%m\") as YM, 
+            SUM(booking.total_price) as RevenuePerMonth
+        FROM booking
+        INNER JOIN tour ON tour.id_tour = booking.tour_id_tour
+        INNER JOIN guide_list ON guide_list.account_id_account = tour.owner_id
+        WHERE booking.status = \"paid\"
+        AND tour.owner_id = $userID
+        AND DATE_FORMAT(booking.booked_date, \"%Y\") = YEAR(NOW())
+        GROUP BY YM
+        ORDER BY YM DESC
+    ) AS revenue"))
+        ->selectRaw('SUM(revenue.RevenuePerMonth) /12 AS avgRevenue')
+        ->get();
+    return view('guide.statistic',compact('touristPerMonth','touristPerYear','revenuePerMonth','revenuePerYear','avgTourist','avgRevenue'));
+  }
+  public function getAllPayment(Request $request){
+    $idAccount = session('userID')->account_id_account;
+    $payments = DB::table('payment as p')
+    ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
+    ->join('tour as t', 't.id_tour', '=', 'b.tour_id_tour')
+    ->join('user_list','user_list.account_id_account','=','p.booking_user_list_account_id_account')
+    ->join('guide_list as c', function ($join) {
+        $join->on('c.account_id_account', '=', 't.owner_id')
+            ->where('t.from_owner', 'LIKE', 'guide');
+    })
+    ->where('c.account_id_account', 30)
+    ->select(
+        'p.id_payment',
+        'p.booking_Tour_id_Tour',
+        'p.booking_user_list_account_id_account',
+        'p.payment_date',
+        'p.checknumber',
+        'p.total_price',
+        'b.tour_id_tour',
+        'user_list.name',
+        'user_list.surname'
+    )->get();
+    // dd($payments);
+    return view('guide.allPayment',compact('payments'));
+  }
+  public function searchPayment(Request $request){
+    $searchKey = $request->searchKey;
+    $date = $request->paymentDate;
+    $idAccount = session('userID')->account_id_account;
+    $payments = DB::table('payment as p')
+    ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
+    ->join('tour as t', 't.id_tour', '=', 'b.tour_id_tour')
+    ->join('user_list','user_list.account_id_account','=','p.booking_user_list_account_id_account')
+    ->join('guide_list as c', function ($join) {
+        $join->on('c.account_id_account', '=', 't.owner_id')
+            ->where('t.from_owner', 'LIKE', 'guide');
+    })
+    ->where('c.account_id_account', 30);
+    if(!empty($date)){
+        $payments->whereDate('p.payment_date',$date);
+    }
+    if(!empty($searchKey)){
+        $payments->where('t.id_tour','LIKE',"%$searchKey%")
+        ->orWhere('p.checknumber','LIKE',"%$searchKey%");
+    }
+    $payments=$payments->select(
+        'p.id_payment',
+        'p.booking_Tour_id_Tour',
+        'p.booking_user_list_account_id_account',
+        'p.payment_date',
+        'p.checknumber',
+        'p.total_price',
+        'b.tour_id_tour',
+        'user_list.name',
+        'user_list.surname'
+    )->get();
+    // dd($payments);
+    return view('guide.allPayment',compact('payments'));
   }
 
 }
