@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\RequestTour;
 use App\Models\TourHasGuideList;
 use App\Models\Tour;
+use App\Models\Booking;
 use App\Models\LocationInTour;
 use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
@@ -105,6 +106,39 @@ class CorpListController extends Controller
         // dd($tours);
         return view('corporation.myTour', compact('tours'));
     }
+
+    // แสดงรายละเอียดของสินค้าของ tour ที่เลือก
+    function getMyTourDetail(Request $request){
+        $tourID = $request->tourID;
+        $tourData = Tour::where('id_tour', $tourID)->first();
+        $totalMember = Booking::where('tour_id_tour', $tourID) //TourID ใช้ของที่กดจองมา
+        ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
+        ->value('Total_Member');
+        // $anotherReview = Review::join('booking', 'booking.id_booking', '=', 'review.booking_id_booking')
+        //                 ->join('tour', 'tour.id_tour', '=', 'booking.tour_id_tour')
+        //                 ->join('user_list', 'user_list.account_id_account', '=', 'review.user_list_account_id_account')
+        //                 ->where('tour.id_tour', $tourID)
+        //                 ->select('review.*', 'user_list.*') // เลือกเฉพาะคอลัมน์ที่ต้องการ
+        //                 ->get();
+        $guideintour = DB::table('Tour_has_guide_list')
+        ->join('guide_list', 'guide_list.account_id_account', '=', 'Tour_has_guide_list.guide_list_account_id_account')
+        ->where('Tour_has_guide_list.tour_id_tour', $tourID)
+        ->get();
+        $locationInTourAPI = LocationInTour::where('tour_id_tour',$tourID)->get();
+        $locations = [];
+        foreach($locationInTourAPI as $api){
+            $locations[] = $this->getLocationsById($api->loc_api);
+        }
+
+        dd($locations);
+        return view('corporation.detailMyTour', compact('totalMember', 'tourData','guideintour','locations'));
+    }
+
+    function getMytour()
+    {
+        return view('corporation.myTour');
+    }
+
     //เอารายการสินค้าที่หมดอายุทั้งหมด
     function getHistory(Request $request)
     {

@@ -106,16 +106,20 @@ Route::post('/deleteGuide', [AdminListController::class, 'deleteGuide'])->name('
 Route::match(['get', 'post'],'/editCorp',[AdminListController::class,'viewEditCorp']);
 Route::post('/updateCorp',[AdminListController::class,'updateCorp']);
 Route::post('/deleteCorp', [AdminListController::class, 'deleteCorp'])->name('deleteCorp');
+
 //corp section
 Route::get('/corpHomepage',[CorpListController::class,'getHomePage']);
 Route::get('/corpAddTourPage',[CorpListController::class,'getAddTour']);
 Route::post('/corpAddTour',[CorpListController::class,'addTour']);
+
 Route::get('/corpMyTour',[CorpListController::class,'getTour']);
+Route::post('/corpDetailMyTour',[CorpListController::class,'getMyTourDetail']);
+Route::get('/corpMyinTour',[GuideListController::class,'getMytour']);
+
 Route::get('/corpHistory',[CorpListController::class,'getHistory']);
 Route::get('/corpOffer',[CorpListController::class,'getOffer']);
 Route::get('/corpStaff',[CorpListController::class,'getStaffInCorp']);
 Route::get('/corpPayments',[CorpListController::class,'getAllPaymentHistory']);
-Route::post('/corpDetailMyTour',[GuideListController::class,'getMyTourDetail']);
 
 
 
