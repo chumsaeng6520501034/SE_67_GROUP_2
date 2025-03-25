@@ -168,4 +168,5 @@ Route::post('/guideSearchRequestDetail',[GuideListController::class,'getSearchRe
 Route::get('/guideStatistic',[GuideListController::class,'getStatistic']);
 Route::get('/guideAllPayment',[GuideListController::class,'getAllPayment']);
 Route::get('/guideSearchAllPayment',[GuideListController::class,'searchPayment']);
+Route::get('/guideGetPaymentDetail',[GuideListController::class,'getPaymentDetail']);
 

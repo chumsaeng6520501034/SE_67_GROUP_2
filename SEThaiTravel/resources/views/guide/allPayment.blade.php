@@ -94,9 +94,15 @@
                             <td class="border border-gray-300 px-4 py-2">{{ $payment->booking_Tour_id_Tour }}</td>
                             <td class="border border-gray-300 px-4 py-2">{{ $payment->total_price }}</td>
                             <td class="border border-gray-300 px-4 py-2">
-                                <button type="submit" class="bg-green-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-300 transform hover:scale-105 active:scale-95">
-                                    INFO
-                                </button>
+                                <form action="/guideGetPaymentDetail" method="GET">
+                                    <input type="hidden" name="userID" value={{$payment->booking_user_list_account_id_account}}>
+                                    <input type="hidden" name="tourID" value={{$payment->tour_id_tour}}>
+                                    <input type="hidden" name="paymentID" value={{$payment->id_payment}}>
+                                    <input type="hidden" name="bookingID" value={{$payment->id_booking}}>
+                                    <button type="submit" class="bg-green-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-300 transform hover:scale-105 active:scale-95">
+                                        INFO
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach 
