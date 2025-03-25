@@ -37,6 +37,7 @@ class CorpListController extends Controller
         return view('corporation.addTour', compact('guides'));
     }
     
+    // ทำเเล้ว เเต่ยังต้องปรับปรุงตรง ไกด์ให้รับได้้หลายคน
     function addTour(Request $request)
     {
         $request->validate([
@@ -80,7 +81,7 @@ class CorpListController extends Controller
             ];
             TourHasGuideList::insert($guideInTour);
         }
-
+        // dd($locationInTourAPI);
         foreach ($locationInTourAPI as $api) {
             $locationInTourData = [
                 "loc_api" => "https://tatdataapi.io/api/v2/places/$api",
@@ -88,7 +89,7 @@ class CorpListController extends Controller
             ];
             LocationInTour::insert($locationInTourData);
         }
-
+ 
         return redirect('/corpHomepage');
     }
 
@@ -117,7 +118,7 @@ class CorpListController extends Controller
         return view('corporation.sellHistory', compact('histours'));
     }
 
-    //เอารายการข้อเสนอทั้งหมด
+    //เอารายการข้อเสนอทั้งหมด ทำเเล้ว
     function getOffer(Request $request)
     {
         $idAccount = session('userID')->account_id_account;

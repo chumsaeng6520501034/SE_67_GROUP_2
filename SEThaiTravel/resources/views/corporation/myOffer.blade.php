@@ -141,23 +141,26 @@
                                 <p class="text-gray-400 text-xs mt-1">Start Date: {{ $offer->start_tour_date }}</p>
                                 <p class="text-gray-400 text-xs  mt-1">End Date: {{ $offer->end_tour_date }}</p>
                             </div>
-                            <div class="p-6 bg-gray-100 w-1/4 text-right rounded-r-lg">
-                                <p class="text-gray-800 text-md font-bold">Release Date</p>
-                                <p class="text-gray-600 font-semibold">{{ $offer->Release_date }}</p>
-                                <p class="text-gray-800 text-md font-bold">Expiration Date</p>
-                                <p class="text-gray-600 text-md font-semibold">
-                                    {{ $offer->End_of_sale_date }}</p>
-                                <p class="text-gray-800 m-2 text-md font-bold">{{ number_format($offer->price) }} ฿</p>
-                                <div class="flex justify-end space-x-2">
-                                    <form>
-                                        <button class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
-                                        <input type="hidden" value={{$offer->id_tour}}>
-                                    </form>
-                                    <!-- Delete Button -->
-                                    <button onclick="openModal({{$offer->id_tour}})"
-                                        class="bg-red-600 text-white px-4 py-2 rounded-md font-bold">Delete</button>
+                            <div class="bg-white rounded-lg p-4 shadow h-full flex flex-col justify-between">
+                                    <!-- ส่วนบน: วันที่ -->
+                                    <div class="text-right">
+                                        <h2 class="font-bold">Request Date</h2>
+                                        <p>{{ $offer->request_date }}</p>
+                                        <h2 class="font-bold mt-2">End Request Date</h2>
+                                        <p>{{ $offer->end_request_date }}</p>
+                                    </div>
+
+                                    <!-- ส่วนล่าง: ปุ่ม -->
+                                    <div class="flex justify-end space-x-2 mt-4">
+                                        <form>
+                                            <input type="hidden" value="{{ $offer->id_tour }}">
+                                            <button class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
+                                        </form>
+                                        <button onclick="openModal({{ $offer->id_tour }})"
+                                            class="bg-red-600 text-white px-4 py-2 rounded-md font-bold">Delete</button>
+                                    </div>
                                 </div>
-                            </div>
+
                         </div>
                     </div>
                     <div id="deleteModal{{$offer->id_tour}}" class="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 hidden">

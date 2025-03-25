@@ -117,9 +117,13 @@
                                     class="w-1/3 object-cover">
                             @endif
                             <div class="p-6 flex-1">
-                                <h2 class="text-2xl font-bold text-black-600">
-                                    {{ ucwords($tour->name) }}
-                                </h2>
+                            <form action="/guideDetailMyTour" method="POST">
+                                    @csrf
+                                    <h2 class="text-2xl font-bold text-black-600 hover:text-blue-500">
+                                        <input type="hidden" name="tourID" value={{$tour->id_tour}}>
+                                        <button type="submit"> {{ ucwords($tour->name) }} </button>
+                                    </h2>
+                                </form>
                                 <p class="text-gray-600 mt-1">{{ $tour->description }}</p>
                                 @switch($tour->status)
                                     @case('ongoing')
