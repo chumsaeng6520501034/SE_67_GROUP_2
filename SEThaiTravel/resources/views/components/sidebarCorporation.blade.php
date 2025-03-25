@@ -18,7 +18,7 @@
 <body class="bg-gray-100">
 
     <!-- Button Toggle Sidebar -->
-    <button id="toggleSidebar" class="fixed top-4 left-4 bg-blue-500 text-white p-2 rounded-md z-[110]">
+    <button id="toggleSidebar" class="fixed top-4 left-4 text-2xl text-white p-2 rounded-md z-[110]">
         ☰
     </button>
 
@@ -35,7 +35,7 @@
         </div>
         <!-- Menu Items -->
         <nav class="flex flex-col space-y-2">
-            <a href="/corpSearch" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
+            <a href="/corpHomepage" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
             <a href="/corpAddTourPage" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
             <a href="/corpMyTour" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY TOUR</a>
             <a href="/corpHistory" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SELL HISTORY</a>

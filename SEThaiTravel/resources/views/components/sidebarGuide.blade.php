@@ -16,12 +16,12 @@
 <body class="bg-gray-100">
 
     <!-- Button Toggle Sidebar -->
-    <button id="toggleSidebar" class="fixed top-4 left-4 text-white bg-blue-700 p-3 rounded-md z-[100] shadow-lg hover:bg-blue-800">
+    <button id="toggleSidebar" class="fixed top-4 left-4 text-white text-2xl p-3 rounded-md z-[100] shadow-lg hover:bg-blue-800">
         ☰
     </button>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed top-0 left-0 w-64 h-screen bg-[#0F588C] text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300  z-50">
+    <aside id="sidebar" class="fixed top-0 left-0 w-64 h-screen bg-blue-900 text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300  z-50">
         <!-- User Profile -->
         <div class="p-6 text-center">
             <img class="h-16 w-16 rounded-full mx-auto border-2 border-white" src="https://avatars.githubusercontent.com/u/64538277" alt="avatar" />
