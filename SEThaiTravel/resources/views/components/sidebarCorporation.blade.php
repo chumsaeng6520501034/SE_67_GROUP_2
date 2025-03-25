@@ -35,7 +35,7 @@
         </div>
         <!-- Menu Items -->
         <nav class="flex flex-col space-y-2">
-            <a href="/corpSearch" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
+            <a href="/corpHomepage" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
             <a href="/corpAddTourPage" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
             <a href="/corpMyTour" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY TOUR</a>
             <a href="/corpHistory" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SELL HISTORY</a>
