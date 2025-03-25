@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Tour</title>
+    <title>My offer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -65,11 +65,11 @@
 
 <body>
     <div class="flex">
-    @include('components.sidebarCorporation')
+        @include('components.sidebarCorporation')
 
         <div id="mainContent" class="flex-1 p-10 transition-all duration-300 overflow-y-auto ml-2">
             <!-- Search and Filter -->
-            <form action="/guideSearchMyTour" method="GET">
+            <form action="/corpSearchMyoffer" method="GET">
                 <div class="flex items-center bg-white shadow-md p-4 rounded-lg mb-4 space-x-4">
                     <div class="relative flex-1">
                         <label>Tour name</label>
@@ -117,9 +117,13 @@
                                     class="w-1/3 object-cover">
                             @endif
                             <div class="p-6 flex-1">
-                                <h2 class="text-2xl font-bold text-black-600">
-                                    {{ ucwords($offer->name) }}
-                                </h2>
+                                <form action="/corpDetailMyoffer" method="POST">
+                                    @csrf
+                                    <h2 class="text-2xl font-bold text-black-600 hover:text-blue-500">
+                                        <input type="hidden" name="tourID" value={{ $offer->id_tour }}>
+                                        <button type="submit"> {{ ucwords($offer->name) }} </button>
+                                    </h2>
+                                </form>
                                 <p class="text-gray-600 mt-1">{{ $offer->description }}</p>
                                 @switch($offer->status)
                                     @case('ongoing')
@@ -141,39 +145,41 @@
                                 <p class="text-gray-400 text-xs mt-1">Start Date: {{ $offer->start_tour_date }}</p>
                                 <p class="text-gray-400 text-xs  mt-1">End Date: {{ $offer->end_tour_date }}</p>
                             </div>
-                            <div class="bg-white rounded-lg p-4 shadow h-full flex flex-col justify-between">
-                                    <!-- ส่วนบน: วันที่ -->
-                                    <div class="text-right">
-                                        <h2 class="font-bold">Request Date</h2>
-                                        <p>{{ $offer->request_date }}</p>
-                                        <h2 class="font-bold mt-2">End Request Date</h2>
-                                        <p>{{ $offer->end_request_date }}</p>
-                                    </div>
-
-                                    <!-- ส่วนล่าง: ปุ่ม -->
-                                    <div class="flex justify-end space-x-2 mt-4">
-                                        <form>
-                                            <input type="hidden" value="{{ $offer->id_tour }}">
-                                            <button class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
+                            <div class="p-6 bg-gray-100 w-1/4 text-right rounded-r-lg">
+                                <p class="text-gray-800 text-md font-bold">Release Date</p>
+                                <p class="text-gray-600 font-semibold">{{ $offer->Release_date }}</p>
+                                <p class="text-gray-800 text-md font-bold">Expiration Date</p>
+                                <p class="text-gray-600 text-md font-semibold">
+                                    {{ $offer->End_of_sale_date }}</p>
+                                <p class="text-gray-800 m-2 text-md font-bold">{{ number_format($offer->price) }} ฿</p>
+                                <div class="flex justify-end space-x-2">
+                                    @if ($offer->status == 'ongoing')
+                                        <form action="/corpEditOffer" method="GET">
+                                            <button
+                                                class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
+                                            <input type="hidden" name="tourID" value={{ $offer->id_tour }}>
                                         </form>
+                                        <!-- Delete Button -->
                                         <button onclick="openModal({{ $offer->id_tour }})"
                                             class="bg-red-600 text-white px-4 py-2 rounded-md font-bold">Delete</button>
-                                    </div>
+                                    @endif
                                 </div>
-
+                            </div>
                         </div>
                     </div>
-                    <div id="deleteModal{{$offer->id_tour}}" class="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 hidden">
+                    <div id="deleteModal{{ $offer->id_tour }}"
+                        class="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 hidden">
                         <div class="bg-white p-6 rounded-md shadow-lg w-1/3">
                             <h3 class="text-lg font-semibold text-gray-800">Are you sure you want to delete?</h3>
-                            <p class="text-sm text-gray-600">{{$offer->name}}</p>
+                            <p class="text-sm text-gray-600">{{ $offer->name }}</p>
                             <div class="mt-4 flex justify-between">
                                 <!-- Cancel Button -->
-                                <button onclick="closeModal({{$offer->id_tour}})" class="bg-gray-400 text-white px-4 py-2 rounded-md">Cancel</button>
+                                <button onclick="closeModal({{ $offer->id_tour }})"
+                                    class="bg-gray-400 text-white px-4 py-2 rounded-md">Cancel</button>
                                 <!-- Confirm Button (Form for Deleting) -->
-                                <form action="/guideDeleteMyTour" method="POST">
+                                <form action="/corpDeleteMyOffer" method="POST">
                                     @csrf
-                                    <input type="hidden" name="tourID" value={{$offer->id_tour}}>
+                                    <input type="hidden" name="tourID" value={{ $offer->id_tour }}>
                                     <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md">Confirm
                                         Delete</button>
                                 </form>
@@ -188,11 +194,11 @@
 
     <script>
         function openModal(id) {
-            document.getElementById('deleteModal'+ id).classList.remove('hidden');
+            document.getElementById('deleteModal' + id).classList.remove('hidden');
         }
 
         function closeModal(id) {
-            document.getElementById('deleteModal'+ id).classList.add('hidden');
+            document.getElementById('deleteModal' + id).classList.add('hidden');
         }
         document.getElementById('toggleSidebar').addEventListener('click', function() {
             let sidebar = document.getElementById('sidebar');
@@ -209,7 +215,8 @@
             };
 
             // ลบสีเก่าก่อน
-            this.classList.remove("text-black", "text-[#007BFF]", "text-[#FFC107]", "text-[#28A745]","text-[#FF5733]");
+            this.classList.remove("text-black", "text-[#007BFF]", "text-[#FFC107]", "text-[#28A745]",
+                "text-[#FF5733]");
 
             // เพิ่มสีใหม่ตามค่าที่เลือก
             this.classList.add(colors[this.value] || "text-black");

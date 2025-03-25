@@ -14,6 +14,7 @@ use App\Models\GuideList;
 use App\Models\Booking;
 use App\Models\UserList;
 use App\Models\Review;
+use App\Models\Account;
 use App\Models\LocationInTour;
 use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
@@ -530,10 +531,10 @@ class CorpListController extends Controller
             ->with(['tourHasGuideList.tour'])
             ->get();
         $guideScore = Review::leftJoin('guide_list', 'review.guide_list_account_id_account', '=', 'guide_list.account_id_account')
-            ->where('guide_list.account_id_account',$idAccount)
+            ->where('guide_list.account_id_account', $idAccount)
             ->selectRaw('COUNT(*) as total_reviews, AVG(review.sp_score) as average_score')
             ->first();
-        return view('corporation.staffDetail', compact('guideInfo','guideWork','guideScore'));
+        return view('corporation.staffDetail', compact('guideInfo', 'guideWork', 'guideScore'));
     }
 
 
@@ -564,17 +565,11 @@ class CorpListController extends Controller
     }
 
 
-    // function getProfile(Request $request)
-    // {
-    //     $idAccount = session('userID')->account_id_account;
-    //     $idPayment = $request->paymentID;
-    //     $bill = payment::table('payment as p')
-    //         ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
-    //         ->join('user_list as u', 'u.account_id_account', '=', 'p.booking_user_list_account_id_account')
-    //         ->where('p.booking_user_list_account_id_account', $idAccount)
-    //         ->where('p.id_payment', $idPayment)
-    //         ->get();
-    //     dd($bill);
-    //     return view('???', compact('bill'));
-    // }
+    function getProfile(Request $request)
+    {
+        $id = session('userID')->account_id_account;
+        $accountData = Account::where('id_account', $id)->first();
+        $userData = CorpList::where('account_id_account', $id)->first();
+        return view('customer.profile', compact('accountData', 'userData'));
+    }
 }

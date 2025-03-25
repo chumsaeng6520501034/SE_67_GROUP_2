@@ -51,20 +51,25 @@
         <div id="mainContent" class="flex-1 p-5 flex justify-center transition-all duration-300">
             <div class="bg-white bg-opacity-80 backdrop-blur-md p-6 rounded-2xl shadow-lg w-4/5 transition-all duration-300">
                 <!-- Search and Date Filter -->
-                <div class="flex items-center space-x-4 mb-4 bg-white bg-opacity-80 p-3 rounded-lg shadow-lg">
-                    <div class="flex items-center border rounded px-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 10a7 7 0 1 0-14 0 7 7 0 0 0 14 0z" />
-                        </svg>
-                        <input type="text" placeholder="Search" class="outline-none px-2 py-1">
+                <form action="/corpSearchAllPayment" method="get">
+                    <div class="flex items-center space-x-4 mb-4 bg-white bg-opacity-80 p-3 rounded-lg shadow-lg">
+                        <div class="flex items-center border rounded px-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 10a7 7 0 1 0-14 0 7 7 0 0 0 14 0z" />
+                            </svg>
+                            <input type="text" name="searchKey" placeholder="Search" class="outline-none px-2 py-1">
+                        </div>
+                        <div class="flex items-center border rounded px-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 4h10M3 10h18M5 14h14m-7 4v-4" />
+                            </svg>
+                            <input type="date" name="paymentDate" class="outline-none px-2 py-1">
+                        </div>
+                            <button type="submit" class="bg-yellow-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-300 transform hover:scale-105 active:scale-95">
+                                SEARCH
+                            </button>
                     </div>
-                    <div class="flex items-center border rounded px-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 4h10M3 10h18M5 14h14m-7 4v-4" />
-                        </svg>
-                        <input type="date" class="outline-none px-2 py-1">
-                    </div>
-                </div>
+                </form>
 
                 <!-- Payment Table -->
                 <table class="w-full border border-blue-500">
