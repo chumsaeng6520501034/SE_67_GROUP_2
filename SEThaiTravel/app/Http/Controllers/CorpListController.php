@@ -114,6 +114,7 @@ class CorpListController extends Controller
         $totalMember = Booking::where('tour_id_tour', $tourID) //TourID ใช้ของที่กดจองมา
         ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
         ->value('Total_Member');
+
         // $anotherReview = Review::join('booking', 'booking.id_booking', '=', 'review.booking_id_booking')
         //                 ->join('tour', 'tour.id_tour', '=', 'booking.tour_id_tour')
         //                 ->join('user_list', 'user_list.account_id_account', '=', 'review.user_list_account_id_account')
@@ -225,4 +226,18 @@ class CorpListController extends Controller
         dd($bill);
         return view('???', compact('bill'));
     }
+
+    // function getProfile(Request $request)
+    // {
+    //     $idAccount = session('userID')->account_id_account;
+    //     $idPayment = $request->paymentID;
+    //     $bill = payment::table('payment as p')
+    //         ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
+    //         ->join('user_list as u', 'u.account_id_account', '=', 'p.booking_user_list_account_id_account')
+    //         ->where('p.booking_user_list_account_id_account', $idAccount)
+    //         ->where('p.id_payment', $idPayment)
+    //         ->get();
+    //     dd($bill);
+    //     return view('???', compact('bill'));
+    // }
 }
