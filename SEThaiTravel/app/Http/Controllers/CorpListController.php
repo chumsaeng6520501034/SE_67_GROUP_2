@@ -431,13 +431,18 @@ class CorpListController extends Controller
     //เสร็จแล้ว
     function getAddOffer(Request $request)
     {
-        $requestTour = RequestTour::where('id_request_tour', $request->request_tourID)->first();
+        $offer = $request->tourID;
+        // dd($offer);
+        $requestTour = RequestTour::where('id_request_tour', $offer)->first();
+        // dd($requestTour);
         return view('corporation.addOffer', compact('requestTour'));
     }
-    //เสร็จแล้ว
+
+    //เสร็จแล้ว ติดตรง 'request_tour_id_request_tour' => $request->request_tourID,
     function addOffer(Request $request)
     {
         $idAccount = session('userID')->account_id_account;
+        dd($request->request_tourID);
         $offerData = [
             'request_tour_id_request_tour' => $request->request_tourID,
             'from_who_offer' => 'corp',
@@ -450,7 +455,7 @@ class CorpListController extends Controller
             'travel' => $request->travel,
             'travel_price' => $request->travel_price,
             'guide_qty' => $request->guide_qty,
-            'status' => $request->status,
+            'status' => 'new',
             'offer_date' => Carbon::now()->toDateString(),
         ];
         Offer::insert($offerData);

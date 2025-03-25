@@ -20,13 +20,20 @@
       <div class="bg-white bg-opacity-80 backdrop-blur-md p-8 rounded-2xl shadow-lg w-full md:w-[600px] max-h-[95vh] overflow-y-auto">
         <h2 class="text-center text-3xl md:text-4xl font-bold text-[#002D62] mb-6">รายละเอียด Request</h2>
         <div class="text-sm space-y-2">
-          <p><span class="font-semibold">Request Name:</span> เที่ยวทะเลพังงา</p>
-          <p><span class="font-semibold">Start Date:</span> 2025-04-01</p>
-          <p><span class="font-semibold">End Date:</span> 2025-04-05</p>
-          <p><span class="font-semibold">Quantity Guide:</span> 2</p>
-          <p><span class="font-semibold">Hotel Required:</span> ใช่</p>
-          <p><span class="font-semibold">Preferred Location:</span> เขาหลัก, หาดบางเนียง</p>
-          <p><span class="font-semibold">Note:</span> ต้องการไกด์พูดอังกฤษได้</p>
+          <p><span class="font-semibold">Request Name:</span>{{ $requestTour-> name}}</p>
+          <p><span class="font-semibold">Start Request Date:</span> {{ $requestTour-> request_date}}</p>
+          <p><span class="font-semibold">End Request Date:</span>{{ $requestTour-> end_of_request_date}} </p>
+          
+          <p><span class="font-semibold">Start Tour:</span>{{ $requestTour-> start_tour_date}}</p>
+          <p><span class="font-semibold">End Tour:</span>{{ $requestTour->end_tour_date }}</p>
+
+          <p><span class="font-semibold">MAX Price:</span>{{ $requestTour->max_price}}</p>
+          <p><span class="font-semibold">Start Price:</span>{{ $requestTour->start_price}}</p>
+
+          <p><span class="font-semibold">Size Tour:</span>{{ $requestTour->size_tour}} </p>
+          <p><span class="font-semibold">Quantity Guide:</span>{{ $requestTour-> guide_qty}} </p>
+
+          <p><span class="font-semibold">Description:</span>{{ $requestTour-> description}} </p>
         </div>
       </div>
 
@@ -34,52 +41,48 @@
       <div class="bg-white bg-opacity-80 backdrop-blur-md p-10 rounded-2xl shadow-lg w-full md:w-[600px] max-h-[95vh] overflow-y-auto">
         <h2 class="text-center text-3xl md:text-4xl font-bold text-[#002D62] mb-6">ADD OFFER</h2>
 
-        <form action="/corpAddTour" method="POST" enctype="multipart/form-data" class="space-y-4">
+        <form action="/corpAddOffer" method="POST" enctype="multipart/form-data" class="space-y-4">
           @csrf
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium">Tour Name*</label>
-              <input type="text" name="tour_name" class="w-full p-2 border rounded shadow-sm">
-            </div>
-            <div>
-              <label class="block text-sm font-medium">Contact*</label>
-              <input type="text" name="contact" class="w-full p-2 border rounded shadow-sm">
-            </div>
-          </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium">Start Date*</label>
-              <input type="date" name="start_date" class="w-full p-2 border rounded shadow-sm">
+              <label class="block text-sm font-medium">Travel By*</label>
+              <input type="text" name="travel" class="w-full p-2 border rounded shadow-sm">
             </div>
             <div>
-              <label class="block text-sm font-medium">End Date*</label>
-              <input type="date" name="end_date" class="w-full p-2 border rounded shadow-sm">
+              <label class="block text-sm font-medium">Travel Price*</label>
+              <input type="number" name="travel_price" class="w-full p-2 border rounded shadow-sm">
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium">Hotel*</label>
-              <select name="hotel" class="w-full p-2 border rounded shadow-sm">
-                <option value="">Select a Hotel</option>
-              </select>
+              <input type="text" name="hotel" class="w-full p-2 border rounded shadow-sm">
             </div>
             <div>
               <label class="block text-sm font-medium">Hotel Price*</label>
-              <input type="number" name="hotelPrice" class="w-full p-2 border rounded shadow-sm">
+              <input type="number" name="hotel_price" class="w-full p-2 border rounded shadow-sm">
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium">Quantity*</label>
-              <input type="number" name="quantity" class="w-full p-2 border rounded shadow-sm">
+          <div>
+              <label class="block text-sm font-medium">Quanty Guide*</label>
+              <input type="number" name="guide_qty" class="w-full p-2 border rounded shadow-sm">
             </div>
             <div>
               <label class="block text-sm font-medium">Price*</label>
               <input type="number" name="price" class="w-full p-2 border rounded shadow-sm">
             </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium">Contact*</label>
+              <input type="text" name="contect" class="w-full p-2 border rounded shadow-sm">
+            </div>
+   
           </div>
 
           <div>
