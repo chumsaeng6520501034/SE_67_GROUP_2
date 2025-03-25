@@ -32,8 +32,8 @@ Route::get('/customer', function () {
     return view('customer.myRequest');
 });
 
-Route::get('/addTour', function () {
-    return view('corporation.addTour');
+Route::get('/addoffer', function () {
+    return view('corporation.addOffer');
 });
 
 Route::get('/corpProfile', function () {
