@@ -17,15 +17,14 @@
             <!-- Search and Add Button -->
             <div class="flex justify-between mb-4">
                 <div class="flex items-center space-x-2">
-                    <input type="text" class="p-2 border border-gray-600 bg-gray-800 rounded-md" placeholder="Search...">
+                    <input type="text" id="searchInput" class="p-2 border border-gray-600 bg-gray-800 text-white rounded-md" placeholder="Search..." onkeyup="searchTable()">
                     <button class="bg-blue-500 px-4 py-2 rounded-md">Search</button>
                 </div>
-                <a href="#" class="bg-blue-500 px-4 py-2 rounded-md">+ ADD</a>
             </div>
 
             <!-- Table -->
             <div class="overflow-x-auto">
-                <table class="w-full border border-gray-400 text-center bg-white text-black rounded-lg shadow-lg">
+                <table class="w-full border border-gray-400 text-center bg-white text-black rounded-lg shadow-lg" id="accountTable">
                     <thead class="bg-gray-900 text-gray-300">
                         <tr>
                             <th class="border border-gray-600 p-3">NO.</th>
@@ -50,69 +49,47 @@
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{ $account->id_account }}">
                                                 <button type="submit" class="bg-yellow-500 px-4 py-2 rounded-md">EDIT</button>
-                                            
-                                            </form>
-                                            <form action="/deleteCustomer" method="POST">
-                                                @csrf
-                                                {{-- @dd($account->id_account) --}}
-                                                <input type="hidden" name="id" value="{{ $account->id_account }}">
-                                                <button type="submit" class="bg-red-500 px-4 py-2 rounded-md">DEL</button>
                                             </form>
                                         @elseif ($account->permittion_acc == 'guide')
                                             <form action="/editGuide" method="POST">
                                                 @csrf
-                                                {{-- @dd($account->id_account) --}}
                                                 <input type="hidden" name="id" value="{{ $account->id_account }}">
                                                 <button type="submit" class="bg-yellow-500 px-4 py-2 rounded-md">EDIT</button>
-                                            
-                                            </form>
-                                            <form action="/deleteGuide" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="id" value="{{ $account->id_account }}">
-                                                <button type="submit" class="bg-red-500 px-4 py-2 rounded-md">DEL</button>
                                             </form>
                                         @elseif ($account->permittion_acc == 'corp')
-                                        <form action="/editCorp" method="POST">
-                                            @csrf
-                                            {{-- @dd($account->id_account) --}}
-                                            <input type="hidden" name="id" value="{{ $account->id_account }}">
-                                            <button type="submit" class="bg-yellow-500 px-4 py-2 rounded-md">EDIT</button>
-                                        
-                                        </form>
-                                        <form action="/deleteCorp" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="id" value="{{ $account->id_account }}">
-                                            <button type="submit" class="bg-red-500 px-4 py-2 rounded-md">DEL</button>
-                                        </form>
-                                        @else
-                                            <a href="#" class="bg-yellow-500 px-4 py-2 rounded-md">EDIT</a>
-                                            <form action="/deleteCustomer" method="POST">
+                                            <form action="/editCorp" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{ $account->id_account }}">
-                                                <button type="submit" class="bg-red-500 px-4 py-2 rounded-md">DEL</button>
+                                                <button type="submit" class="bg-yellow-500 px-4 py-2 rounded-md">EDIT</button>
                                             </form>
+                                        @else
                                         @endif
-                                        {{-- <a href="#" class="bg-yellow-500 px-4 py-2 rounded-md">EDIT</a> --}}
-                                        
                                     </div>
                                 </td>
                                 <td class="border border-gray-400 p-3">
                                     <div class="flex justify-center">
-                                        <form action="/statusChange" method="POST">
-                                            @csrf
-                                            {{-- @dd($account->id_account) --}}
-                                            <input type="hidden" name="id" value="{{ $account->id_account }}">
-                                            <button type="submit" 
-                                                    class="px-4 py-2 rounded-md 
-                                                    {{ $account->status === 'available' ? 'bg-green-500' : 'bg-gray-500' }}">
-                                                {{ $account->status }}
-                                            </button>
-                                        
-                                        </form>
-                                        {{-- <a href="/statusChange" class="bg-green-500 px-4 py-2 rounded-md">{{$account->status}}</a> --}}
+                                        @if($account->permittion_acc !== 'admin')
+                                            @if ($account->status !== 'pending')
+                                                <form action="/statusChange" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="id" value="{{ $account->id_account }}">
+                                                    <button type="submit" 
+                                                            class="px-4 py-2 rounded-md 
+                                                            {{ $account->status === 'available' ? 'bg-green-500' : 'bg-gray-500' }}">
+                                                        {{ $account->status }}
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <button type="button" onclick="openPopup('{{ $account->id_account }}', '{{ $account->status }}')" 
+                                                        class="px-4 py-2 rounded-md 
+                                                            {{ $account->status === 'available' ? 'bg-green-500' : ($account->status === 'pending' ? 'bg-yellow-500' : 'bg-gray-500') }}">
+                                                    {{ ucfirst($account->status) }}
+                                                </button>
+                                            @endif
+                                        @else
+                                        @endif
                                     </div>
                                 </td>
-                                
                             </tr>
                         @endforeach
                     </tbody>
@@ -121,5 +98,30 @@
             
         </div>
     </div>
+
+    <script>
+        function searchTable() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const table = document.getElementById('accountTable');
+            const rows = table.getElementsByTagName('tr');
+            
+            // Loop through all rows, except the header row
+            for (let i = 1; i < rows.length; i++) {
+                let row = rows[i];
+                let username = row.cells[1].textContent.toLowerCase();
+                let permission = row.cells[2].textContent.toLowerCase();
+                let email = row.cells[3].textContent.toLowerCase();
+                let status = row.cells[5].querySelector('button') ? row.cells[5].querySelector('button').textContent.toLowerCase() : ''; // ดึงข้อความจากปุ่มในคอลัมน์สถานะ
+
+                // Check if the search input matches any column (USERNAME, PERMISSION, EMAIL, or STATUS)
+                if (username.includes(searchInput) || permission.includes(searchInput) || email.includes(searchInput) || status.includes(searchInput)) {
+                    row.style.display = ''; // Show matching row
+                } else {
+                    row.style.display = 'none'; // Hide non-matching row
+                }
+            }
+        }
+    </script>
+
 </body>
 </html>
