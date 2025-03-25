@@ -10,7 +10,9 @@ use App\Models\RequestTour;
 use App\Models\TourHasGuideList;
 use App\Models\Tour;
 use App\Models\Offer;
+use App\Models\GuideList;
 use App\Models\Booking;
+use App\Models\Review;
 use App\Models\LocationInTour;
 use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
@@ -201,16 +203,18 @@ class CorpListController extends Controller
     }
 
     //เสร็จแล้ว
-    function getAddOffer(Request $request){
-        $idRequest = $request->request_tourID;
-        return view('corporation.addOffer', compact('idRequest'));
+    function getAddOffer(Request $request)
+    {
+        $requestTour = RequestTour::where('id_request_tour', $request->request_tourID)->first();
+        return view('corporation.addOffer', compact('requestTour'));
     }
     //เสร็จแล้ว
-    function addOffer(Request $request){
+    function addOffer(Request $request)
+    {
         $idAccount = session('userID')->account_id_account;
         $offerData = [
             'request_tour_id_request_tour' => $request->request_tourID,
-            'from_who_offer' =>'corp',
+            'from_who_offer' => 'corp',
             'id_who_offer' => $idAccount,
             'contect' => $request->contect,
             'price' => $request->price,
@@ -227,7 +231,8 @@ class CorpListController extends Controller
         return redirect('/corpOffer');
     }
     //เสร็จแล้ว
-    function getOffer(Request $request){
+    function getOffer(Request $request)
+    {
         $idAccount = session('userID')->account_id_account;
         $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
             ->where('o.id_who_offer', $idAccount)
@@ -236,7 +241,8 @@ class CorpListController extends Controller
         return view('corporation.myOffer', compact('requestTours'));
     }
     //เสร็จแล้ว
-    function getOfferDetail(Request $request){
+    function getOfferDetail(Request $request)
+    {
         $idAccount = session('userID')->account_id_account;
         $offerByMe = DB::table('offer')
             ->where('id_who_offer', $idAccount)
@@ -251,12 +257,14 @@ class CorpListController extends Controller
         return view('corporation.offerDetail', compact('offerByMe'), compact('RequestDetail'), compact('offerInRequest'));
     }
     //เสร็จแล้ว
-    function toEditOffer(Request $request){
+    function toEditOffer(Request $request)
+    {
         $OfferID = $request->offerID;
-        return view('corporation.editOffer',compact('OfferID'));
+        return view('corporation.editOffer', compact('OfferID'));
     }
     //เสร็จแล้ว
-    function updateMyOffer(Request $request){
+    function updateMyOffer(Request $request)
+    {
         $idOffer = $request->offerID;
         $validated = $request->validate([
             'contect' => $request->contect,
@@ -267,16 +275,14 @@ class CorpListController extends Controller
             'travel' => $request->travel,
             'travel_price' => $request->travel_price,
             'guide_qty' => $request->guide_qty,
-            'status'=> 'new'
+            'status' => 'new'
         ]);
         DB::table('offer')
             ->where('id_offer', $idOffer)
             ->update($validated);
         return redirect('/corpOffer');
     }
-
-
-    //เอาพนักงานในบ. ทำเเล้ว
+    //เสร็จแล้ว
     function getStaffInCorp(Request $request)
     {
         $idAccount = session('userID')->account_id_account;
@@ -286,6 +292,25 @@ class CorpListController extends Controller
         // dd($guides);
         return view('corporation.myStaf', compact('guides'));
     }
+    //เสร็จแล้ว
+    function staffDetail(Request $request)
+    {
+        $guideID = $request->guideID;
+        $idAccount = session('userID')->account_id_account;
+        $guideInfo = GuideList::where('account_id_account', $guideID)->get();
+        $guideWork = GuideList::where('account_id_account', $guideID)
+            ->whereHas('tourHasGuideList.tour', function ($query) use ($idAccount) {
+                $query->where('owner_id', $idAccount);
+            })
+            ->with(['tourHasGuideList.tour'])
+            ->get();
+        $guideScore = Review::leftJoin('guide_list', 'review.guide_list_account_id_account', '=', 'guide_list.account_id_account')
+            ->where('guide_list.account_id_account',$idAccount)
+            ->selectRaw('COUNT(*) as total_reviews, AVG(review.sp_score) as average_score')
+            ->first();
+        return view('corporation.staffDetail', compact('guideInfo','guideWork','guideScore'));
+    }
+
 
     //เอารายการจ่ายทั้งหมด ทำเเล้ว
     function getAllPaymentHistory(Request $request)
