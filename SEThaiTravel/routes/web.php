@@ -35,6 +35,11 @@ Route::get('/customer', function () {
 Route::get('/addTour', function () {
     return view('corporation.addTour');
 });
+
+Route::get('/corpProfile', function () {
+    return view('corporation.profileCorp');
+});
+
 Route::get('/myTour', function () {
     return view('corporation.myTour');
 });
@@ -89,6 +94,7 @@ Route::get('/searchHistory',[UserListController::class,'searchHistory']);
 
 //     return response()->json(['status' => $account->status]);
 // });
+
 Route::post('/statusChange',[AdminListController::class,'statusChange']);
 Route::get('/account',[AdminListController::class,'viewAccount'])->name('account');
 Route::get('/customer', [AdminListController::class, 'viewCustomer'])->name('customer');
@@ -108,6 +114,8 @@ Route::post('/updateCorp',[AdminListController::class,'updateCorp']);
 Route::post('/deleteCorp', [AdminListController::class, 'deleteCorp'])->name('deleteCorp');
 
 //corp section
+Route::get('/corpProfile',[CorpListController::class,'getProfile']);
+
 Route::get('/corpHomepage',[CorpListController::class,'getHomePage']);
 Route::get('/corpAddTourPage',[CorpListController::class,'getAddTour']);
 Route::post('/corpAddTour',[CorpListController::class,'addTour']);
@@ -120,7 +128,6 @@ Route::get('/corpHistory',[CorpListController::class,'getHistory']);
 Route::get('/corpOffer',[CorpListController::class,'getOffer']);
 Route::get('/corpStaff',[CorpListController::class,'getStaffInCorp']);
 Route::get('/corpPayments',[CorpListController::class,'getAllPaymentHistory']);
-
 
 
 //guide section
