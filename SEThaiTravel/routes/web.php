@@ -116,8 +116,11 @@ Route::post('/deleteCorp', [AdminListController::class, 'deleteCorp'])->name('de
 
 //corp section
 Route::get('/corpProfile',[CorpListController::class,'getProfile']);
-
 Route::get('/corpHomepage',[CorpListController::class,'getHomePage']);
+Route::get('/guideSearch',[CorpListController::class,'searchAll']);
+Route::get('/guideSearchFilter',[CorpListController::class,'searchFilter']);
+Route::post('/guideSearchTourDetail',[CorpListController::class,'getSearchTourDetail']);
+Route::post('/guideSearchRequestDetail',[CorpListController::class,'getSearchRequestDetail']);
 
 Route::get('/corpAddTourPage',[CorpListController::class,'getAddTour']); //หน้าเพิ่มทัวร์
 Route::post('/corpAddTour',[CorpListController::class,'addTour']);
