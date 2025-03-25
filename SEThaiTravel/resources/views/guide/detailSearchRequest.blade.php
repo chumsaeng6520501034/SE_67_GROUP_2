@@ -120,6 +120,50 @@
             </div>
         </div>
     </div>
+    <div class="bg-white py-6 px-6 rounded-lg shadow-md mt-4 w-[1485px] mx-auto mb-10">
+        <h4 class="text-2xl font-bold mb-3">Offer</h4>
+
+        <!-- กล่องรีวิวแบบเลื่อน -->
+        <div class="max-h-[300px] overflow-y-auto space-y-2 p-2 bg-gray-50 rounded-lg shadow-inner">
+            @foreach ($offerData as $offer)
+                <div class="bg-gray-100 p-3 rounded-lg shadow-sm">
+                    @if ($offer->from_who_offer == 'guide')
+                        <strong>{{ $offer->name . ' ' . $offer->surname }}:</strong>
+                        @switch($offer->status)
+                        @case('new')
+                        <span class="text-blue-500">{{ "($offer->status)" }}</span><br>
+                        @break
+                        @case('reject')
+                        <span class="text-red-500">{{ "($offer->status)" }}</span><br>
+                        @break
+                        @case('approve')
+                        <span class="text-green-500">{{ "($offer->status)" }}</span><br>
+                        @break
+                        @endswitch
+                        <p>
+                            Offer Price: {{number_format($offer->price)}}
+                        </p>
+                    @else
+                        <strong>{{ $offer->name }}: 
+                            @switch($offer->status)
+                            @case('new')
+                            <span class="text-blue-500">{{ "($offer->status)" }}</span><br>
+                            @break
+                            @case('reject')
+                            <span class="text-red-500">{{ "($offer->status)" }}</span><br>
+                            @break
+                            @case('approve')
+                            <span class="text-green-500">{{ "($offer->status)" }}</span><br>
+                            @break
+                            @endswitch
+                        <p>
+                            Offer Price: {{number_format($offer->price)}}
+                        </p>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    </div>
 
     <script>
         const minBudgetInput = document.getElementById("min_budget");
