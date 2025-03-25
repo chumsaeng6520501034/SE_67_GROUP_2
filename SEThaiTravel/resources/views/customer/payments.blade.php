@@ -10,7 +10,7 @@
 
     <style>
         body {
-            background-image: url('https://cdn.pixabay.com/photo/2019/11/10/08/31/beach-4615202_1280.jpg');
+            background-image: url('https://www.bsr.org/images/heroes/bsr-travel-hero..jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -43,13 +43,10 @@
 <body>
 
     <div class="flex h-screen">
-
         @include('components.sidebarCustomer')
-
-
         <!-- Main Content -->
         <div id="mainContent" class="flex-1 p-5 flex justify-center transition-all duration-300">
-            <div class="bg-white bg-opacity-80 backdrop-blur-md p-6 rounded-2xl shadow-lg w-4/5 transition-all duration-300">
+            <div class="bg-white bg-opacity-20 backdrop-blur-md p-6 rounded-2xl shadow-lg w-4/5 transition-all duration-300">
                 <!-- Search and Date Filter -->
                 <div class="flex items-center space-x-4 mb-4 bg-white bg-opacity-80 p-3 rounded-lg shadow-lg">
                     <div class="flex items-center border rounded px-2">
@@ -76,6 +73,7 @@
                             <th class="border border-blue-500 px-4 py-2">BOOKING ID</th>
                             <th class="border border-blue-500 px-4 py-2">TOUR ID</th>
                             <th class="border border-blue-500 px-4 py-2">Net price</th>
+                            <th class="border border-blue-500 px-4 py-2">RECEIPT</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -87,6 +85,19 @@
                             <td class="border border-gray-300 px-4 py-2">{{ $payment->booking_user_list_account_id_account }}</td>
                             <td class="border border-gray-300 px-4 py-2">{{ $payment->booking_Tour_id_Tour }}</td>
                             <td class="border border-gray-300 px-4 py-2">{{ $payment->total_price}}</td>
+                            <td class="border border-gray-300 px-4 py-2">
+                                @if($payment->receipt_url)
+                                    <a href="/" target="_blank">
+                                        <button class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition">
+                                            View Receipt
+                                        </button>
+                                    </a>
+                                @else
+                                    <button class="bg-red-700 text-white px-4 py-2 rounded-lg cursor-not-allowed" disabled>
+                                        No Receipt
+                                    </button>
+                                @endif
+                            </td>
                         </tr>
                         @endforeach 
 
