@@ -12,7 +12,7 @@
     <!-- Navbar -->
     <nav
         class="fixed top-0 left-1/2 transform -translate-x-1/2 p-4 flex justify-start items-center space-x-6 z-50  bg-[#205781] w-full ">
-        <a href="/guideMyTour" class="text-2xl text-white font-bold">&#x2190;</a>
+        <a href="/corpMyinTour" class="text-2xl text-white font-bold">&#x2190;</a>
         <span class="font-bold text-xl text-white">THAI TRAVEL & TOUR</span>
     </nav>
 
@@ -121,17 +121,24 @@
             </div>
 
             <!-- Owner of post และ Description -->
-            <div class="bg-white p-6 rounded-lg shadow-md h-[300px]">
-                <p class="font-bold">Owner of post : <span class="font-normal">
-                        {{ session('userID')->name . ' ' . session('userID')->surname }}
-                    </span></p>
-                <p class="font-bold mt-2">Contact: <span class="font-normal">
-                        {{ session('userID')->phonenumber }}
-                    </span></p>
-                </p>
-                <p class="font-bold mt-2">Description:</p>
-                <p class="mt-2">{{ $tourData->description }}</p>
+            <div class="bg-white p-6 rounded-lg shadow-md h-auto">
+                @foreach ($guideintour as $guide)
+                    <div class="mb-4 border-b pb-4">
+                        <p class="font-bold">Owner of post : 
+                            <span class="font-normal">{{ $guide->name . ' ' . $guide->surname }}</span>
+                        </p>
+                        <p class="font-bold mt-2">Contact: 
+                            <span class="font-normal">{{ $guide->phonenumber }}</span>
+                        </p>
+                    </div>
+                @endforeach
+
+                <div class="mt-4">
+                    <p class="font-bold">Description:</p>
+                    <p class="mt-2">{{ $tourData->description }}</p>
+                </div>
             </div>
+
         </div>
 
         <!-- กล่องขวา: Quantity และปุ่ม -->
@@ -144,21 +151,7 @@
             @endforeach
         </div>
     </div>
-    <div class="bg-white py-6 px-6 rounded-lg shadow-md mt-4 w-[1485px] mx-auto mb-10">
-        <h4 class="text-2xl font-bold mb-3">Reserve</h4>
 
-        <!-- กล่องรีวิวแบบเลื่อน -->
-        <div class="max-h-[300px] overflow-y-auto space-y-2 p-2 bg-gray-50 rounded-lg shadow-inner">
-            @foreach ($bookingInTour as $booking)
-                <div class="bg-gray-100 p-3 rounded-lg shadow-sm">
-                    <strong>{{ $booking->name . ' ' . $booking->surname }}:</strong><span class="{{$booking->status == 'paid' ? "text-green-500" : "text-yellow-500" }}">{{"($booking->status)"}}</span><br>
-                    <p>
-                        kid: {{$booking->kid_qty}}<br>
-                        adult: {{$booking->adult_qty}}
-                    </p>
-                </div>
-            @endforeach
-        </div>
     </div>
     <script>
         const minBudgetInput = document.getElementById("min_budget");
