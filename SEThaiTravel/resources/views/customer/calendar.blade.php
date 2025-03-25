@@ -18,7 +18,7 @@
     <style>
         /* พื้นหลังเต็มหน้า */
         body {
-            background-image: url('https://cdn.pixabay.com/photo/2019/11/10/08/31/beach-4615202_1280.jpg');
+            background-image: url('https://www.bsr.org/images/heroes/bsr-travel-hero..jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -38,7 +38,7 @@
 
     <div class="flex h-screen">
         <!-- Button Toggle Sidebar -->
-        <button id="toggleSidebar" class="fixed top-4 left-4 bg-blue-500 text-white p-2 rounded-md z-50">
+        <button id="toggleSidebar" class="fixed top-4 left-4 text-2xl text-white p-2 rounded-md z-50">
             ☰
         </button>
 
@@ -60,7 +60,6 @@
                 <a href="/addTour" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
                 <a href="/myRequest" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REQUEST</a>
                 <a href="/history" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">HISTORY</a>
-                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REVIEW</a>
                 <a href="/myBooking" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY BOOKING</a>
                 <a href="/calendar" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">CALENDAR</a>
                 <a href="/payments" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY PAYMENT</a>
@@ -79,11 +78,9 @@
             </div>
         </aside>
 
-
-
         <!-- Main Content -->
         <div id="mainContent" class="flex-1 p-5 flex justify-center transition-all duration-300">
-            <div id="calendarContainer" class="bg-white p-5 rounded-lg shadow-md w-4/5 transition-all duration-300">
+            <div id="calendarContainer" class="bg-white bg-opacity-90 p-5 rounded-lg shadow-md w-4/5 h-[700px] transition-all duration-300 mt-20">
                 <div id="calendar"></div>
             </div>
         </div>
@@ -141,8 +138,5 @@
 
         });
     </script>
-
-
 </body>
-
 </html>

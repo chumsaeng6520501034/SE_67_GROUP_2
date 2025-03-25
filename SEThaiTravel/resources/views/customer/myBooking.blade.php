@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-image: url('https://cdn.pixabay.com/photo/2019/11/10/08/31/beach-4615202_1280.jpg');
+            background-image: url('https://www.bsr.org/images/heroes/bsr-travel-hero..jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -65,7 +65,7 @@
 
 <body>
     <div class="flex">
-        <button id="toggleSidebar" class="fixed top-4 left-4 bg-blue-500 text-white p-2 rounded-md z-50">
+        <button id="toggleSidebar" class="fixed top-4 left-4 text-2xl text-white p-2 rounded-md z-50">
             ☰
         </button>
 
@@ -84,7 +84,6 @@
                 <a href="/addTour" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
                 <a href="/myRequest" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REQUEST</a>
                 <a href="/history" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">HISTORY</a>
-                <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REVIEW</a>
                 <a href="/myBooking" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY BOOKING</a>
                 <a href="/calendar" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">CALENDAR</a>
                 <a href="/payments" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY PAYMENT</a>
@@ -107,7 +106,7 @@
             <!-- Search and Filter -->
             <form action="/searchBooking" method="POST">
                 @csrf
-                <div class="flex items-center bg-white shadow-md p-4 rounded-lg mb-4 space-x-4">
+                <div class="flex items-center p-4 rounded-lg mb-4 space-x-4 text-black">
                     <div class="relative flex-1">
                         <label>Tour name</label>
                         <input type="text" id="searchBar" name="name" placeholder="Search Booking tours..."

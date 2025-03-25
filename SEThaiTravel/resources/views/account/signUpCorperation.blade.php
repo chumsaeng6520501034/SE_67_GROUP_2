@@ -36,7 +36,7 @@
         </a>
         <div class="text-2xl text-white font-semibold">TRAVEL & TOUR</div>
     </nav>
-    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 mt-10 w-full max-w-lg sm:max-w-xl md:max-w-2xl bg-white bg-opacity-50 backdrop-blur-md p-6 rounded-2xl shadow-lg overflow-y-auto max-h-[90vh] mt-20">
+    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 mt-20 w-full max-w-lg sm:max-w-xl md:max-w-2xl bg-white bg-opacity-50 backdrop-blur-md p-6 rounded-2xl shadow-lg overflow-y-auto max-h-[90vh]">
         <h2 class="text-3xl sm:text-4xl font-bold text-center text-[#0F3557] mb-4">SIGN IN</h2>
 
         <!-- อัพโหลดรูป -->
