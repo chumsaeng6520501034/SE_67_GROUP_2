@@ -106,6 +106,9 @@
             </form>
 
             <div class="card-wrapper">
+                @php
+                    $startArray = 0;
+                @endphp
                 @foreach ($tourData as $tour)
                     <div class="card-container m-4">
                         <div class="card bg-white rounded-lg shadow-lg flex overflow-hidden">
@@ -144,6 +147,11 @@
                                 @endswitch
                                 <p class="text-gray-400 text-xs mt-1">Start Date: {{ $tour->start_tour_date }}</p>
                                 <p class="text-gray-400 text-xs  mt-1">End Date: {{ $tour->end_tour_date }}</p>
+                                <p
+                                    class="text-base font-semibold mt-3 {{ $totalMember[$startArray] < $tour->tour_capacity ? 'text-green-500' : 'text-red-500' }}">
+                                    NET AMOUNT:
+                                    {{ is_null($totalMember[$startArray]) ? 0 : $totalMember[$startArray] }}/{{ $tour->tour_capacity }}
+                                </p>
                             </div>
                             <div class="p-6 bg-gray-100 w-1/4 text-right rounded-r-lg">
                                 <p class="text-gray-800 text-md font-bold">Release Date</p>
@@ -186,6 +194,9 @@
                             </div>
                         </div>
                     </div>
+                    @php
+                        $startArray++;
+                    @endphp
                 @endforeach
                 {{ $tourData->links() }}
             </div>

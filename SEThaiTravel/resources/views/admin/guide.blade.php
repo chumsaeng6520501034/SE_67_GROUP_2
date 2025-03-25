@@ -17,15 +17,14 @@
             <!-- Search and Add Button -->
             <div class="flex justify-between mb-4">
                 <div class="flex items-center space-x-2">
-                    <input type="text" class="p-2 border border-gray-600 bg-gray-800 rounded-md" placeholder="Search...">
+                    <input type="text" id="searchInput" class="p-2 border border-gray-600 bg-gray-800 text-white rounded-md" placeholder="Search..." onkeyup="searchTable()">
                     <button class="bg-blue-500 px-4 py-2 rounded-md">Search</button>
                 </div>
-                <a href="#" class="bg-blue-500 px-4 py-2 rounded-md">+ ADD</a>
             </div>
 
             <!-- Table -->
             <div class="overflow-x-auto">
-                <table class="w-full border border-gray-400 text-center bg-white text-black rounded-lg shadow-lg">
+                <table id="accountTable" class="w-full border border-gray-400 text-center bg-white text-black rounded-lg shadow-lg">
                     <thead class="bg-gray-900 text-gray-300">
                         <tr>
                             <th class="border border-gray-600 p-3">NO.</th>
@@ -51,11 +50,11 @@
                                         <button type="submit" class="bg-yellow-500 px-4 py-2 rounded-md">EDIT</button>
                                     
                                     </form>
-                                    <form action="/deleteCustomer" method="POST">
+                                    {{-- <form action="/deleteCustomer" method="POST">
                                         @csrf
                                         <input type="hidden" name="id" value="{{ $account->account_id_account }}">
                                         <button type="submit" class="bg-red-500 px-4 py-2 rounded-md">DEL</button>
-                                    </form>
+                                    </form> --}}
                                 </td>
                             </tr>
                         @endforeach
@@ -65,5 +64,32 @@
             
         </div>
     </div>
+    <script>
+        function searchTable() {
+                const searchInput = document.getElementById('searchInput').value.toLowerCase();
+                const table = document.getElementById('accountTable');
+                const rows = table.getElementsByTagName('tr');
+                
+                // Loop through all rows, except the header row
+                for (let i = 1; i < rows.length; i++) {
+                    let row = rows[i];
+                    
+                    // ดึงข้อมูลจากแต่ละคอลัมน์
+                    let no = row.cells[0].textContent.toLowerCase();  // NO.
+                    let id = row.cells[1].textContent.toLowerCase();  // ID
+                    let name = row.cells[2].textContent.toLowerCase();  // NAME
+                    let phone = row.cells[3].textContent.toLowerCase();  // PHONE
+                    let guideLicense = row.cells[4].textContent.toLowerCase();  // GUIDE LICENSE
+                    
+                    // Check if the search input matches any column
+                    if (no.includes(searchInput) || id.includes(searchInput) || name.includes(searchInput) || phone.includes(searchInput) || guideLicense.includes(searchInput)) {
+                        row.style.display = ''; // Show matching row
+                    } else {
+                        row.style.display = 'none'; // Hide non-matching row
+                    }
+                }
+            }
+
+    </script>
 </body>
 </html>

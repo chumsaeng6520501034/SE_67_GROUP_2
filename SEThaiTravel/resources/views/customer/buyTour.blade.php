@@ -7,7 +7,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white">
-    <div class="container mx-auto p-6 pt-16">
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 w-full bg-blue-800 p-4 flex items-center space-x-4 z-50">
+        <a href="/" class="text-2xl text-white font-bold pl-4">
+            &#x2190;
+        </a>
+        <div class="text-2xl text-white font-bold">PAYMENT</div>
+    </nav>
+    <div class="container mx-auto p-6 pt-16 mt-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="md:col-span-2 bg-white text-black p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-bold mb-4">ข้อมูลผู้จอง</h2>
@@ -122,11 +129,11 @@
             </div>
         </div>
 
-        <!-- Confirm / Cancel Buttons -->
-        <div class="flex justify-between mt-6">
-            <button class="bg-red-700 text-white px-6 py-3 rounded-lg shadow-md text-xl font-bold">Cancel</button>
-            <button class="bg-blue-900 text-white px-6 py-3 rounded-lg shadow-md text-xl font-bold">Summit</button>
+        <!-- Confirm -->
+        <div class="flex justify-end mt-6">
+            <button class="bg-blue-900 text-white px-6 py-3 rounded-lg shadow-md text-xl font-bold">Submit</button>
         </div>
+
     </div>
     <script>
         let maxCapacity = 10; // จำนวนที่ Tour เปิดรับ
@@ -144,38 +151,37 @@
                 document.getElementById('children-count').innerText = children;
             }
         }
-        document.getElementById('pay-now').addEventListener('change', function() {
-            let payLaterForm = document.getElementById('pay-later-form');
-            let paymentMethods = document.getElementById('payment-methods');
+        document.addEventListener("DOMContentLoaded", function () {
+            let payNow = document.getElementById('pay-now');
+            let payLater = document.getElementById('pay-later');
+            let paymentDropdown = document.getElementById('payment-dropdown');
 
-            if (payLaterForm) {
-                payLaterForm.classList.add('hidden'); // ซ่อน Pay Later
+            if (payNow) {
+                payNow.addEventListener('change', function () {
+                    let paymentMethods = document.getElementById('payment-methods');
+                    if (paymentMethods) paymentMethods.classList.remove('hidden');
+                });
             }
-            paymentMethods.classList.remove('hidden'); // แสดง Pay Now
-        });
 
-        document.getElementById('pay-later').addEventListener('change', function() {
-            let payLaterForm = document.getElementById('pay-later-form');
-            let paymentMethods = document.getElementById('payment-methods');
-
-            if (payLaterForm) {
-                payLaterForm.classList.remove('hidden'); // แสดง Pay Later
+            if (payLater) {
+                payLater.addEventListener('change', function () {
+                    let paymentMethods = document.getElementById('payment-methods');
+                    if (paymentMethods) paymentMethods.classList.add('hidden');
+                });
             }
-            paymentMethods.classList.add('hidden'); // ซ่อนช่องจ่ายเงิน
-        });
 
-        document.getElementById('payment-dropdown').addEventListener('change', function() {
-            let selectedOption = this.value;
-            showPaymentOption(selectedOption);
-        });
-
-        function showPaymentOption(id) {
-            document.querySelectorAll('.payment-option').forEach(el => el.classList.add('hidden'));
-
-            if (id && document.getElementById(id)) {
-                document.getElementById(id).classList.remove('hidden');
+            if (paymentDropdown) {
+                paymentDropdown.addEventListener('change', function () {
+                    showPaymentOption(this.value);
+                });
             }
-        }
+
+            function showPaymentOption(id) {
+                document.querySelectorAll('.payment-option').forEach(el => el.classList.add('hidden'));
+                let selectedOption = document.getElementById(id);
+                if (selectedOption) selectedOption.classList.remove('hidden');
+            }
+        });
     </script>
 </body>
 </html>

@@ -39,9 +39,14 @@
 
 <body class="relative w-full h-screen bg-cover bg-center"
     style="background-image: url('https://my.kapook.com/imagescontent/fb_img/816/s_96528_4076.jpg');">
-
-    <div
-        class="absolute top-0 left-1/2 transform -translate-x-1/2 mt-10 w-full max-w-lg sm:max-w-xl md:max-w-2xl bg-white bg-opacity-50 backdrop-blur-md p-6 rounded-2xl shadow-lg overflow-y-auto max-h-[90vh]">
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 w-full bg-blue-800 p-4 flex items-center space-x-4 z-50 shadow-lg">
+        <a href="/" class="text-2xl text-white font-bold pl-4 hover:text-gray-300 transition">
+            &#x2190;
+        </a>
+        <div class="text-2xl text-white font-semibold">TRAVEL & TOUR</div>
+    </nav>
+    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 mt-10 w-full max-w-lg sm:max-w-xl md:max-w-2xl bg-white bg-opacity-50 backdrop-blur-md p-6 rounded-2xl shadow-lg overflow-y-auto max-h-[90vh] mt-20">
 
         <h2 class="text-4xl font-bold text-center text-[#0F3557]">SIGN UP</h2>
 

@@ -7,7 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-cover bg-center h-screen flex justify-center items-center" style="background-image: url('https://my.kapook.com/imagescontent/fb_img/816/s_96528_4076.jpg');">
-
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 w-full bg-blue-800 p-4 flex items-center space-x-4 z-50 shadow-lg">
+        <a href="/" class="text-2xl text-white font-bold pl-4 hover:text-gray-300 transition">
+            &#x2190;
+        </a>
+        <div class="text-2xl text-white font-semibold">TRAVEL & TOUR</div>
+    </nav>
     <div class="bg-white bg-opacity-50 backdrop-blur-lg p-12 rounded-2xl shadow-2xl w-96"> 
         <h2 class="text-4xl font-bold text-center text-blue-900 mb-6">LOG IN</h2>
         <form action="/checkLogIn" method="POST">

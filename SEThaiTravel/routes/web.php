@@ -89,6 +89,8 @@ Route::get('/searchHistory',[UserListController::class,'searchHistory']);
 
 //     return response()->json(['status' => $account->status]);
 // });
+Route::post('/statusAvai',[AdminListController::class,'statusAvai']);
+Route::post('/statusDis',[AdminListController::class,'statusDis']);
 Route::post('/statusChange',[AdminListController::class,'statusChange']);
 Route::get('/account',[AdminListController::class,'viewAccount'])->name('account');
 Route::get('/customer', [AdminListController::class, 'viewCustomer'])->name('customer');
