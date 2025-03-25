@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\RequestTour;
 use App\Models\TourHasGuideList;
 use App\Models\Tour;
+use App\Models\Offer;
 use App\Models\Booking;
 use App\Models\LocationInTour;
 use App\Models\Payment;
@@ -94,7 +95,6 @@ class CorpListController extends Controller
 
         return redirect('/corpHomepage');
     }
-
 
     //เอารายการสินค้าทั้งหมด ทำเเล้ว
     function getTour(Request $request)
@@ -201,8 +201,33 @@ class CorpListController extends Controller
     }
 
     //เสร็จแล้ว
-    function getOffer(Request $request)
-    {
+    function getAddOffer(Request $request){
+        $idRequest = $request->request_tourID;
+        return view('corporation.addOffer', compact('idRequest'));
+    }
+    //เสร็จแล้ว
+    function addOffer(Request $request){
+        $idAccount = session('userID')->account_id_account;
+        $offerData = [
+            'request_tour_id_request_tour' => $request->request_tourID,
+            'from_who_offer' =>'corp',
+            'id_who_offer' => $idAccount,
+            'contect' => $request->contect,
+            'price' => $request->price,
+            'description' => $request->description,
+            'hotel' => $request->hotel,
+            'hotel_price' => $request->hotel_price,
+            'travel' => $request->travel,
+            'travel_price' => $request->travel_price,
+            'guide_qty' => $request->guide_qty,
+            'status' => $request->status,
+            'offer_date' => Carbon::now()->toDateString(),
+        ];
+        Offer::insert($offerData);
+        return redirect('/corpOffer');
+    }
+    //เสร็จแล้ว
+    function getOffer(Request $request){
         $idAccount = session('userID')->account_id_account;
         $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
             ->where('o.id_who_offer', $idAccount)
@@ -211,8 +236,7 @@ class CorpListController extends Controller
         return view('corporation.myOffer', compact('requestTours'));
     }
     //เสร็จแล้ว
-    function getOfferDetail(Request $request)
-    {
+    function getOfferDetail(Request $request){
         $idAccount = session('userID')->account_id_account;
         $offerByMe = DB::table('offer')
             ->where('id_who_offer', $idAccount)
@@ -248,9 +272,7 @@ class CorpListController extends Controller
         DB::table('offer')
             ->where('id_offer', $idOffer)
             ->update($validated);
-        
         return redirect('/corpOffer');
-
     }
 
 
