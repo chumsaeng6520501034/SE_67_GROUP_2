@@ -169,7 +169,14 @@ class GuideListController extends Controller
     {
         $tourData = Tour::where('owner_id', session('userID')->account_id_account)
             ->paginate(10)->appends($request->query());
-        return view('guide.myTour', compact('tourData'));
+        $totalMember = [];
+        foreach($tourData as $tour)
+        {
+            $totalMember[] = Booking::where('tour_id_tour', $tour->id_tour) //TourID ใช้ของที่กดจองมา
+            ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
+            ->value('Total_Member');
+        }
+        return view('guide.myTour', compact('tourData','totalMember'));
     }
     function searchMyTour(Request $request)
     {
@@ -281,6 +288,10 @@ class GuideListController extends Controller
         $totalMember = Booking::where('tour_id_tour', $tourID) //TourID ใช้ของที่กดจองมา
         ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
         ->value('Total_Member');
+        $bookingInTour = Booking::join('user_list', 'user_list.account_id_account', '=', 'booking.user_list_account_id_account')
+        ->where('booking.tour_id_tour', $tourID )
+        ->where('booking.status', 'not like', 'cancel')
+        ->get();
         $anotherReview = Review::join('booking', 'booking.id_booking', '=', 'review.booking_id_booking')
                         ->join('tour', 'tour.id_tour', '=', 'booking.tour_id_tour')
                         ->join('user_list', 'user_list.account_id_account', '=', 'review.user_list_account_id_account')
@@ -292,7 +303,7 @@ class GuideListController extends Controller
         foreach($locationInTourAPI as $api){
             $locations[] = $this->getLocationsById($api->loc_api);
         }
-        return view('guide.detailMyTour', compact('totalMember', 'tourData','anotherReview','locations'));
+        return view('guide.detailMyTour', compact('totalMember', 'tourData','anotherReview','locations','bookingInTour'));
     }
     public function getMyJob(Request $request){
         $tourData = Tour::join('Tour_has_guide_list', 'tour.id_tour', '=', 'Tour_has_guide_list.tour_id_tour')
