@@ -114,7 +114,7 @@ Route::post('/corpAddTour',[CorpListController::class,'addTour']);
 
 Route::get('/corpMyTour',[CorpListController::class,'getTour']);
 Route::post('/corpDetailMyTour',[CorpListController::class,'getMyTourDetail']);
-Route::get('/corpMyinTour',[GuideListController::class,'getMytour']);
+Route::get('/corpMyinTour',[CorpListController::class,'getTour']);
 
 Route::get('/corpHistory',[CorpListController::class,'getHistory']);
 Route::get('/corpOffer',[CorpListController::class,'getOffer']);

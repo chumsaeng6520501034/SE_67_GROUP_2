@@ -149,12 +149,6 @@ class CorpListController extends Controller
         }
     }
 
-    // ปุ้มยอนกลับไปหน้า myTour
-    function getMytour()
-    {
-        return view('corporation.myTour');
-    }
-
     //เอารายการสินค้าที่หมดอายุทั้งหมด
     function getHistory(Request $request)
     {
