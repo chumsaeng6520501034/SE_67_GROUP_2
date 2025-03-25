@@ -327,4 +327,18 @@ class CorpListController extends Controller
         dd($bill);
         return view('???', compact('bill'));
     }
+
+    // function getProfile(Request $request)
+    // {
+    //     $idAccount = session('userID')->account_id_account;
+    //     $idPayment = $request->paymentID;
+    //     $bill = payment::table('payment as p')
+    //         ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
+    //         ->join('user_list as u', 'u.account_id_account', '=', 'p.booking_user_list_account_id_account')
+    //         ->where('p.booking_user_list_account_id_account', $idAccount)
+    //         ->where('p.id_payment', $idPayment)
+    //         ->get();
+    //     dd($bill);
+    //     return view('???', compact('bill'));
+    // }
 }
