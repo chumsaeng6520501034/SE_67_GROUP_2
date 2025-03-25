@@ -202,8 +202,8 @@ class CorpListController extends Controller
 
     //เสร็จแล้ว
     function getAddOffer(Request $request){
-        $idRequest = $request->request_tourID;
-        return view('corporation.addOffer', compact('idRequest'));
+        $requestTour = RequestTour::where('id_request_tour', $request->request_tourID)->first();
+        return view('corporation.addOffer', compact('requestTour'));
     }
     //เสร็จแล้ว
     function addOffer(Request $request){
