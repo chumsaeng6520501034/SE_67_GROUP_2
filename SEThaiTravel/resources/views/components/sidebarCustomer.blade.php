@@ -17,7 +17,7 @@
 <body class="bg-gray-100">
 
     <!-- Button Toggle Sidebar -->
-    <button id="toggleSidebar" class="fixed top-4 left-4 text-2xl text-white p-2 rounded-md z-[110]">
+    <button id="toggleSidebar" class="fixed top-4 left-4 text-white text-2xl p-2 rounded-md z-[110]">
         ☰
     </button>
 
@@ -27,7 +27,7 @@
         <!-- User Profile -->
         <div class="p-6 text-center">
             <a href="/userProfile">
-                <img class="h-16 w-16 rounded-full mx-auto" src="https://avatars.githubusercontent.com/u/64538277"
+                <img class="h-16 w-16 rounded-full mx-auto border-2 border-white" src="https://avatars.githubusercontent.com/u/64538277"
                 alt="avatar" />
             </a>
             <h2 class="text-lg font-bold mt-2">{{session('userID')->name}}</h2>

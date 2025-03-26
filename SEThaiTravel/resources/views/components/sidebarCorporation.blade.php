@@ -17,7 +17,7 @@
 <body class="bg-gray-100">
 
     <!-- Button Toggle Sidebar -->
-    <button id="toggleSidebar" class="fixed top-4 left-4 text-2xl text-white p-2 rounded-md z-[110]">
+    <button id="toggleSidebar" class="fixed top-4 left-4 text-white text-2xl p-2 rounded-md z-[110]">
         ☰
     </button>
 
@@ -26,12 +26,13 @@
         class="fixed top-0 left-0 w-64 h-screen bg-blue-900 text-white shadow-lg flex flex-col transform z-50 transition-transform duration-300 ">
         <!-- User Profile -->
         <div class="p-6 text-center">
-            <a href="/corpProfile">
-                <img class="h-16 w-16 rounded-full mx-auto" src="https://avatars.githubusercontent.com/u/64538277"
+            <a href="/userProfile">
+                <img class="h-16 w-16 rounded-full mx-auto border-2 border-white" src="https://avatars.githubusercontent.com/u/64538277"
                 alt="avatar" />
             </a>
             <h2 class="text-lg font-bold mt-2">{{session('userID')->name}}</h2>
         </div>
+
         <!-- Menu Items -->
         <nav class="flex flex-col space-y-2">
             <a href="/corpHomepage" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
