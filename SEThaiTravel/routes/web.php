@@ -131,6 +131,7 @@ Route::post('/corpDetailMyTour',[CorpListController::class,'getMyTourDetail']);
 
 Route::get('/corpHistory',[CorpListController::class,'getHistory']); //หน้าประวัติขาย
 //ถึงตรงนี้
+Route::get('/corpEditTourPage',[CorpListController::class,'editMyTourPage']);
 
 Route::get('/corpToAddtour',[CorpListController::class,'getAddOffer']);
 Route::post('/corpAddOffer',[CorpListController::class,'addOffer']);
