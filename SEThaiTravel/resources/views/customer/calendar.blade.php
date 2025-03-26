@@ -47,26 +47,27 @@
             <!-- User Profile -->
             <div class="p-6 text-center">
                 <a href="/userProfile">
-                    <img class="h-16 w-16 rounded-full mx-auto" src="https://avatars.githubusercontent.com/u/64538277"
+                    <img class="h-16 w-16 rounded-full mx-auto border-2 border-white" src="https://avatars.githubusercontent.com/u/64538277"
                     alt="avatar" />
                 </a>
                 <h2 class="text-lg font-bold mt-2">{{ session('userID')->name }}</h2>
             </div>
 
             <!-- Menu Items -->
-            <nav class="flex flex-col space-y-2">
-                <a href="/home" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
-                <a href="/addTour" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
-                <a href="/myRequest" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REQUEST</a>
-                <a href="/history" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">HISTORY</a>
-                <a href="/myBooking" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY BOOKING</a>
-                <a href="/calendar" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">CALENDAR</a>
-                <a href="/payments" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY PAYMENT</a>
+            <nav class="flex flex-col space-y-1">
+                <a href="/home" class="block py-3 px-6 hover:bg-gray-700 transition duration-300 rounded">SEARCH</a>
+                <a href="/addTour" class="block py-3 px-6 hover:bg-gray-700 transition duration-300 rounded">ADD TOUR</a>
+                <a href="/myRequest" class="block py-3 px-6 hover:bg-gray-700 transition duration-300 rounded">MY REQUEST</a>
+                <a href="/history" class="block py-3 px-6 hover:bg-gray-700 transition duration-300 rounded">HISTORY</a>
+                <a href="/myBooking" class="block py-3 px-6 hover:bg-gray-700 transition duration-300 rounded">MY BOOKING</a>
+                <a href="/calendar" class="block py-3 px-6 hover:bg-gray-700 transition duration-300 rounded">CALENDAR</a>
+                <a href="/payments" class="block py-3 px-6 hover:bg-gray-700 transition duration-300 rounded">MY PAYMENT</a>
             </nav>
 
             <!-- Log Out -->
             <div class="mt-auto">
-                <a href="/logOut" class="flex items-center justify-between py-3 px-6 hover:bg-red-700 transition duration-300 rounded">
+                <a href="/logOut"
+                    class="flex items-center justify-between py-3 px-6 hover:bg-red-700 transition duration-300 rounded">
                     <span>LOG OUT</span>
                     <svg class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
@@ -76,6 +77,7 @@
                 </a>
             </div>
         </aside>
+
 
         <!-- Main Content -->
         <div id="mainContent" class="flex-1 p-5 flex justify-center transition-all duration-300">
