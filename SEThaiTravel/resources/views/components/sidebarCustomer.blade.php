@@ -6,11 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sidebar</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap">
     <style>
         body {
-            font-family: 'Inknut Antiqua', serif;
+            font-family: 'Sarabun', sans-serif;
         }
     </style>
 </head>
@@ -18,16 +17,16 @@
 <body class="bg-gray-100">
 
     <!-- Button Toggle Sidebar -->
-    <button id="toggleSidebar" class="fixed top-4 left-4 text-2xl text-white p-2 rounded-md z-[110]">
+    <button id="toggleSidebar" class="fixed top-4 left-4 text-white text-2xl p-2 rounded-md z-[110]">
         ☰
     </button>
 
     <!-- Sidebar -->
     <aside id="sidebar"
-        class="fixed top-0 left-0 w-64 h-screen bg-blue-900 text-white shadow-lg flex flex-col transform z-50 transition-transform duration-300 ">
+        class="fixed top-0 left-0 w-64 h-screen bg-gray-900 text-white shadow-lg flex flex-col transform z-50 transition-transform duration-300 ">
         <!-- User Profile -->
         <div class="p-6 text-center">
-            <a href="/userProfile">
+            <a href="/customerProfile">
                 <img class="h-16 w-16 rounded-full mx-auto" src="https://avatars.githubusercontent.com/u/64538277"
                 alt="avatar" />
             </a>
@@ -35,15 +34,14 @@
         </div>
 
         <!-- Menu Items -->
-        <nav class="flex flex-col space-y-2">
-            <a href="/home" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
-            <a href="/addTour" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
-            <a href="/myRequest" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REQUEST</a>
-            <a href="/history" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">HISTORY</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY REVIEW</a>
-            <a href="/myBooking" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY BOOKING</a>
-            <a href="/calendar" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">CALENDAR</a>
-            <a href="/payments" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY PAYMENT</a>
+        <nav class="flex flex-col space-y-1">
+            <a href="/home" class="block py-3 px-6 hover:bg-gray-700 transition duration-300 rounded">SEARCH</a>
+            <a href="/addTour" class="block py-3 px-6 hover:bg-gray-700 transition duration-300 rounded">ADD TOUR</a>
+            <a href="/myRequest" class="block py-3 px-6 hover:bg-gray-700 transition duration-300 rounded">MY REQUEST</a>
+            <a href="/history" class="block py-3 px-6 hover:bg-gray-700 transition duration-300 rounded">HISTORY</a>
+            <a href="/myBooking" class="block py-3 px-6 hover:bg-gray-700 transition duration-300 rounded">MY BOOKING</a>
+            <a href="/calendar" class="block py-3 px-6 hover:bg-gray-700 transition duration-300 rounded">CALENDAR</a>
+            <a href="/payments" class="block py-3 px-6 hover:bg-gray-700 transition duration-300 rounded">MY PAYMENT</a>
         </nav>
 
         <!-- Log Out -->

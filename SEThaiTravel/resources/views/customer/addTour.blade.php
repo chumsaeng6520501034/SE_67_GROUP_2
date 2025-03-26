@@ -18,15 +18,15 @@
                 <div class="grid grid-cols-3 gap-4 mb-4">
                     <div>
                         <label class="block text-gray-700 font-medium">Tour Name*</label>
-                        <input type="text" name="tour_name" class="w-full p-2 border rounded shadow-sm">
+                        <input type="text" name="tour_name" class="w-full p-2 border rounded shadow-sm" required>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-medium">Minimum Price*</label>
-                        <input type="number" name="min_price" class="w-full p-2 border rounded shadow-sm">
+                        <input type="number" name="min_price" class="w-full p-2 border rounded shadow-sm" required>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-medium">Maximum Price*</label>
-                        <input type="number" name="max_price" class="w-full p-2 border rounded shadow-sm">
+                        <input type="number" name="max_price" class="w-full p-2 border rounded shadow-sm" required>
                     </div>
                 </div>
 
@@ -34,15 +34,15 @@
                 <div class="grid grid-cols-3 gap-4 mb-4">
                     <div>
                         <label class="block text-gray-700 font-medium">Start Date*</label>
-                        <input type="date" name="start_date" class="w-full p-2 border rounded shadow-sm">
+                        <input type="date" name="start_date" class="w-full p-2 border rounded shadow-sm" required>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-medium">End Date*</label>
-                        <input type="date" name="end_date" class="w-full p-2 border rounded shadow-sm">
+                        <input type="date" name="end_date" class="w-full p-2 border rounded shadow-sm" required>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-medium">Quantity Of Guide</label>
-                        <input type="number" name="quantity_guide" class="w-full p-2 border rounded shadow-sm">
+                        <input type="number" name="quantity_guide" class="w-full p-2 border rounded shadow-sm" required>
                     </div>
                 </div>
 
@@ -50,7 +50,7 @@
                 <div class="grid grid-cols-3 gap-4 mb-4">
                     <div class="col-span-3">
                         <label class="block text-gray-700 font-medium">Contact</label>
-                        <input type="text" name="contact" class="w-full p-2 border rounded shadow-sm">
+                        <input type="text" name="contact" class="w-full p-2 border rounded shadow-sm" required>
                     </div>
                 </div>
 
@@ -58,7 +58,7 @@
                 <div class="grid grid-cols-3 gap-4 mb-4">
                     <div>
                         <label class="block text-gray-700 font-medium">Quantity Of People*</label>
-                        <input type="number" name="quantity_people" class="w-full p-2 border rounded shadow-sm">
+                        <input type="number" name="quantity_people" class="w-full p-2 border rounded shadow-sm" required>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-medium">Travel Status*</label>
@@ -81,15 +81,19 @@
                 <!-- Row 5 (Description) -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium">Description</label>
-                    <textarea name="description" class="w-full p-2 border rounded shadow-sm h-24"></textarea>
+                    <textarea name="description" class="w-full p-2 border rounded shadow-sm h-24" required></textarea>
                 </div>
 
                 <div class="mt-6 text-center">
                     <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded shadow-lg text-lg hover:bg-blue-800 transition">
-                        Next
+                        Submit
+                    </button>
+                    <button type="button" onclick="window.history.back();" class="bg-gray-500 text-white px-6 py-2 rounded shadow-lg text-lg hover:bg-gray-700 transition ml-4">
+                        Cancel
                     </button>
                 </div>
             </form>
+            
         </div>
     </div>
 

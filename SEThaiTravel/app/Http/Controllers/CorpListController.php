@@ -14,6 +14,7 @@ use App\Models\GuideList;
 use App\Models\Booking;
 use App\Models\UserList;
 use App\Models\Review;
+use App\Models\Account;
 use App\Models\LocationInTour;
 use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
@@ -395,8 +396,28 @@ class CorpListController extends Controller
             $locations[] = $this->getLocationsById($api->loc_api);
         }
 
-
         return view('corporation.detailMyTour', compact('totalMember', 'tourData', 'guideintour', 'locations'));
+    }
+
+    
+    public function editMyTourPage(Request $request){
+
+        $tourId = $request->tourID;
+        // dd( $tourId);
+        $locationInTourAPI = LocationInTour::where('tour_id_tour',$tourId)->get();
+        $tourData = Tour::where("id_tour",$tourId)->first();
+        $locations = [];
+        // $guideintour = [];
+        $guideintour = DB::table('Tour_has_guide_list')
+        ->join('guide_list', 'guide_list.account_id_account', '=', 'Tour_has_guide_list.guide_list_account_id_account')
+        ->where('Tour_has_guide_list.tour_id_tour',$tourId)
+        ->get();
+        // dd($guideintour);
+        foreach($locationInTourAPI as $api){
+            $locations[] = $this->getLocationsById($api->loc_api);
+        }
+        $provinceId = $locations[0]->original["location"]["province"]["provinceId"];
+        return view('corporation.editTour',compact('provinceId','locations','tourData','guideintour'));
     }
 
     function getLocationsById($api)
@@ -430,9 +451,13 @@ class CorpListController extends Controller
     //เสร็จแล้ว
     function getAddOffer(Request $request)
     {
-        $requestTour = RequestTour::where('id_request_tour', $request->request_tourID)->first();
+        $offer = $request->tourID;
+        // dd($offer);
+        $requestTour = RequestTour::where('id_request_tour', $offer)->first();
+        // dd($requestTour);
         return view('corporation.addOffer', compact('requestTour'));
     }
+
     //เสร็จแล้ว
     function addOffer(Request $request)
     {
@@ -449,7 +474,7 @@ class CorpListController extends Controller
             'travel' => $request->travel,
             'travel_price' => $request->travel_price,
             'guide_qty' => $request->guide_qty,
-            'status' => $request->status,
+            'status' => 'new',
             'offer_date' => Carbon::now()->toDateString(),
         ];
         Offer::insert($offerData);
@@ -517,33 +542,35 @@ class CorpListController extends Controller
         // dd($guides);
         return view('corporation.myStaf', compact('guides'));
     }
-    //เสร็จแล้ว
+    //ยังไม่เทส
     function staffDetail(Request $request)
     {
         $guideID = $request->guideID;
         $idAccount = session('userID')->account_id_account;
         $guideInfo = GuideList::where('account_id_account', $guideID)->get();
-        $guideWork = GuideList::where('account_id_account', $guideID)
-            ->whereHas('tourHasGuideList.tour', function ($query) use ($idAccount) {
-                $query->where('owner_id', $idAccount);
-            })
-            ->with(['tourHasGuideList.tour'])
+        $guideWork = DB::table('guide_list as g')
+            ->join('Tour_has_guide_list as thg', 'thg.guide_list_account_id_account', '=', 'g.account_id_account')
+            ->join('tour as t', 't.id_tour', '=', 'thg.tour_id_tour')
+            ->where('g.account_id_account', $guideID)
+            ->where('t.owner_id', $idAccount)
+            ->select('g.*', 't.*', 'thg.*')
             ->get();
+
         $guideScore = Review::leftJoin('guide_list', 'review.guide_list_account_id_account', '=', 'guide_list.account_id_account')
-            ->where('guide_list.account_id_account',$idAccount)
+            ->where('guide_list.account_id_account', $idAccount)
             ->selectRaw('COUNT(*) as total_reviews, AVG(review.sp_score) as average_score')
             ->first();
-        return view('corporation.staffDetail', compact('guideInfo','guideWork','guideScore'));
+        //dd($guideWork);
+        return view('corporation.profile', compact('guideInfo', 'guideWork', 'guideScore'));
     }
-
-
-    //เอารายการจ่ายทั้งหมด ทำเเล้ว
+    //เสร็จแล้ว
     function getAllPaymentHistory(Request $request)
     {
         $idAccount = session('userID')->account_id_account;
         $payments = DB::table('payment as p')
             ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
             ->join('tour as t', 't.id_tour', '=', 'b.tour_id_tour')
+            ->join('user_list', 'user_list.account_id_account', '=', 'p.booking_user_list_account_id_account')
             ->join('corp_list as c', function ($join) {
                 $join->on('c.account_id_account', '=', 't.owner_id')
                     ->where('t.from_owner', 'LIKE', 'corp');
@@ -556,25 +583,136 @@ class CorpListController extends Controller
                 'p.payment_date',
                 'p.checknumber',
                 'p.total_price',
-                'b.tour_id_tour'
+                'b.tour_id_tour',
+                'b.id_booking',
+                'user_list.name',
+                'user_list.surname'
             )
             ->paginate(25)->appends($request->query());
         //dd($payments);
         return view('corporation.allPayments', compact('payments'));
     }
+    //เสร็จแล้ว
+    function getPaymentDetail(Request $request)
+    {
+        $userID = $request->userID;
+        $tourID = $request->tourID;
+        $paymentID = $request->paymentID;
+        $bookingID = $request->bookingID;
+        $paymentData = Payment::where('id_payment', $paymentID)->first();
+        $tourData = Tour::where('id_tour', $tourID)->first();
+        $userData = UserList::where('account_id_account', $userID)->first();
+        $bookingData = Booking::where('id_booking', $bookingID)->first();
+        return view('corporation.paymentDetail', compact('paymentData', 'tourData', 'userData', 'bookingData'));
+    }
+    //เสร็จแล้ว
+    public function getStatistic()
+    {
+        $userID = session('userID')->account_id_account;
+        $touristPerMonth = Booking::selectRaw("DATE_FORMAT(booked_date, '%Y-%m') as YM, SUM(adult_qty + kid_qty) as tourListPerMonth")
+            ->where('status', 'paid')
+            ->groupBy('YM')
+            ->orderBy('YM')
+            ->get();
+        $touristPerYear = DB::table('booking')
+            ->selectRaw("DATE_FORMAT(booking.booked_date, '%Y') as YM, SUM(booking.adult_qty + booking.kid_qty) as tourListPerYear")
+            ->where('booking.status', 'paid')
+            ->whereRaw("DATE_FORMAT(booking.booked_date, '%Y') = YEAR(NOW())")
+            ->groupBy(DB::raw("DATE_FORMAT(booking.booked_date, '%Y')"))
+            ->orderBy('YM')
+            ->get();
+        $revenuePerMonth = Booking::join('tour', 'tour.id_tour', '=', 'booking.tour_id_tour')
+            ->join('guide_list', 'guide_list.account_id_account', '=', 'tour.owner_id')
+            ->selectRaw("DATE_FORMAT(booking.booked_date, '%Y-%m') as YM, SUM(booking.total_price) as RevenuePerMonth")
+            ->where('booking.status', 'paid')
+            ->where('tour.owner_id', session('userID')->account_id_account)
+            ->groupBy('YM')
+            ->orderByDesc('YM')
+            ->get();
+        $revenuePerYear = DB::table(DB::raw("(
+            SELECT
+                DATE_FORMAT(booking.booked_date, \"%Y-%m\") as YM,
+                SUM(booking.total_price) as RevenuePerMonth
+            FROM booking
+            INNER JOIN tour ON tour.id_tour = booking.tour_id_tour
+            INNER JOIN guide_list ON guide_list.account_id_account = tour.owner_id
+            WHERE booking.status = \"paid\"
+            AND tour.owner_id = $userID
+            AND DATE_FORMAT(booking.booked_date, \"%Y\") = YEAR(NOW())
+            GROUP BY YM
+            ORDER BY YM DESC
+        ) AS revenue"))
+            ->selectRaw('SUM(revenue.RevenuePerMonth) AS revenuePerYear')
+            ->get();
 
-
-    // function getProfile(Request $request)
-    // {
-    //     $idAccount = session('userID')->account_id_account;
-    //     $idPayment = $request->paymentID;
-    //     $bill = payment::table('payment as p')
-    //         ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
-    //         ->join('user_list as u', 'u.account_id_account', '=', 'p.booking_user_list_account_id_account')
-    //         ->where('p.booking_user_list_account_id_account', $idAccount)
-    //         ->where('p.id_payment', $idPayment)
-    //         ->get();
-    //     dd($bill);
-    //     return view('???', compact('bill'));
-    // }
+        $avgTourist = DB::table(DB::raw('(SELECT DATE_FORMAT(booking.booked_date, "%Y-%m") as YM, 
+                SUM(booking.adult_qty + booking.kid_qty) as tourListPerMonth 
+                FROM booking
+                WHERE booking.status = "paid"
+                GROUP BY YM
+                ORDER BY YM DESC) AS Tourist'))
+            ->selectRaw('SUM(Tourist.tourListPerMonth) / 12 AS avgTourist')
+            ->get();
+        $avgRevenue = DB::table(DB::raw("(
+            SELECT
+                DATE_FORMAT(booking.booked_date, \"%Y-%m\") as YM,
+                SUM(booking.total_price) as RevenuePerMonth
+            FROM booking
+            INNER JOIN tour ON tour.id_tour = booking.tour_id_tour
+            INNER JOIN guide_list ON guide_list.account_id_account = tour.owner_id
+            WHERE booking.status = \"paid\"
+            AND tour.owner_id = $userID
+            AND DATE_FORMAT(booking.booked_date, \"%Y\") = YEAR(NOW())
+            GROUP BY YM
+            ORDER BY YM DESC
+        ) AS revenue"))
+            ->selectRaw('SUM(revenue.RevenuePerMonth) /12 AS avgRevenue')
+            ->get();
+        //dd($revenuePerYear);
+        return view('corporation.statistic', compact('touristPerMonth', 'touristPerYear', 'revenuePerMonth', 'revenuePerYear', 'avgTourist', 'avgRevenue'));
+    }
+    public function searchPayment(Request $request)
+    {
+        $searchKey = $request->searchKey;
+        $date = $request->paymentDate;
+        $idAccount = session('userID')->account_id_account;
+        $payments = DB::table('payment as p')
+            ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
+            ->join('tour as t', 't.id_tour', '=', 'b.tour_id_tour')
+            ->join('user_list', 'user_list.account_id_account', '=', 'p.booking_user_list_account_id_account')
+            ->join('corp_list as c', function ($join) {
+                $join->on('c.account_id_account', '=', 't.owner_id')
+                    ->where('t.from_owner', 'LIKE', 'corp');
+            })
+            ->where('c.account_id_account', $idAccount);
+        if (!empty($date)) {
+            $payments->whereDate('p.payment_date', $date);
+        }
+        if (!empty($searchKey)) {
+            $payments->where('t.id_tour', 'LIKE', "%$searchKey%")
+                ->orWhere('p.checknumber', 'LIKE', "%$searchKey%");
+        }
+        $payments = $payments->select(
+            'p.id_payment',
+            'p.booking_Tour_id_Tour',
+            'p.booking_user_list_account_id_account',
+            'p.payment_date',
+            'p.checknumber',
+            'p.total_price',
+            'b.tour_id_tour',
+            'b.id_booking',
+            'user_list.name',
+            'user_list.surname'
+        )->get();
+        // dd($payments);
+        return view('corporation.allPayments', compact('payments'));
+    }
+    //เสร็จแล้ว
+    function getProfile(Request $request)
+    {
+        $id = session('userID')->account_id_account;
+        $accountData = Account::where('id_account', $id)->first();
+        $userData = CorpList::where('account_id_account', $id)->first();
+        return view('customer.profile', compact('accountData', 'userData'));
+    }
 }

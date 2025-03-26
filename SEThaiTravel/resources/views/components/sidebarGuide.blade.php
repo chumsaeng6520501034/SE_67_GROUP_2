@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sidebar</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap">
     <style>
         body {
-            font-family: 'Inknut Antiqua', serif;
+            font-family: 'Sarabun', sans-serif;
         }
     </style>
 </head>
@@ -21,7 +20,7 @@
     </button>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed top-0 left-0 w-64 h-screen bg-blue-900 text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300  z-50">
+    <aside id="sidebar" class="fixed top-0 left-0 w-64 h-screen bg-gray-900 text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300  z-50">
         <!-- User Profile -->
         <div class="p-6 text-center">
             <img class="h-16 w-16 rounded-full mx-auto border-2 border-white" src="https://avatars.githubusercontent.com/u/64538277" alt="avatar" />
@@ -29,17 +28,17 @@
         </div>
 
         <!-- Menu Items -->
-        <nav class="flex flex-col space-y-2">
-            <a href="/guideHomePage" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">SEARCH</a>
-            <a href="/guideAddTourPage" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">ADD TOUR</a>
-            <a href="/guideMyTour" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">MY TOUR</a>
-            <a href="/guideMyJop" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">MY JOB</a>
-            <a href="/guideGetMyOffer" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">MY OFFER</a>
-            <a href="/guideJobHistory" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">JOB HISTORY</a>
-            <a href="#" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">SELL HISTORY</a>
-            <a href="/guideCalendar" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">CALENDAR</a>
-            <a href="/guideAllPayment" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">ALL PAYMENT</a>
-            <a href="/guideStatistic" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">STATISTIC</a>
+        <nav class="flex flex-col space-y-1">
+            <a href="/guideHomePage" class="block py-2 px-6 hover:bg-gray-700 rounded transition duration-300">SEARCH</a>
+            <a href="/guideAddTourPage" class="block py-2 px-6 hover:bg-gray-700 rounded transition duration-300">ADD TOUR</a>
+            <a href="/guideMyTour" class="block py-2 px-6 hover:bg-gray-700 rounded transition duration-300">MY TOUR</a>
+            <a href="/guideMyJop" class="block py-2 px-6 hover:bg-gray-700 rounded transition duration-300">MY JOB</a>
+            <a href="/guideGetMyOffer" class="block py-2 px-6 hover:bg-gray-700 rounded transition duration-300">MY OFFER</a>
+            <a href="/guideJobHistory" class="block py-2 px-6 hover:bg-gray-700 rounded transition duration-300">JOB HISTORY</a>
+            <a href="#" class="block py-2 px-6 hover:bg-gray-700 rounded transition duration-300">SELL HISTORY</a>
+            <a href="/guideCalendar" class="block py-2 px-6 hover:bg-gray-700 rounded transition duration-300">CALENDAR</a>
+            <a href="/guideAllPayment" class="block py-2 px-6 hover:bg-gray-700 rounded transition duration-300">ALL PAYMENT</a>
+            <a href="/guideStatistic" class="block py-2 px-6 hover:bg-gray-700 rounded transition duration-300">STATISTIC</a>
         </nav>
 
         <!-- Log Out -->

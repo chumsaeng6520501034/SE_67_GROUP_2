@@ -67,12 +67,12 @@
 
 <body>
     <!-- Sidebar -->
-    @include('components.sidebarGuide')
+    @include('components.sidebarCorporation')    
     <!-- Navbar -->
     <div id="mainContent">
         <nav id="navbar" class="fixed top-0 left-0 w-full p-4 z-[60] transition-all duration-300">
             <div class="max-w-7xl mx-auto flex flex-col space-y-3 p-4 bg-[#205781] rounded-lg">
-                <form action="/guideSearchFilter" method="GET">
+                <form action="/corpSearchFilter" method="GET">
                     <!-- บรรทัดแรก: แบรนด์ + ช่องค้นหา -->
                     <div class="flex justify-between items-center w-full">
                         <div class="text-2xl text-white font-bold pl-4">TRAVEL</div>
@@ -178,11 +178,12 @@
                                 <p class="text-base text-black-500">{{ number_format($item->start_price) }}</p>
                                 <p class="text-base text-black-500">to</p>
                                 <p class="text-base text-black-500">{{ number_format($item->max_price) }}</p>
-                                <form action="\corpAddOfferpage" method="GET">
+                                <form action="/corpToAddtour" method="GET">
                                     <button type="submit"
                                         class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm mt-2 relative z-[50]">
                                         OFFER
                                     </button>
+                                    <input type="hidden" name="tourID" value={{ $item->id_request_tour}}>
                                 </form>
                             </div>
                         </div>
