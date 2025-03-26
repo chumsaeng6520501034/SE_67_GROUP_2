@@ -102,7 +102,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="mt-6 bg-yellow-500 text-lg text-white font-bold py-3 rounded-lg px-6 py-2 rounded-lg w-full mx-auto block"> Find Your Adventure</button>
+                    <button type="submit" class="mt-6 bg-yellow-500 hover:bg-yellow-600 text-lg text-white font-bold py-3 rounded-lg px-6 py-2 rounded-lg w-full mx-auto block"> Find Your Adventure</button>
                 </div>
             </form>              
         </main>

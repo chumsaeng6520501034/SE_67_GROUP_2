@@ -56,7 +56,7 @@
         }
 
         body {
-            background-image: url('https://blog.bangkokair.com/wp-content/uploads/2023/09/Cover_krabi-travel-guide-top-destinations.jpg');
+            background-image: url('https://codyduncan.com/blogimages/2012/12/cody-duncan-landscape-2012-01.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -178,7 +178,8 @@
                                 <p class="text-base text-black-500">{{ number_format($item->start_price) }}</p>
                                 <p class="text-base text-black-500">to</p>
                                 <p class="text-base text-black-500">{{ number_format($item->max_price) }}</p>
-                                <form action="\corpAddOfferpage" method="GET">
+                                <form action="/getAddOfferPage" method="GET">
+                                    <input type="hidden" name="requestID" value={{$item->id_request_tour}}>
                                     <button type="submit"
                                         class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm mt-2 relative z-[50]">
                                         OFFER

@@ -17,7 +17,7 @@
 
     <style>
          body {
-            background-image: url('https://cdn.pixabay.com/photo/2019/11/10/08/31/beach-4615202_1280.jpg');
+            background-image: url('https://codyduncan.com/blogimages/2012/12/cody-duncan-landscape-2012-01.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -59,7 +59,7 @@
         @include('components.sidebarGuide')
         <!-- Main Content -->
         <div id="mainContent" class="flex-1 p-5 flex justify-center transition-all duration-300">
-            <div id="calendarContainer" class="bg-white p-5 rounded-lg shadow-md w-4/5 transition-all duration-300">
+            <div id="calendarContainer" class="bg-white p-5 rounded-lg shadow-md w-4/5 h-[650px] transition-all duration-300 mt-20">
                 <div id="calendar"></div>
             </div>
         </div>
