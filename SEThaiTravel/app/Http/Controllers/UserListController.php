@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\UserList;
 use App\Models\TourHasGuideList;
 use App\Models\Booking;
+use App\Http\Controllers\AccountController;
 use App\Models\Tour;
 use App\Models\Account;
 use App\Models\RequestTour;
@@ -649,8 +650,62 @@ class UserListController extends Controller
     $id = session('userID')->account_id_account;
     $accountData = Account::where('id_account', $id)->first();
     $userData = UserList::where('account_id_account', $id)->first();
-    return view('customer.profile', compact('accountData', 'userData'));
+    $countrys =  AccountController::getCountry();
+    return view('customer.profile', compact('accountData', 'userData', 'countrys'));
   }
+  public function updateUser(Request $request)
+  {
+    // ตรวจสอบว่ามี user อยู่หรือไม่
+    $idAccount = session('userID')->account_id_account;
+    $user = UserList::where('account_id_account', $idAccount)->first();
+    $acc = Account::where('id_account', $idAccount)->first();
+    if (!$acc) {
+      return response()->json(['message' => 'User not found'], 404);
+    }
+    // อัปเดตข้อมูล
+    $user->update([
+      'name' => $request->name,
+      'surname' => $request->surname,
+      'phonenumber' => $request->phonenumber,
+      'address' => $request->address,
+      'country' => $request->country,  // ค่าที่เป็นตัวเลขไม่ต้องใส่ ''
+      'postcode' => $request->postcode,
+    ]);
+    $acc->update([
+      'username' => $request->username
+    ]);
+
+    return redirect('/customerProfile');
+  }
+  public function updateImage(Request $request)
+  {
+    // ตรวจสอบว่ามี user อยู่หรือไม่
+    $idAccount = session('userID')->account_id_account;
+    $user = UserList::where('account_id_account', $idAccount)->first();
+
+  
+    $request->validate([
+      'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+    ]);
+
+    if ($request->hasFile('image')) {
+      $image = $request->file('image');
+      $path = $image->store('images', 'public');
+    } else {
+      if (is_null($request->image))
+        $path = NULL;
+      else
+        $path = $request->image;
+    }
+    // อัปเดตข้อมูล
+    $user->update([
+      'photo' => $path
+    ]);
+
+    return redirect('/customerProfile');
+  }
+
+
   function viewProductDetail(Request $request)
   {
     $tourID = $request->tourID;

@@ -55,7 +55,7 @@ Route::post('/checkLogIn',[AccountController::class,'checkLogin']);
 Route::get('/calendar',[UserListController::class,'viewCalendar']);
 Route::get('/myBooking',[UserListController::class,'viewMyBooking']);
 Route::post('/searchBooking',[UserListController::class,'searchBooking']);
-Route::get('/userProfile',[UserListController::class,'viewProfile']);
+Route::get('/customerProfile',[UserListController::class,'viewProfile']);
 Route::get('/myRequest',[UserListController::class,'getAllRequestTour']);
 Route::get('/payments',[UserListController::class,'getUserPaymentHistory']);
 Route::get('/deleteAccount',[AccountController::class,'deleteAccount']);
@@ -71,7 +71,8 @@ Route::get('/de', function () {
 });
 
 
-
+Route::post('/customerEditProfile',[UserListController::class,'updateUser']);
+Route::post('/customerUpdateImage',[UserListController::class,'updateImage']);
 Route::get('/customerSearch',[UserListController::class,'searchAllTourActive']);
 Route::get('/customerFilterSearch',[UserListController::class,'searchFilterTourActive']);
 Route::get('/userSearch',[AccountController::class,'search']);
