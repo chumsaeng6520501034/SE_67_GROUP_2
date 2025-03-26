@@ -117,7 +117,7 @@
                                     class="w-1/3 object-cover">
                             @endif
                             <div class="p-6 flex-1">
-                                <form action="/corpDetailMyoffer" method="POST">
+                                <form action="/corpDetailSellHistory" method="POST">
                                     @csrf
                                     <h2 class="text-2xl font-bold text-black-600 hover:text-blue-500">
                                         <input type="hidden" name="tourID" value={{ $payments->id_tour }}>

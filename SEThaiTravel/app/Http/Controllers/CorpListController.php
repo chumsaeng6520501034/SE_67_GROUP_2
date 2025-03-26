@@ -209,6 +209,8 @@ class CorpListController extends Controller
             return view('corporation.searchRequest', compact('ownerData', 'searchRequestData', 'path'));
         }
     }
+
+
     public function getSearchTourDetail(Request $request)
     {
         $tourID = $request->tourID;
@@ -494,6 +496,41 @@ class CorpListController extends Controller
             ->paginate(10)->appends($request->query());
         //dd($histours);
         return view('corporation.sellHistory', compact('histours'));
+    }
+
+    public function getJobHistoryDetail(Request $request)
+    {
+        $tourID = $request->tourID;
+        $tour = Tour::where('id_tour', $tourID)->first();
+        switch ($tour->from_owner) {
+            case "guide":
+                $tourData = Tour::join('guide_list', 'tour.owner_id', '=', 'guide_list.account_id_account')
+                    ->where('tour.id_tour', $tourID)
+                    ->select('tour.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname', 'guide_list.phonenumber')
+                    ->first();
+                break;
+            case "corp":
+                $tourData = Tour::join('corp_list', 'tour.owner_id', '=', 'corp_list.account_id_account')
+                    ->where('tour.id_tour', $tourID)
+                    ->select('tour.*', 'corp_list.name as corp_name', 'corp_list.phone_number')
+                    ->first();
+                break;
+        }
+        $totalMember = Booking::where('tour_id_tour', $tourID) //TourID ใช้ของที่กดจองมา
+            ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
+            ->value('Total_Member');
+        $anotherReview = Review::join('booking', 'booking.id_booking', '=', 'review.booking_id_booking')
+            ->join('tour', 'tour.id_tour', '=', 'booking.tour_id_tour')
+            ->join('user_list', 'user_list.account_id_account', '=', 'review.user_list_account_id_account')
+            ->where('tour.id_tour', $tourID)
+            ->select('review.*', 'user_list.*') // เลือกเฉพาะคอลัมน์ที่ต้องการ
+            ->get();
+        $locationInTourAPI = LocationInTour::where('tour_id_tour', $tourID)->get();
+        $locations = [];
+        foreach ($locationInTourAPI as $api) {
+            $locations[] = $this->getLocationsById($api->loc_api);
+        }
+        return view('corporation.detailSellhistory', compact('totalMember', 'tourData', 'anotherReview', 'locations'));
     }
 
     //เสร็จแล้ว
