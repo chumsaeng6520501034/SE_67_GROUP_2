@@ -139,21 +139,28 @@ Route::get('/corpHistory',[CorpListController::class,'getHistory']); //หน้
 //ถึงตรงนี้
 Route::get('/corpEditTourPage',[CorpListController::class,'editMyTourPage']);
 
-Route::get('/corpToAddtour',[CorpListController::class,'getAddOffer']);
+Route::get('/corpProfile',[CorpListController::class,'viewProfile']);//profile
+Route::post('/corpEditProfile',[CorpListController::class,'updateUser']);
+Route::post('/corpUpdateImage',[CorpListController::class,'updateImage']);
+
+Route::get('/corpToAddtour',[CorpListController::class,'getAddOffer']); //addoffer
 Route::post('/corpAddOffer',[CorpListController::class,'addOffer']);
-Route::get('/corpOffer',[CorpListController::class,'getOffer']); //หน้าข้อเสนอ
+Route::get('/corpOffer',[CorpListController::class,'getOffer']); //offer lsit
 Route::post('/corpOfferDetail',[CorpListController::class,'getOfferDetail']);
-Route::post('/corpEditOffer',[CorpListController::class,'toEditOffer']);
+Route::post('/corpEditOffer',[CorpListController::class,'toEditOffer']); //update offer
 Route::post('/corpUpdateOffer',[CorpListController::class,'updateMyOffer']);
-Route::get('/corpStaff',[CorpListController::class,'getStaffInCorp']); //หน้าพนักงานในบ.
+Route::get('/corpStaff',[CorpListController::class,'getStaffInCorp']); //staff list
 Route::get('/corpStaffDetail',[CorpListController::class,'staffDetail']);
-Route::get('/corpPayments',[CorpListController::class,'getAllPaymentHistory']);//หน้าใบเสร็จ
+Route::get('/corpPayments',[CorpListController::class,'getAllPaymentHistory']);//payments
 Route::get('/corpSearchAllPayment',[CorpListController::class,'searchPayment']);
 Route::get('/corpPaymentDetail',[CorpListController::class,'getPaymentDetail']);
-Route::get('/corpStatistic',[CorpListController::class,'getStatistic']);
+Route::get('/corpStatistic',[CorpListController::class,'getStatistic']);//stat
 
 
 //guide section
+Route::get('/guideProfile',[GuideListController::class,'viewProfile']);//profile
+Route::post('/guideEditProfile',[GuideListController::class,'updateUser']);
+Route::post('/guideUpdateImage',[GuideListController::class,'updateImage']);
 Route::get('/guideHomePage',[GuideListController::class,'getHomePage']);
 Route::get('/guideAddTourPage',[GuideListController::class,'getAddTour']);
 Route::post('/guideAddTour',[GuideListController::class,'addTour']);
