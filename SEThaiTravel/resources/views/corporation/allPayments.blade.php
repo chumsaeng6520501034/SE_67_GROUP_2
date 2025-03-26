@@ -128,13 +128,6 @@
             document.body.classList.toggle('sidebar-open');
         });
 
-
-        document.getElementById('toggleSidebar').addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('-translate-x-full');
-        });
-        document.getElementById('toggleSidebar').addEventListener('click', function() {
-            document.body.classList.toggle('sidebar-open');
-        });
     </script>
 
 </body>
