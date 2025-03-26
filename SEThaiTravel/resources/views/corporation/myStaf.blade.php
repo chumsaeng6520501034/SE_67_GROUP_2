@@ -21,22 +21,30 @@
         #mainContent {
             transition: all 0.3s ease-in-out;
         }
+
         #sidebar {
-    z-index: 50; /* ให้ Sidebar อยู่ด้านหน้า */
-}
-#toggleSidebar {
-    position: fixed;
-    z-index: 100; /* ให้ปุ่มอยู่ด้านหน้าสุด */
-}
-#sidebar {
-        transform: translateX(-100%);
-    }
-    .sidebar-open #sidebar {
-        transform: translateX(0);
-    }
-    .sidebar-open #mainContent {
-        margin-left: 16rem; /* ขยับไปทางขวาเท่ากับความกว้างของ Sidebar */
-    }
+            z-index: 50;
+            /* ให้ Sidebar อยู่ด้านหน้า */
+        }
+
+        #toggleSidebar {
+            position: fixed;
+            z-index: 100;
+            /* ให้ปุ่มอยู่ด้านหน้าสุด */
+        }
+
+        #sidebar {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-open #sidebar {
+            transform: translateX(0);
+        }
+
+        .sidebar-open #mainContent {
+            margin-left: 16rem;
+            /* ขยับไปทางขวาเท่ากับความกว้างของ Sidebar */
+        }
     </style>
 </head>
 
@@ -44,7 +52,7 @@
 
     <div class="flex h-screen">
 
-    @include('components.sidebarCorporation')
+        @include('components.sidebarCorporation')
 
 
         <!-- Main Content -->
@@ -56,18 +64,16 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 10a7 7 0 1 0-14 0 7 7 0 0 0 14 0z" />
                         </svg>
-                        <input type="text" placeholder="Search" class="outline-none px-2 py-1">
+                        <input type="text" id="searchInput" placeholder="Search" class="outline-none px-2 py-1" onkeyup="searchTable()">
+
                     </div>
-                    <div class="flex items-center border rounded px-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 4h10M3 10h18M5 14h14m-7 4v-4" />
-                        </svg>
-                        <input type="date" class="outline-none px-2 py-1">
+                    <div class="flex items-center border rounded ">
+                        <button class="bg-blue-500 px-4 py-2 rounded-md text-white">Search</button>
                     </div>
                 </div>
 
                 <!-- Payment Table -->
-                <table class="w-full border border-blue-500">
+                <table  id="accountTable"class="w-full border border-blue-500">
                     <thead>
                         <tr class="bg-blue-500 text-white">
                             <th class="border border-blue-500 px-4 py-2">NO.</th>
@@ -95,7 +101,7 @@
                                 </form>
                             </td>
                         </tr>
-                        @endforeach 
+                        @endforeach
 
                     </tbody>
                 </table>
@@ -104,12 +110,37 @@
     </div>
 
     <script>
-        document.getElementById('toggleSidebar').addEventListener('click', function () {
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
             document.getElementById('sidebar').classList.toggle('-translate-x-full');
         });
-        document.getElementById('toggleSidebar').addEventListener('click', function () {
-        document.body.classList.toggle('sidebar-open');
-    });
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.body.classList.toggle('sidebar-open');
+        });
+
+        function searchTable() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const table = document.getElementById('accountTable');
+            const rows = table.getElementsByTagName('tr');
+
+            // Loop through all rows, except the header row
+            for (let i = 1; i < rows.length; i++) {
+                let row = rows[i];
+
+                // ดึงข้อมูลจากแต่ละคอลัมน์
+                let no = row.cells[1].textContent.toLowerCase(); // NO.
+                let name = row.cells[2].textContent.toLowerCase(); // NAME
+                let surname = row.cells[3].textContent.toLowerCase(); // NAME
+                let phone = row.cells[5].textContent.toLowerCase(); // PHONE
+                let guideLicense = row.cells[4].textContent.toLowerCase(); // GUIDE LICENSE
+
+                // Check if the search input matches any column
+                if (no.includes(searchInput) || name.includes(searchInput) || surname.includes(searchInput) || phone.includes(searchInput) || guideLicense.includes(searchInput)) {
+                    row.style.display = ''; // Show matching row
+                } else {
+                    row.style.display = 'none'; // Hide non-matching row
+                }
+            }
+        }
     </script>
 
 </body>

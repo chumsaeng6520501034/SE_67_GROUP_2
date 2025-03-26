@@ -63,6 +63,7 @@
             <div>
               <label class="block text-sm font-medium">Hotel Price*</label>
               <input type="number" name="hotel_price" class="w-full p-2 border rounded shadow-sm">
+              <input type="hidden" name="request_tourID" value={{$requestTour-> id_request_tour}}>
             </div>
           </div>
 
