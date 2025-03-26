@@ -115,7 +115,7 @@ Route::post('/updateCorp',[AdminListController::class,'updateCorp']);
 Route::post('/deleteCorp', [AdminListController::class, 'deleteCorp'])->name('deleteCorp');
 
 //corp section
-Route::get('/guidesInprovince/{provinceId}', [CorpListController::class, 'getGuidesByProvince']);
+// Route::get('/guidesInprovince/{provinceId}', [CorpListController::class, 'getGuidesByProvince']);
 
 Route::get('/corpProfile',[CorpListController::class,'getProfile']);
 Route::get('/corpHomepage',[CorpListController::class,'getHomePage']);
