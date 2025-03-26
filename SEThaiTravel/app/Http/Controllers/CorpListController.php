@@ -473,10 +473,10 @@ class CorpListController extends Controller
             ->where('id_who_offer', $idAccount)
             ->where('request_tour_id_request_tour', $request->requestID)
             ->get();
-        $RequestDetail = DB::table('offer')
+         $offerInRequest= DB::table('offer')
             ->where('request_tour_id_request_tour', $request->requestID)
             ->get();
-        $offerInRequest = DB::table('request_tour')
+        $RequestDetail = DB::table('request_tour')
             ->where('id_request_tour', $request->requestID)
             ->first();
         return view('corporation.offerDetail', compact('offerByMe'), compact('RequestDetail'), compact('offerInRequest'));

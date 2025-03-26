@@ -34,7 +34,7 @@
             <a href="/guideAddTourPage" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">ADD TOUR</a>
             <a href="/guideMyTour" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">MY TOUR</a>
             <a href="/guideMyJop" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">MY JOB</a>
-            <a href="#" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">MY OFFER</a>
+            <a href="/guideGetMyOffer" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">MY OFFER</a>
             <a href="/guideJobHistory" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">JOB HISTORY</a>
             <a href="#" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">SELL HISTORY</a>
             <a href="/guideCalendar" class="block py-2 px-6 hover:bg-blue-800 rounded transition duration-300">CALENDAR</a>
