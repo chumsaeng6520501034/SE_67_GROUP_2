@@ -72,7 +72,7 @@ Route::get('/de', function () {
 Route::get('/addTour',[UserListController::class,'viewAddTour']);
 Route::post('/addRequest',[UserListController::class,'insertRequest']);
 Route::post('/deleteRequestTour',[UserListController::class,'deleteMyTour']);
-Route::match(['get', 'post'],'/requestDetail',[UserListController::class,'getRequestDetail']);
+Route::match(['get', 'post'],'/requestDetail',[UserListController::class,'getRequestDetail'])->name('requestDetail');
 Route::post('/statusApprove',[UserListController::class,'statusApprove']);
 Route::post('/statusReject',[UserListController::class,'statusReject']);
 

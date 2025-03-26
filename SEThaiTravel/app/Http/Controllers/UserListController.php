@@ -749,7 +749,7 @@ class UserListController extends Controller
         return redirect('/myRequest');
     }
   function getRequestDetail(Request $request){
-      //dd($request->requestID);
+      // dd($request->requestID);
       $idAccount = session('userID')->account_id_account;
       $RequestDetail = RequestTour::join('user_list', 'request_tour.user_list_account_id_account', '=', 'user_list.account_id_account')
             ->where('id_request_tour',$request->requestID)
@@ -776,7 +776,7 @@ class UserListController extends Controller
       return view('customer.detailRequest',compact('offerByMe','RequestDetail','offerData'));
   }
   function statusApprove(Request $request){
-    // dd($request->requestID);
+    //dd($request->requestID);
       $tourData = [
           "status" => 'reject'
       ];
@@ -792,32 +792,8 @@ class UserListController extends Controller
       Offer::where('request_tour_id_request_tour', $request->requestID)
           ->where('id_offer', $request->offerID)
           ->update($approve);
-
-          //เอามาใช้จากอันบน
-          $idAccount = session('userID')->account_id_account;
-          $RequestDetail = RequestTour::join('user_list', 'request_tour.user_list_account_id_account', '=', 'user_list.account_id_account')
-                ->where('id_request_tour',$request->requestID)
-                ->select('request_tour.*', 'user_list.name as uName','user_list.surname','user_list.phonenumber')  // เลือกคอลัมน์ทั้งหมดจากทั้ง 2 ตาราง
-                ->first();
-          $offerInRequest = Offer::where('request_tour_id_request_tour', $request->requestID)->get();
-          $offerByMe = DB::table('offer')
-                ->where('id_who_offer', 23)
-                ->where('request_tour_id_request_tour', $request->requestID)
-                ->get();
-          $offerData = [];
-          foreach($offerInRequest as $offer){
-              switch($offer->from_who_offer){
-                  case 'corp': $offerData[] = $offer->join('corp_list','corp_list.account_id_account','=','offer.id_who_offer')
-                                                      ->where('corp_list.account_id_account',$offer->id_who_offer)
-                                                      ->first(); 
-                  break;
-                  case 'guide': $offerData[] = $offer->join('guide_list','guide_list.account_id_account','=','offer.id_who_offer')
-                                                      ->where('guide_list.account_id_account',$offer->id_who_offer)
-                                                      ->first();
-                  break;
-            }
-          }
-          return view('customer.detailRequest',compact('offerByMe','RequestDetail','offerData'));
+      
+          return redirect()->route('requestDetail', ['requestID' => $request->requestID]);
   }
   function statusReject(Request $request){
       $tourData = [
