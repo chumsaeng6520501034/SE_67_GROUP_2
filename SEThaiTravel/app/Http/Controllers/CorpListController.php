@@ -396,8 +396,28 @@ class CorpListController extends Controller
             $locations[] = $this->getLocationsById($api->loc_api);
         }
 
-
         return view('corporation.detailMyTour', compact('totalMember', 'tourData', 'guideintour', 'locations'));
+    }
+
+    
+    public function editMyTourPage(Request $request){
+
+        $tourId = $request->tourID;
+        // dd( $tourId);
+        $locationInTourAPI = LocationInTour::where('tour_id_tour',$tourId)->get();
+        $tourData = Tour::where("id_tour",$tourId)->first();
+        $locations = [];
+        // $guideintour = [];
+        $guideintour = DB::table('Tour_has_guide_list')
+        ->join('guide_list', 'guide_list.account_id_account', '=', 'Tour_has_guide_list.guide_list_account_id_account')
+        ->where('Tour_has_guide_list.tour_id_tour',$tourId)
+        ->get();
+        // dd($guideintour);
+        foreach($locationInTourAPI as $api){
+            $locations[] = $this->getLocationsById($api->loc_api);
+        }
+        $provinceId = $locations[0]->original["location"]["province"]["provinceId"];
+        return view('corporation.editTour',compact('provinceId','locations','tourData','guideintour'));
     }
 
     function getLocationsById($api)

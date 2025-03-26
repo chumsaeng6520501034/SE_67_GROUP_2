@@ -69,6 +69,9 @@ Route::get('/history',[UserListController::class,'viewHistory']);
 Route::get('/de', function () {
     return view('customer.history');
 });
+Route::get('/addTour',[UserListController::class,'viewAddTour']);
+Route::post('/addRequest',[UserListController::class,'insertRequest']);
+Route::post('/deleteRequestTour',[UserListController::class,'deleteMyTour']);
 
 
 Route::post('/customerEditProfile',[UserListController::class,'updateUser']);
@@ -116,6 +119,8 @@ Route::post('/updateCorp',[AdminListController::class,'updateCorp']);
 Route::post('/deleteCorp', [AdminListController::class, 'deleteCorp'])->name('deleteCorp');
 
 //corp section
+Route::get('/guidesInprovince/{provinceId}', [CorpListController::class, 'getGuidesByProvince']);
+
 Route::get('/corpProfile',[CorpListController::class,'getProfile']);
 Route::get('/corpHomepage',[CorpListController::class,'getHomePage']);
 Route::get('/corpSearch',[CorpListController::class,'searchAll']);
@@ -132,6 +137,7 @@ Route::post('/corpDetailMyTour',[CorpListController::class,'getMyTourDetail']);
 
 Route::get('/corpHistory',[CorpListController::class,'getHistory']); //หน้าประวัติขาย
 //ถึงตรงนี้
+Route::get('/corpEditTourPage',[CorpListController::class,'editMyTourPage']);
 
 Route::get('/corpToAddtour',[CorpListController::class,'getAddOffer']);
 Route::post('/corpAddOffer',[CorpListController::class,'addOffer']);

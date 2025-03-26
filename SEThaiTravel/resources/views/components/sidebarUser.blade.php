@@ -20,12 +20,11 @@
     </button>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed top-0 left-0 w-64 h-screen bg-blue-900 text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300 z-50 pt-16">
+    <aside id="sidebar" class="fixed top-0 left-0 w-64 h-screen bg-gray-900 text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300 z-50 pt-16">
         <!-- Menu Items -->
-        <nav class="flex flex-col space-y-2">
-            <a href="/signUp" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">SIGN IN</a>
-            <a href="/logIn" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">LOG IN</a>
-            <a href="#" class="block py-3 px-6 hover:bg-blue-800 rounded transition duration-300">SETTING</a>
+        <nav class="flex flex-col space-y-1">
+            <a href="/signUp" class="block py-3 px-6 hover:bg-gray-700 rounded transition duration-300">SIGN UP</a>
+            <a href="/logIn" class="block py-3 px-6 hover:bg-gray-700 rounded transition duration-300">LOG IN</a>
         </nav>
     </aside>
 

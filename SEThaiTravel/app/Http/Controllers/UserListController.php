@@ -740,7 +740,18 @@ class UserListController extends Controller
     // ]);
     return view('customer.detailSearch', compact('path', 'totalMember', 'productData'));
   }
-  function insertRequest(Request $request)
+  function deleteMyTour(Request $request)
+    {
+        $tourData = [
+            "request_status" => 'cancal'
+        ];
+        RequestTour::where('id_request_tour', $request->tourID)->update($tourData);
+        return redirect('/myRequest');
+    }
+  function viewAddTour(Request $request){
+    return view('customer.addTour');
+  }
+  function insertRequest(Request $request)//addtour ส่งมา
   {
     $requestData = [
       'user_list_account_id_account' => session('userID')->account_id_account,
