@@ -69,6 +69,9 @@ Route::get('/history',[UserListController::class,'viewHistory']);
 Route::get('/de', function () {
     return view('customer.history');
 });
+Route::get('/addTour',[UserListController::class,'viewAddTour']);
+Route::post('/addRequest',[UserListController::class,'insertRequest']);
+Route::post('/deleteRequestTour',[UserListController::class,'deleteMyTour']);
 
 
 
