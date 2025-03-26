@@ -21,22 +21,30 @@
         #mainContent {
             transition: all 0.3s ease-in-out;
         }
+
         #sidebar {
-    z-index: 50; /* ให้ Sidebar อยู่ด้านหน้า */
-}
-#toggleSidebar {
-    position: fixed;
-    z-index: 100; /* ให้ปุ่มอยู่ด้านหน้าสุด */
-}
-#sidebar {
-        transform: translateX(-100%);
-    }
-    .sidebar-open #sidebar {
-        transform: translateX(0);
-    }
-    .sidebar-open #mainContent {
-        margin-left: 16rem; /* ขยับไปทางขวาเท่ากับความกว้างของ Sidebar */
-    }
+            z-index: 50;
+            /* ให้ Sidebar อยู่ด้านหน้า */
+        }
+
+        #toggleSidebar {
+            position: fixed;
+            z-index: 100;
+            /* ให้ปุ่มอยู่ด้านหน้าสุด */
+        }
+
+        #sidebar {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-open #sidebar {
+            transform: translateX(0);
+        }
+
+        .sidebar-open #mainContent {
+            margin-left: 16rem;
+            /* ขยับไปทางขวาเท่ากับความกว้างของ Sidebar */
+        }
     </style>
 </head>
 
@@ -51,7 +59,7 @@
         <div id="mainContent" class="flex-1 p-5 flex justify-center transition-all duration-300">
             <div class="bg-white bg-opacity-80 backdrop-blur-md p-6 rounded-2xl shadow-lg w-4/5 transition-all duration-300">
                 <!-- Search and Date Filter -->
-                <form action="/guideSearchAllPayment" method="get">
+                <form action="/corpSearchAllPayment" method="get">
                     <div class="flex items-center space-x-4 mb-4 bg-white bg-opacity-80 p-3 rounded-lg shadow-lg">
                         <div class="flex items-center border rounded px-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -65,12 +73,11 @@
                             </svg>
                             <input type="date" name="paymentDate" class="outline-none px-2 py-1">
                         </div>
-                            <button type="submit" class="bg-yellow-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-300 transform hover:scale-105 active:scale-95">
-                                SEARCH
-                            </button>
+                        <button type="submit" class="bg-yellow-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-300 transform hover:scale-105 active:scale-95">
+                            SEARCH
+                        </button>
                     </div>
                 </form>
-
                 <!-- Payment Table -->
                 <table class="w-full border border-blue-500">
                     <thead>
@@ -105,7 +112,7 @@
                                 </form>
                             </td>
                         </tr>
-                        @endforeach 
+                        @endforeach
 
                     </tbody>
                 </table>
@@ -114,12 +121,20 @@
     </div>
 
     <script>
-        document.getElementById('toggleSidebar').addEventListener('click', function () {
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
             document.getElementById('sidebar').classList.toggle('-translate-x-full');
         });
-        document.getElementById('toggleSidebar').addEventListener('click', function () {
-        document.body.classList.toggle('sidebar-open');
-    });
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.body.classList.toggle('sidebar-open');
+        });
+
+
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        });
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.body.classList.toggle('sidebar-open');
+        });
     </script>
 
 </body>
