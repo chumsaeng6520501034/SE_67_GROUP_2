@@ -32,21 +32,20 @@ Route::get('/customer', function () {
     return view('customer.myRequest');
 });
 
+//ข้างล่างมี??
 Route::get('/addoffer', function () {
     return view('corporation.addOffer');
 });
-
+//ย้ายที่ด้วย
 Route::get('/corpProfile', function () {
     return view('corporation.profileCorp');
 });
-
+//ข้างล่างมี??
 Route::get('/myTour', function () {
     return view('corporation.myTour');
 });
 
 Route::get('/us',[UserListController::class,'getRequestTour']);
-// Route::get('/ac',[AccountController::class,'checkTable']);
-// Route::get('/bk',[BookingController::class,'checkTable']);
 Route::get('/signUp',[AccountController::class,'viewSignIn']);
 Route::post('/signUpCategory',[AccountController::class,'signIn']);
 Route::post('/insertUser',[AccountController::class,'insertUser']);
@@ -94,6 +93,7 @@ Route::get('/searchHistory',[UserListController::class,'searchHistory']);
 
 //     return response()->json(['status' => $account->status]);
 // });
+//admin section
 Route::post('/statusAvai',[AdminListController::class,'statusAvai']);
 Route::post('/statusDis',[AdminListController::class,'statusDis']);
 Route::post('/statusChange',[AdminListController::class,'statusChange']);
