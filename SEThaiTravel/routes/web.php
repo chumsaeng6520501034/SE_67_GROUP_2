@@ -178,4 +178,9 @@ Route::get('/guideStatistic',[GuideListController::class,'getStatistic']);
 Route::get('/guideAllPayment',[GuideListController::class,'getAllPayment']);
 Route::get('/guideSearchAllPayment',[GuideListController::class,'searchPayment']);
 Route::get('/guideGetPaymentDetail',[GuideListController::class,'getPaymentDetail']);
+Route::get('/guideGetMyOffer',[GuideListController::class,'getOffer']);
+Route::get('/guideSearchOffer',[GuideListController::class,'searchOffer']);
+Route::get('/guideOfferDetail',[GuideListController::class,'getOfferDetail']);
+Route::get('/guideEditOffer',[GuideListController::class,'toEditOffer']);
+Route::post('/guideUpdateOffer',[GuideListController::class,'updateOffer']);
 
