@@ -4,6 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserListController;
 use App\Http\Controllers\GuideListController;
+use App\Http\Controllers\CorpListController;
+
+Route::get('/guidesInprovince/{provinceId}', [CorpListController::class, 'getGuidesByProvince']);
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
