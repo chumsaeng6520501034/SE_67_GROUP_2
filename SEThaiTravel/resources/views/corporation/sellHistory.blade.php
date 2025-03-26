@@ -152,40 +152,10 @@
                                 <p class="text-gray-600 text-md font-semibold">
                                     {{ $payments->End_of_sale_date }}</p>
                                 <p class="text-gray-800 m-2 text-md font-bold">{{ number_format($payments->price) }} ฿</p>
-                                <div class="flex justify-end space-x-2">
-                                    @if ($payments->status == 'ongoing')
-                                        <form action="/corpEditTourPage" method="GET">
-                                            <button
-                                                class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
-                                            <input type="hidden" name="tourID" value={{ $payments->id_tour }}>
-                                        </form>
-                                        <!-- Delete Button -->
-                                        <button onclick="openModal({{ $payments->id_tour }})"
-                                            class="bg-red-600 text-white px-4 py-2 rounded-md font-bold">Delete</button>
-                                    @endif
-                                </div>
                             </div>
                         </div>
                     </div>
-                    <div id="deleteModal{{ $payments->id_tour }}"
-                        class="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 hidden">
-                        <div class="bg-white p-6 rounded-md shadow-lg w-1/3">
-                            <h3 class="text-lg font-semibold text-gray-800">Are you sure you want to delete?</h3>
-                            <p class="text-sm text-gray-600">{{ $payments->name }}</p>
-                            <div class="mt-4 flex justify-between">
-                                <!-- Cancel Button -->
-                                <button onclick="closeModal({{ $payments->id_tour }})"
-                                    class="bg-gray-400 text-white px-4 py-2 rounded-md">Cancel</button>
-                                <!-- Confirm Button (Form for Deleting) -->
-                                <form action="/corpDeleteMyTour" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="tourID" value={{ $payments->id_tour }}>
-                                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md">Confirm
-                                        Delete</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    
                 @endforeach
                 {{ $histours->links() }}
             </div>

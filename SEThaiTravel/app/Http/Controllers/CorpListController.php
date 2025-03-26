@@ -420,6 +420,53 @@ class CorpListController extends Controller
         return view('corporation.editTour',compact('provinceId','locations','tourData','guideintour'));
     }
 
+    public function updateMyTour(Request $request){
+        $request->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $path = $image->store('images', 'public');
+        } else {
+            if(is_null($request->tourImage))
+                $path = NULL;
+            else
+                $path = $request->tourImage;
+        }
+        $locationInTourAPI = $request->location;
+        $tourData = [
+            "from_owner" => 'guide',
+            "owner_id" => session('userID')->account_id_account,
+            "name" => $request->tour_name,
+            "Release_date" => $request->Release,
+            "End_of_sale_date" => $request->End,
+            "start_tour_date" => $request->start_date,
+            "end_tour_date" => $request->end_date,
+            "price" => $request->price,
+            "tour_capacity" => $request->quantity,
+            "contect" => $request->contact,
+            "hotel" => $request->hotel,
+            "hotel_price" => $request->hotelPrice,
+            "description" => $request->description,
+            "travel_by" => $request->travel_by,
+            "status" => 'ongoing',
+            "offer_id_offer" => NULL,
+            "type_tour" => 'public',
+            "tourImage" => $path
+        ];
+        $tourId = $request->tourID;
+        Tour::find($tourId)->update($tourData);
+        LocationInTour::where('tour_id_tour',$tourId)->delete();
+        foreach ($locationInTourAPI as $api) {
+            $locationInTourData = [
+                "loc_api" => "https://tatdataapi.io/api/v2/places/$api",
+                "tour_id_tour" => $tourId
+            ];
+                LocationInTour::insert($locationInTourData);
+            }
+        return redirect('/guideMyTour');
+    }
+
     function getLocationsById($api)
     {
         $response = Http::withHeaders([
@@ -498,14 +545,16 @@ class CorpListController extends Controller
             ->where('id_who_offer', $idAccount)
             ->where('request_tour_id_request_tour', $request->requestID)
             ->get();
-         $offerInRequest= DB::table('offer')
+        $offerInRequest= DB::table('offer')
             ->where('request_tour_id_request_tour', $request->requestID)
             ->get();
         $RequestDetail = DB::table('request_tour')
             ->where('id_request_tour', $request->requestID)
             ->first();
-        return view('corporation.offerDetail', compact('offerByMe'), compact('RequestDetail'), compact('offerInRequest'));
+            dd($offerByMe, $offerInRequest,$RequestDetail);
+        return view('corporation.detailMyOffer', compact('offerByMe'), compact('RequestDetail'), compact('offerInRequest'));
     }
+
     //เสร็จแล้ว
     function toEditOffer(Request $request)
     {

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My offer</title>
+    <title>My Tour</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -65,7 +65,7 @@
 
 <body>
     <div class="flex">
-        @include('components.sidebarCorporation')
+        @include('components.sidebarGuide')
 
         <div id="mainContent" class="flex-1 p-10 transition-all duration-300 overflow-y-auto ml-2">
             <!-- Search and Filter -->
@@ -92,10 +92,9 @@
                         <select id="filterDropdown" name="status"
                             class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="" style="color: black;">All Status</option>
-                            <option value="ongoing" style="color:#007BFF;">ON GOING</option>
-                            <option value="finish" style="color:#28A745;">FINISH</option>
-                            <option value="collect" style="color: #FFC107;">COLLECT</option>
-                            <option value="cancal" style="color: #FF5733;">CANCEL</option>
+                            <option value="new" style="color:#007BFF;">NEW</option>
+                            <option value="approve" style="color:#28A745;">APPROVE</option>
+                            <option value="reject" style="color: #FF5733;">REJECT</option>
                         </select>
                     </div>
                     <div>
@@ -109,77 +108,69 @@
                 @foreach ($requestTours as $offer)
                     <div class="card-container m-4">
                         <div class="card bg-white rounded-lg shadow-lg flex overflow-hidden">
-                            @if (is_null($offer->tourImage))
-                                <img src="https://quintessentially.com/assets/noted/Header_2023-04-12-154210_sigz.webp"
-                                    alt="Bangkok" class="w-1/3 object-cover">
-                            @else
-                                <img src="{{ asset('storage/' . $offer->tourImage) }}" alt="image"
-                                    class="w-1/3 object-cover">
-                            @endif
+                            <img src="https://quintessentially.com/assets/noted/Header_2023-04-12-154210_sigz.webp"
+                                alt="Bangkok" class="w-1/3 object-cover">
                             <div class="p-6 flex-1">
-                                <form action="/corpDetailMyoffer" method="POST">
-                                    @csrf
+                                <form action="/corpOfferDetail" method="GET">
                                     <h2 class="text-2xl font-bold text-black-600 hover:text-blue-500">
-                                        <input type="hidden" name="tourID" value={{ $offer->id_tour }}>
+                                        <input type="hidden" name="requestID" value={{ $offer->id_request_tour }}>
                                         <button type="submit"> {{ ucwords($offer->name) }} </button>
                                     </h2>
                                 </form>
                                 <p class="text-gray-600 mt-1">{{ $offer->description }}</p>
                                 @switch($offer->status)
-                                    @case('ongoing')
+                                    @case('new')
                                         <p class="text-[#007BFF] text-sm mt-2 font-bold">{{ ucwords($offer->status) }}</p>
                                     @break
 
-                                    @case('cancal')
+                                    @case('reject')
                                         <p class="text-[#FF5733] text-sm mt-2 font-bold">{{ ucwords($offer->status) }}</p>
                                     @break
 
-                                    @case('finish')
+                                    @case('approve')
                                         <p class="text-[#28A745] text-sm mt-2 font-bold">{{ ucwords($offer->status) }}</p>
-                                    @break
-
-                                    @case('collect')
-                                        <p class="text-[#FFC107] text-sm mt-2 font-bold">{{ ucwords($offer->status) }}</p>
                                     @break
                                 @endswitch
                                 <p class="text-gray-400 text-xs mt-1">Start Date: {{ $offer->start_tour_date }}</p>
                                 <p class="text-gray-400 text-xs  mt-1">End Date: {{ $offer->end_tour_date }}</p>
                             </div>
-                            <div class="p-6 bg-gray-100 w-1/4 text-right rounded-r-lg">
-                                <p class="text-gray-800 text-md font-bold">Release Date</p>
-                                <p class="text-gray-600 font-semibold">{{ $offer->Release_date }}</p>
-                                <p class="text-gray-800 text-md font-bold">Expiration Date</p>
-                                <p class="text-gray-600 text-md font-semibold">
-                                    {{ $offer->End_of_sale_date }}</p>
-                                <p class="text-gray-800 m-2 text-md font-bold">{{ number_format($offer->price) }} ฿</p>
-                                <div class="flex justify-end space-x-2">
-                                    @if ($offer->status == 'ongoing')
-                                        <form action="/corpEditOffer" method="GET">
-                                            <button
-                                                class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
-                                            <input type="hidden" name="tourID" value={{ $offer->id_tour }}>
-                                        </form>
-                                        <!-- Delete Button -->
-                                        <button onclick="openModal({{ $offer->id_tour }})"
-                                            class="bg-red-600 text-white px-4 py-2 rounded-md font-bold">Delete</button>
-                                    @endif
+                            <div class="bg-white rounded-lg p-4 shadow h-full flex flex-col justify-between">
+                                <!-- ส่วนบน: วันที่ -->
+                                <div class="text-right">
+                                    <h2 class="font-bold">Request Date</h2>
+                                    <p>{{ $offer->request_date }}</p>
+                                    <h2 class="font-bold mt-2">End Request Date</h2>
+                                    <p>{{ $offer->end_of_request_date }}</p>
+                                </div>
+
+                                <!-- ส่วนล่าง: ปุ่ม -->
+                                <div class="flex justify-end space-x-2 mt-4">
+                                    <form action="/guideEditOffer" method="GET">
+                                        <input type="hidden" name="offerID" value="{{ $offer->id_offer }}">
+                                        <button
+                                            class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
+                                    </form>
+                                    <button onclick="openModal({{ $offer->id_offer }})"
+                                        class="bg-red-600 text-white px-4 py-2 rounded-md font-bold">Delete</button>
                                 </div>
                             </div>
+
                         </div>
                     </div>
-                    <div id="deleteModal{{ $offer->id_tour }}"
+                    <div id="deleteModal{{ $offer->id_offer }}"
                         class="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 hidden">
                         <div class="bg-white p-6 rounded-md shadow-lg w-1/3">
-                            <h3 class="text-lg font-semibold text-gray-800">Are you sure you want to delete?</h3>
+                            <h3 class="text-lg font-semibold text-gray-800">Are you sure you want to delete this offer?
+                            </h3>
                             <p class="text-sm text-gray-600">{{ $offer->name }}</p>
                             <div class="mt-4 flex justify-between">
                                 <!-- Cancel Button -->
-                                <button onclick="closeModal({{ $offer->id_tour }})"
+                                <button onclick="closeModal({{ $offer->id_offer }})"
                                     class="bg-gray-400 text-white px-4 py-2 rounded-md">Cancel</button>
                                 <!-- Confirm Button (Form for Deleting) -->
-                                <form action="/corpDeleteMyOffer" method="POST">
+                                <form action="" method="POST">
                                     @csrf
-                                    <input type="hidden" name="tourID" value={{ $offer->id_tour }}>
+                                    <input type="hidden" name="offerID" value={{ $offer->id_offer }}>
                                     <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md">Confirm
                                         Delete</button>
                                 </form>
@@ -208,14 +199,13 @@
         document.getElementById("filterDropdown").addEventListener("change", function() {
             const colors = {
                 "": "text-black",
-                "ongoing": "text-[#007BFF]",
-                "collect": "text-[#FFC107]",
-                "finish": "text-[#28A745]",
-                "cancal": "text-[#FF5733]"
+                "new": "text-[#007BFF]",
+                "approve": "text-[#28A745]",
+                "reject": "text-[#FF5733]"
             };
 
             // ลบสีเก่าก่อน
-            this.classList.remove("text-black", "text-[#007BFF]", "text-[#FFC107]", "text-[#28A745]",
+            this.classList.remove("text-black", "text-[#007BFF]", "text-[#28A745]",
                 "text-[#FF5733]");
 
             // เพิ่มสีใหม่ตามค่าที่เลือก
