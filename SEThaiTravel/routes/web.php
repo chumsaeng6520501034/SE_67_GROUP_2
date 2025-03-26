@@ -55,7 +55,7 @@ Route::post('/checkLogIn',[AccountController::class,'checkLogin']);
 Route::get('/calendar',[UserListController::class,'viewCalendar']);
 Route::get('/myBooking',[UserListController::class,'viewMyBooking']);
 Route::post('/searchBooking',[UserListController::class,'searchBooking']);
-Route::get('/userProfile',[UserListController::class,'viewProfile']);
+
 Route::get('/myRequest',[UserListController::class,'getAllRequestTour']);
 Route::get('/payments',[UserListController::class,'getUserPaymentHistory']);
 Route::get('/deleteAccount',[AccountController::class,'deleteAccount']);
@@ -69,9 +69,13 @@ Route::get('/history',[UserListController::class,'viewHistory']);
 Route::get('/de', function () {
     return view('customer.history');
 });
+Route::get('/addTour',[UserListController::class,'viewAddTour']);
+Route::post('/addRequest',[UserListController::class,'insertRequest']);
+Route::post('/deleteRequestTour',[UserListController::class,'deleteMyTour']);
 
-
-
+Route::get('/customerProfile',[UserListController::class,'viewProfile']);
+Route::post('/customerEditProfile',[UserListController::class,'updateUser']);
+Route::post('/customerUpdateImage',[UserListController::class,'updateImage']);
 Route::get('/customerSearch',[UserListController::class,'searchAllTourActive']);
 Route::get('/customerFilterSearch',[UserListController::class,'searchFilterTourActive']);
 Route::get('/userSearch',[AccountController::class,'search']);
@@ -115,7 +119,7 @@ Route::post('/updateCorp',[AdminListController::class,'updateCorp']);
 Route::post('/deleteCorp', [AdminListController::class, 'deleteCorp'])->name('deleteCorp');
 
 //corp section
-Route::get('/guidesInprovince/{provinceId}', [CorpListController::class, 'getGuidesByProvince']);
+// Route::get('/guidesInprovince/{provinceId}', [CorpListController::class, 'getGuidesByProvince']);
 
 Route::get('/corpProfile',[CorpListController::class,'getProfile']);
 Route::get('/corpHomepage',[CorpListController::class,'getHomePage']);
@@ -174,4 +178,9 @@ Route::get('/guideStatistic',[GuideListController::class,'getStatistic']);
 Route::get('/guideAllPayment',[GuideListController::class,'getAllPayment']);
 Route::get('/guideSearchAllPayment',[GuideListController::class,'searchPayment']);
 Route::get('/guideGetPaymentDetail',[GuideListController::class,'getPaymentDetail']);
+Route::get('/guideGetMyOffer',[GuideListController::class,'getOffer']);
+Route::get('/guideSearchOffer',[GuideListController::class,'searchOffer']);
+Route::get('/guideOfferDetail',[GuideListController::class,'getOfferDetail']);
+Route::get('/guideEditOffer',[GuideListController::class,'toEditOffer']);
+Route::post('/guideUpdateOffer',[GuideListController::class,'updateOffer']);
 

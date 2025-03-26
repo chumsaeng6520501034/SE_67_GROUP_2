@@ -778,7 +778,7 @@ class GuideListController extends Controller
         $join->on('c.account_id_account', '=', 't.owner_id')
             ->where('t.from_owner', 'LIKE', 'guide');
     })
-    ->where('c.account_id_account', 30)
+    ->where('c.account_id_account', $idAccount)
     ->select(
         'p.id_payment',
         'p.booking_Tour_id_Tour',
@@ -806,7 +806,7 @@ class GuideListController extends Controller
         $join->on('c.account_id_account', '=', 't.owner_id')
             ->where('t.from_owner', 'LIKE', 'guide');
     })
-    ->where('c.account_id_account', 30);
+    ->where('c.account_id_account', $idAccount);
     if(!empty($date)){
         $payments->whereDate('p.payment_date',$date);
     }
@@ -840,4 +840,114 @@ class GuideListController extends Controller
         $bookingData = Booking::where('id_booking',$bookingID)->first();
         return view('guide.receipt',compact('paymentData','tourData','userData','bookingData'));
   }
+  function getOffer(Request $request)
+  {
+      $idAccount = session('userID')->account_id_account;
+      $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
+          ->where('o.id_who_offer', 23)
+          ->select('request_tour.*','o.*')
+          ->paginate(10)->appends($request->query());
+      return view('guide.myOffer', compact('requestTours'));
+  }
+  function searchOffer(Request $request)
+  {
+      $name = $request->name;
+      $startDate = $request->startDate;
+      $endDate = $request->endDate;
+      $status = $request->status;
+      $idAccount = session('userID')->account_id_account;
+      $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
+          ->where('o.id_who_offer', 23);
+      if(!empty($name)){
+        $requestTours->whereRaw('LOWER(request_tour.name) LIKE LOWER(?)', ["%$name%"]);
+      }
+      if(!empty($startDate)){
+        $requestTours->whereDate('request_tour.request_date', $startDate);
+      }
+      if(!empty($endDate)){
+        $requestTours->whereDate('request_tour.end_of_request_date', $endDate);
+      }
+      if(!empty($status)){
+        $requestTours->where('o.status','LIKE',$status);
+      }
+      $requestTours=$requestTours->select('request_tour.*','o.*')
+          ->paginate(10)->appends($request->query());
+      return view('guide.myOffer', compact('requestTours'));
+  }
+  function getOfferDetail(Request $request)
+  {
+        $idAccount = session('userID')->account_id_account;
+        $offerByMe = DB::table('offer')
+            ->where('id_who_offer', 23)
+            ->where('request_tour_id_request_tour', $request->requestID)
+            ->get();
+        $RequestDetail = RequestTour::join('user_list', 'request_tour.user_list_account_id_account', '=', 'user_list.account_id_account')
+            ->where('id_request_tour',$request->requestID)
+            ->select('request_tour.*', 'user_list.name as uName','user_list.surname','user_list.phonenumber')  // เลือกคอลัมน์ทั้งหมดจากทั้ง 2 ตาราง
+            ->first();
+        $offerInRequest = Offer::where('request_tour_id_request_tour', $request->requestID)->get();
+        $offerData = [];
+        foreach($offerInRequest as $offer){
+            switch($offer->from_who_offer){
+                case 'corp': $offerData[] = $offer->join('corp_list','corp_list.account_id_account','=','offer.id_who_offer')
+                                                    ->where('corp_list.account_id_account',$offer->id_who_offer)
+                                                    ->first(); 
+                break;
+                case 'guide': $offerData[] = $offer->join('guide_list','guide_list.account_id_account','=','offer.id_who_offer')
+                                                    ->where('guide_list.account_id_account',$offer->id_who_offer)
+                                                    ->first();
+                break;
+            }
+        } 
+        return view('guide.detailMyOffer', compact('offerByMe','RequestDetail','offerData'));
+  }
+  function toEditOffer(Request $request)
+  {
+        $OfferID = $request->offerID;
+        $offerData = Offer::join('request_tour','request_tour.id_request_tour','=','offer.request_tour_id_request_tour')
+                        ->where('id_offer',$OfferID)->first(); 
+        $getHotel = $this->getHotelByName($offerData->hotel);
+        if(empty($getHotel->original["data"])){
+            $getHotel = null;
+            $provinceId = null; 
+        }else{
+            $provinceId = $getHotel->original["data"][0]["location"]["province"]["provinceId"];
+            $getHotel = $getHotel->original["data"][0]["name"]; 
+        }
+        
+        return view('guide.editOffer',compact('provinceId','getHotel','offerData'));
+  }
+  public function getHotelByName($name)
+  {
+        $response = Http::withHeaders([
+            'accept' => 'application/json',
+            'Accept-Language' => 'th',
+            'x-api-key' => env('TAT_API_KEY')
+        ])->get("https://tatdataapi.io/api/v2/places?keyword=$name&place_category_id=2&limit=300");
+
+        if ($response->successful()) {
+            return response()->json($response->json());
+        } else {
+            return response()->json(['error' => 'ไม่สามารถดึงข้อมูลสถานที่ท่องเที่ยวได้'], 500);
+        }
+  }
+  public function updateOffer(Request $request){
+    $idOffer = $request->offerID;
+    $offerData = [
+        'contect' => $request->contact,
+        'price' => $request->price,
+        'description' => $request->description,
+        'hotel' => $request->hotel,
+        'hotel_price' => $request->hotelPrice,
+        'travel' => $request->travel,
+        'travel_price' => $request->travel_price,
+        'guide_qty' => $request->quantity,
+        'status' => 'new'
+    ];
+    DB::table('offer')
+        ->where('id_offer', $idOffer)
+        ->update($offerData);
+    return redirect('/guideGetMyOffer');
+  }
+
 }
