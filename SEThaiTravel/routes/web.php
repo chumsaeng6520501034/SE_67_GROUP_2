@@ -183,4 +183,7 @@ Route::get('/guideSearchOffer',[GuideListController::class,'searchOffer']);
 Route::get('/guideOfferDetail',[GuideListController::class,'getOfferDetail']);
 Route::get('/guideEditOffer',[GuideListController::class,'toEditOffer']);
 Route::post('/guideUpdateOffer',[GuideListController::class,'updateOffer']);
+Route::post('/guideDeleteOffer',[GuideListController::class,'deleteOffer']);
+Route::get('/getAddOfferPage',[GuideListController::class,'getAddOfferPage']);
+Route::post('/guideAddOffer',[GuideListController::class,'addOfferS']);
 

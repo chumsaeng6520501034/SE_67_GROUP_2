@@ -844,7 +844,7 @@ class GuideListController extends Controller
   {
       $idAccount = session('userID')->account_id_account;
       $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
-          ->where('o.id_who_offer', 23)
+          ->where('o.id_who_offer', $idAccount)
           ->select('request_tour.*','o.*')
           ->paginate(10)->appends($request->query());
       return view('guide.myOffer', compact('requestTours'));
@@ -857,7 +857,7 @@ class GuideListController extends Controller
       $status = $request->status;
       $idAccount = session('userID')->account_id_account;
       $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
-          ->where('o.id_who_offer', 23);
+          ->where('o.id_who_offer', $idAccount);
       if(!empty($name)){
         $requestTours->whereRaw('LOWER(request_tour.name) LIKE LOWER(?)', ["%$name%"]);
       }
@@ -878,7 +878,7 @@ class GuideListController extends Controller
   {
         $idAccount = session('userID')->account_id_account;
         $offerByMe = DB::table('offer')
-            ->where('id_who_offer', 23)
+            ->where('id_who_offer', $idAccount)
             ->where('request_tour_id_request_tour', $request->requestID)
             ->get();
         $RequestDetail = RequestTour::join('user_list', 'request_tour.user_list_account_id_account', '=', 'user_list.account_id_account')
@@ -949,5 +949,40 @@ class GuideListController extends Controller
         ->update($offerData);
     return redirect('/guideGetMyOffer');
   }
+  public function deleteOffer(Request $request){
+    $idOffer = $request->offerID;
+    Offer::where('id_offer',$idOffer)->delete();
+    return redirect('/guideGetMyOffer');
+  }
+  public function getAddOfferPage(Request $request){
+    $requestID = $request->requestID;
+    $requestData = RequestTour::where('id_request_tour',$requestID)->first();
+    return view('guide.offerPage',compact('requestData'));
+  }
+  public function addOfferS(Request $request){
+    $requestTourID = $request->requestID;
+    $offerData = [
+        "request_tour_id_request_tour" => $requestTourID,
+        "from_who_offer" => "guide",
+        "id_who_offer" => session('userID')->account_id_account,
+        'contect' => $request->contact,
+        'price' => $request->price,
+        'description' => $request->description,
+        'hotel' => $request->hotel,
+        'hotel_price' => $request->hotelPrice,
+        'travel' => $request->travel,
+        'travel_price' => $request->travel_price,
+        'guide_qty' => $request->quantity,
+        'status' => 'new',
+        "offer_date" => Carbon::now()->toDateTimeString()
+    ];
+    DB::table('offer')
+        ->insert($offerData);
+    return redirect('/guideGetMyOffer');
+  }
+  public function getSellHistory(Request $request){
+    
+  }
+
 
 }
