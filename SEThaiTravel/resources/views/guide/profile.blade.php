@@ -12,7 +12,7 @@
 <body class="bg-gray-100" x-data="{ openEditModal: false, openDeleteModal: false }">
     <!-- Header -->
     <div class="bg-blue-900 text-white p-4 flex items-center">
-        <a href="/corpHomepage" class="text-2xl mr-4">&#8592;</a>
+        <a href="/guideHomePage" class="text-2xl mr-4">&#8592;</a>
         <h1 class="text-xl font-bold">PROFILE</h1>
     </div>
 
@@ -27,16 +27,16 @@
         <!-- Profile Section -->
         <div class="relative -mt-16 flex flex-col items-center">
             <label for="profile-upload" class="relative cursor-pointer">
-                @if (is_null($userData->logo))
+                @if (is_null($userData->photo))
                 <img id="profileImage"
                     src="https://simplyfox.co.uk//wp-content/uploads/2018/08/iStock-640299760-1249910_1080x675.jpg"
                     alt="Profile Picture"
                     class="w-32 h-32 rounded-full border-4 border-white object-cover shadow-lg">
                 @else
-                <img src="{{ asset('storage/' . $userData->logo) }}" alt="image"
+                <img src="{{ asset('storage/' . $userData->photo) }}" alt="image"
                     class="w-32 h-32 rounded-full border-4 border-white object-cover shadow-lg">
                 @endif
-                <form action="/corpUpdateImage" method="POST" enctype="multipart/form-data" class="mt-4 text-center">
+                <form action="/guideUpdateImage" method="POST" enctype="multipart/form-data" class="mt-4 text-center">
                     @csrf
                     <input type="file" id="profile-upload" name="image" class="hidden">
                     <button class="mt-1" type="submit">Upload</button>
@@ -44,7 +44,7 @@
             </label>
 
             <div class="mt-4 text-center">
-                <h2 class="text-xl font-semibold">{{$userData->name}} </h2>
+                <h2 class="text-xl font-semibold">{{$userData->name}} {{$userData->surname}}</h2>
                 <p class="text-gray-600">{{$accountData->username}}</p>
             </div>
         </div>
@@ -58,13 +58,27 @@
                 </div>
                 <div>
                     <p class="font-semibold">Phone:</p>
-                    <p class="mt-1">{{$userData->phone_number}}</p>
+                    <p class="mt-1">{{$userData->phonenumber}}</p>
                 </div>
             </div>
-            <div class="grid grid-cols-1 gap-4 mt-4">
+            <div class="grid grid-cols-2 gap-4 mt-4">
                 <div class="bg-gray-100 p-4 rounded-lg shadow">
                     <p class="font-semibold">Address:</p>
                     <p class="mt-1">{{$userData->address}}</p>
+                </div>
+                <div class="bg-gray-100 p-4 rounded-lg shadow">
+                    <p class="font-semibold">Payment:</p>
+                    <p class="mt-1">Visa: {{$userData->fake_BAN}}</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div class="bg-gray-100 p-4 rounded-lg shadow">
+                    <p class="font-semibold">Affiliation:</p>
+                    <p class="mt-1">{{$corp->name }}</p>
+                </div>
+                <div class="bg-gray-100 p-4 rounded-lg shadow">
+                    <p class="font-semibold">Guide License:</p>
+                    <p class="mt-1">{{$userData->guide_license}}</p>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-4 mt-4">
@@ -79,45 +93,7 @@
                     @else
                     <p class="mt-1"></p>
                     @endif
-                </div>
-            </div>
-        </div>
 
-        <div class="relative  flex flex-col items-center">
-            <div class="mt-3 text-center">
-                <h2 class="text-xl font-semibold">Owner</h2>
-            </div>
-        </div>
-
-        <div class="mt-1 p-6">
-            <div class="grid grid-cols-2 gap-4 mt-4">
-                <div class="bg-gray-100 p-4 rounded-lg shadow">
-                    <p class="font-semibold">Owner:</p>
-                    <p class="mt-1">{{$userData->name_owner}}</p>
-                </div>
-                <div class="bg-gray-100 p-4 rounded-lg shadow">
-                    <p class="font-semibold">Owner Nationality:</p>
-                    <p class="mt-1">{{$userData->nationality}}</p>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 gap-4 mt-4">
-                <div class="bg-gray-100 p-4 rounded-lg shadow">
-                    <p class="font-semibold">Owner Address:</p>
-                    <p class="mt-1">{{$userData->owner_address}}</p>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4 mt-4">
-                <div class="bg-gray-100 p-4 rounded-lg shadow">
-                    <p class="font-semibold">Owner Date Of Birth:</p>
-                    <p class="mt-1">{{$userData->dob}}</p>
-                </div>
-                <div class="bg-gray-100 p-4 rounded-lg shadow">
-                    <p class="font-semibold">Country:</p>
-                    @if ($userData->owner_country_code)
-                    <p class="mt-1">{{$countrys[$userData->owner_country_code]}}</p>
-                    @else
-                    <p class="mt-1"></p>
-                    @endif
                 </div>
             </div>
         </div>
@@ -133,7 +109,7 @@
 
     <!-- Edit Modal -->
     <div x-show="openEditModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-        <form action="/corpEditProfile" method="POST">
+        <form action="/guideEditProfile" method="POST">
             @csrf
             <div class="bg-white p-6 rounded-lg shadow-lg w-[800px]">
                 <h2 class="text-xl font-bold mb-4">Edit Profile</h2>
@@ -147,8 +123,18 @@
                         <input type="text" name="name" value="{{$userData->name}}" class="w-full p-2 border rounded shadow-sm">
                     </div>
                     <div>
+                        <label class="block text-gray-700 font-medium">Surname:</label>
+                        <input type="text" name="surname" value="{{$userData->surname}}" class="w-full p-2 border rounded shadow-sm">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-1">
+                    <div>
                     <label class="block mb-2">Phone number:</label>
-                    <input type="text" pattern="^\d+$" name="phone_number" class="w-full border p-2 rounded-lg mb-4" value="{{$userData->phone_number}}">
+                    <input type="text" pattern="^\d+$" name="phonenumber" class="w-full border p-2 rounded-lg mb-4" value="{{$userData->phonenumber}}">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Bank Account:</label>
+                        <input type="text" name="fake_BAN" pattern="^\d+$" value="{{$userData->fake_BAN}}" class="w-full p-2 border rounded shadow-sm">
                     </div>
                 </div>
 
@@ -177,7 +163,7 @@
                 </div>
 
                 <div class="flex justify-end space-x-2">
-                    <a href="/corpProfile" class="bg-gray-500 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-red-700 transition">
+                    <a href="/guideProfile" class="bg-gray-500 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-red-700 transition">
                         BACK
                     </a>
                     <button type="submit" class="bg-[#0F3557] text-white font-bold py-2 px-6 rounded shadow-md hover:bg-blue-700 transition">

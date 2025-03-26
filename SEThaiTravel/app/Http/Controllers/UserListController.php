@@ -653,7 +653,7 @@ class UserListController extends Controller
     $countrys =  AccountController::getCountry();
     return view('customer.profile', compact('accountData', 'userData', 'countrys'));
   }
-  public function updateUser(Request $request)
+  function updateUser(Request $request)
   {
     // ตรวจสอบว่ามี user อยู่หรือไม่
     $idAccount = session('userID')->account_id_account;
@@ -677,7 +677,7 @@ class UserListController extends Controller
 
     return redirect('/customerProfile');
   }
-  public function updateImage(Request $request)
+  function updateImage(Request $request)
   {
     // ตรวจสอบว่ามี user อยู่หรือไม่
     $idAccount = session('userID')->account_id_account;
