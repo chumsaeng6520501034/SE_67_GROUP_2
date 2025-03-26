@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Tour</title>
+    <title>edit Tour</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -88,6 +88,14 @@
                     </select>
                 </div>
 
+                <!-- ✅ เลือกไกด์แบบ tag แสดงด้านล่าง -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium">Guide</label>
+                    <select id="guideSelect" name="guideintour[]" class="w-full p-2 border rounded shadow-sm">
+                    </select>
+                    <div id="selectedGuides" class="mt-3 flex flex-wrap gap-2"></div>
+                </div>
+
                 <!-- Row 5 (Description) -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium">Description</label>
@@ -107,10 +115,12 @@
                             value="{{ $tourData->contect }}">
                     </div>
                 </div>
+
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium">Image</label>
                     <input type="file" id="imageInput" name="image" class="w-full p-2 border rounded shadow-sm" >
                 </div>
+
                 <div class="mt-2">
                     @if (is_null($tourData->tourImage))
                         <img src="https://quintessentially.com/assets/noted/Header_2023-04-12-154210_sigz.webp"
@@ -320,7 +330,10 @@
                 // หรือ $(this).val(''); // ถ้าใช้ select ธรรมดา
             });
 
+            
+
         });
+        
     </script>
     <!-- Custom Scrollbar -->
     <style>
@@ -341,6 +354,77 @@
             background: rgba(0, 0, 0, 0.5);
         }
     </style>
+    <!-- JavaScript Guide (ต่อท้ายสุดของหน้า แยกจากสคริปต์เดิมเลย) -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const guideSelect = document.getElementById('guideSelect');
+    const selectedGuidesContainer = document.getElementById('selectedGuides');
+
+    // ข้อมูล guide ที่ได้จาก Controller
+    const guideintour = @json($guideintour);
+
+    // เพิ่ม option และแสดงผล guide ที่มีอยู่
+    guideintour.forEach(guide => {
+        const option = document.createElement('option');
+        option.value = guide.account_id_account;
+        option.textContent = guide.name + ' ' + guide.surname;
+        option.selected = true;
+        guideSelect.appendChild(option);
+
+        // เพิ่ม tag ด้านล่าง select
+        const tag = document.createElement('div');
+        tag.className = 'flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full shadow text-sm';
+        tag.innerHTML = `
+            <span class="mr-2">${guide.name} ${guide.surname}</span>
+            <button type="button" onclick="removeGuide(${guide.account_id_account})" class="text-green-600 hover:text-red-600">&times;</button>
+            <input type="hidden" name="guideintour[]" value="${guide.account_id_account}">
+        `;
+        selectedGuidesContainer.appendChild(tag);
+    });
+
+    // เรียก select2 เพื่อความสวยงามและใช้ง่าย
+    $('#guideSelect').select2({
+        placeholder: "Select a Guide",
+        allowClear: true
+    });
+
+    // เมื่อมีการเลือกไกด์ใหม่
+    $('#guideSelect').on('change', function() {
+        const selectedId = $(this).val();
+        const selectedName = $(this).find('option:selected').text();
+
+        if (selectedId) {
+            const tag = document.createElement('div');
+            tag.className = 'flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full shadow text-sm';
+            tag.innerHTML = `
+                <span class="mr-2">${selectedName}</span>
+                <button type="button" onclick="removeGuide(${selectedId})" class="text-green-600 hover:text-red-600">&times;</button>
+                <input type="hidden" name="guideintour[]" value="${selectedId}">
+            `;
+            selectedGuidesContainer.appendChild(tag);
+        }
+
+        // reset select2
+        $(this).val('').trigger('change.select2');
+    });
+
+});
+
+// ฟังก์ชันลบ tag ไกด์ที่เลือก
+function removeGuide(guideId) {
+    const selectedGuidesContainer = document.getElementById('selectedGuides');
+    const tags = selectedGuidesContainer.querySelectorAll('div');
+    tags.forEach(tag => {
+        if (tag.querySelector(`input[value="${guideId}"]`)) {
+            tag.remove();
+        }
+    });
+
+    // เอาออกจาก select option
+    $(`#guideSelect option[value="${guideId}"]`).prop('selected', false);
+}
+</script>
+
 </body>
 
 </html>

@@ -56,7 +56,7 @@
         }
 
         body {
-            background-image: url('https://blog.bangkokair.com/wp-content/uploads/2023/09/Cover_krabi-travel-guide-top-destinations.jpg');
+            background-image: url('https://codyduncan.com/blogimages/2012/12/cody-duncan-landscape-2012-01.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;

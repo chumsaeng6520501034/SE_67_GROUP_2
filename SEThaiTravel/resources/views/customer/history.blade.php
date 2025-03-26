@@ -6,7 +6,7 @@
     <title>Travel Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-cover bg-center bg-no-repeat bg-gray-100" style="background-image: url('https://cms.thailandprivilege.co.th/stocks/privilege_categorys/o0x0/2k/1f/8nvp2k1ftw3/Travel.jpg');">
+<body class="bg-cover bg-center bg-no-repeat bg-gray-100" style="background-image: url('https://codyduncan.com/blogimages/2012/12/cody-duncan-landscape-2012-01.jpg');">
     <!-- Sidebar -->
     @include('components.sidebarCustomer')
 
@@ -15,31 +15,31 @@
         <div class="w-3/5 p-6 ">
             <!-- Search and Filter -->
             <form action="/searchHistory" method="GET">
-                <div class="flex items-center bg-white shadow-md p-4 rounded-lg mb-4 space-x-4 fixed top-4 left-1/2 transform -translate-x-1/2 w-3/5 z-50">
+                <div class="flex items-center p-4 rounded-lg mb-4 space-x-4 fixed top-4 left-1/2 transform -translate-x-1/2 w-3/5 z-50">
                     <div class="relative flex-1">
-                        <label class="block text-sm font-medium">Tour name</label>
+                        <label class="block text-white text-xl font-bold">Tour name</label>
                         <input type="text" id="searchBar" name="name" placeholder="Search Booking tours..." class="w-full p-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <span class="absolute left-3 top-8 text-gray-500">🔍</span>
                     </div>
-                    <div class="relative flex-1">
-                        <label class="block text-sm font-medium">Start Date</label>
-                        <input type="date" name="startDate" id="startDate" class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="relative flex-1 ">
+                        <label class="block text-white text-xl font-bold">Start Date</label>
+                        <input type="date" name="startDate" id="startDate" class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black text-lg">
                     </div>
                     <div class="relative flex-1">
-                        <label class="block text-sm font-medium">End Date</label>
-                        <input type="date" name="endDate" id="endDate" class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-white text-xl font-bold">End Date</label>
+                        <input type="date" name="endDate" id="endDate" class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black text-lg">
                     </div>
-                    <div class="relative flex-1">
+                    <div class="relative flex-1 text-white text-xl font-bold">
                         <label>Status</label>
                         <select id="filterDropdown" name="status"
-                            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black text-lg">
                             <option value="" style="color: black;">All Status</option>
                             <option value="notReview" style="color: rgb(236, 12, 12);">NOT REVIEW</option>
                             <option value="Review" style="color: rgb(15, 221, 8);">REVIEWED</option>
                         </select>
                     </div>
                     <div>
-                        <button id="submitButton" class="mt-5 bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition duration-300">Search</button>
+                        <button id="submitButton" class="mt-5 bg-blue-900 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition duration-300">Search</button>
                     </div>
                 </div>
             </form>
@@ -72,13 +72,13 @@
 <div x-data="{ openModal: false ,selectedTourId: null, bookingId: null}">
     <!-- Tour List -->
     <div class="flex justify-center mt-40">
-        <div class="space-y-6 w-[1400px]">
+        <div class="absolute top-[20vh] left-1/2 transform -translate-x-1/2 w-4/5 px-6 z-10">
             {{-- ทำตรงนี้ --}}
 
             
             @foreach ($tours as $tour)
             
-            <div class="bg-white rounded-lg shadow-md flex p-4 mx-auto w-full relative">
+            <div class="bg-white bg-opacity-80 backdrop-blur-lg rounded-lg shadow-lg p-6 mb-6 flex relative mx-auto">
                 <img src="{{ $tour['image_url'] }}" class="rounded-lg shadow-md w-1/3">
                 <form action="/customerViewReview" method="POST">
                     @csrf

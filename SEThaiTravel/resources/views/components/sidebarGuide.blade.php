@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
         }
     </style>
 </head>
+
 <body class="bg-gray-100">
 
     <!-- Button Toggle Sidebar -->
@@ -23,7 +25,9 @@
     <aside id="sidebar" class="fixed top-0 left-0 w-64 h-screen bg-gray-900 text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300  z-50">
         <!-- User Profile -->
         <div class="p-6 text-center">
-            <img class="h-16 w-16 rounded-full mx-auto border-2 border-white" src="https://avatars.githubusercontent.com/u/64538277" alt="avatar" />
+            <a href="/guideProfile">
+                <img class="h-16 w-16 rounded-full mx-auto border-2 border-white" src="https://avatars.githubusercontent.com/u/64538277" alt="avatar" />
+            </a>
             <h2 class="text-lg font-bold mt-2">{{session('userID')->name}}</h2>
         </div>
 
@@ -71,4 +75,5 @@
     </script>
 
 </body>
+
 </html>
