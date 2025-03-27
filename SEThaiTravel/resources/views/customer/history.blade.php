@@ -142,7 +142,7 @@
                     {{-- ทำตรงนี้ --}}
                     @foreach ($tours as $tour)
                         <div class="card-container m-4">
-                            <div class="card bg-white rounded-lg shadow-lg flex overflow-hidden">
+                            <div class="card bg-white relative rounded-lg shadow-lg flex overflow-hidden">
                                 <img src="{{ $tour['image_url'] }}" class="w-1/3 object-cover">
                                 <form action="/customerViewReview" method="POST">
                                     @csrf
