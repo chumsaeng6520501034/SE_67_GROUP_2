@@ -325,7 +325,15 @@ class CorpListController extends Controller
 
         return redirect('/corpHomepage');
     }
-
+    function deleteTour(Request $request)
+    {
+        $tourData = [
+            "status" => 'cancal'
+        ];
+        //  dd($request->tourID);
+        Tour::where('id_tour', $request->tourID)->update($tourData);
+        return redirect('/corpMyTour');
+    }
     //เอารายการสินค้าทั้งหมด ทำเเล้ว
     function getTour(Request $request)
     {
@@ -577,10 +585,11 @@ class CorpListController extends Controller
     //เสร็จแล้ว
     function getOffer(Request $request){
         $idAccount = session('userID')->account_id_account;
-        $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
-            ->where('o.id_who_offer', $idAccount)
-            ->select('request_tour.*')
-            ->paginate(10)->appends($request->query());
+        $requestTours = Offer::with('request_tour')
+        ->where('id_who_offer', $idAccount)
+        ->get();
+
+              dd($requestTours);
         return view('corporation.myOffer', compact('requestTours'));
     }
     //เสร็จแล้ว
