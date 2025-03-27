@@ -81,7 +81,7 @@
 
         <!-- Main Content -->
         <div id="mainContent" class="flex-1 p-5 flex justify-center transition-all duration-300">
-            <div id="calendarContainer" class="bg-white bg-opacity-90 p-5 rounded-lg shadow-md w-4/5 h-[650px] transition-all duration-300 mt-15">
+            <div id="calendarContainer" class="bg-white bg-opacity-90 p-5 rounded-lg shadow-md w-4/5 h-[650px] overflow-y-auto transition-all duration-300 mt-28">
                 <div id="calendar"></div>
             </div>
         </div>
