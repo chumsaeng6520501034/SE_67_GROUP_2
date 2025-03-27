@@ -51,12 +51,23 @@
             /* ขยับ Navbar ตาม Sidebar */
         }
 
-        .sidebar-open #card {
-            margin-top: 90px;
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .card {
+            width: 80%;
+        }
+
+        #sidebar.open~#mainContent .card {
+            width: 90%;
         }
 
         body {
-            background-image: url('https://blog.bangkokair.com/wp-content/uploads/2023/09/Cover_krabi-travel-guide-top-destinations.jpg');
+            background-image: url('https://codyduncan.com/blogimages/2012/12/cody-duncan-landscape-2012-01.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -70,8 +81,7 @@
     @include('components.sidebarCorporation')    
     <!-- Navbar -->
     <div id="mainContent">
-        <nav id="navbar" class="fixed top-0 left-0 w-full p-4 z-[60] transition-all duration-300">
-            <div class="max-w-7xl mx-auto flex flex-col space-y-3 p-4 bg-[#205781] rounded-lg">
+        <div class="p-6 rounded-xl mt-4 bg-white/10 backdrop-blur-2xl mx-auto w-3/4 z-50">
                 <form action="/corpSearchFilter" method="GET">
                     <!-- บรรทัดแรก: แบรนด์ + ช่องค้นหา -->
                     <div class="flex justify-between items-center w-full">
@@ -88,19 +98,19 @@
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-center ">
                             <!-- วันที่ไป -->
                             <div class="flex items-center justify-center space-x-1">
-                                <label for="start_date" class="text-yellow-500 font-semibold">From:</label>
+                                <label for="start_date" class="text-white font-semibold">From:</label>
                                 <input type="date" id="start_date" name="startDate"
                                     class="border px-2 py-1 rounded-lg">
                             </div>
 
                             <!-- วันที่กลับ -->
                             <div class="flex items-center justify-center space-x-1">
-                                <label for="end_date" class="text-yellow-500 font-semibold">To:</label>
+                                <label for="end_date" class="text-white font-semibold">To:</label>
                                 <input type="date" id="end_date" name="endDate" class="border px-2 py-1 rounded-lg">
                             </div>
 
                             <div class="flex items-center space-x-1">
-                                <label for="people" class="text-yellow-500 font-semibold">Type:</label>
+                                <label for="people" class="text-white font-semibold">Type:</label>
                                 <select name="type" class="h-full w-full rounded-lg">
                                     <option value="request">REQUEST</option>
                                     <option value="tour">TOUR</option>
@@ -109,7 +119,7 @@
 
                             <!-- งบประมาณขั้นต่ำ -->
                             <div class="flex items-center justify-center space-x-1">
-                                <label for="min_budget" class="text-yellow-500 font-semibold">Min:</label>
+                                <label for="min_budget" class="text-white font-semibold">Min:</label>
                                 <input type="range" id="min_budget" name="minBudget" min="0" max="1000000"
                                     value="0" step="10000" class="w-24" oninput="updateMinValue(this.value)">
                                 <span id="min_value" class="text-sm font-semibold text-white">0</span>
@@ -117,7 +127,7 @@
 
                             <!-- งบประมาณสูงสุด -->
                             <div class="flex items-center justify-center space-x-1">
-                                <label for="max_budget" class="text-yellow-500 font-semibold">Max:</label>
+                                <label for="max_budget" class="text-white font-semibold">Max:</label>
                                 <input type="range" id="max_budget" name="maxBudget" min="0" max="1000000"
                                     value="1000000" step="10000" class="w-24" oninput="updateMaxValue(this.value)">
                                 <span id="max_value" class="text-sm font-semibold text-white">1,000,000</span>
@@ -128,102 +138,97 @@
             </div>
         </nav>
 
-
-        <!-- Hero Section -->
-        <div class="relative h-[50vh] w-full">
-
-            <div class="w-full h-full object-cover"></div>
             @php
                 $startArray = 0;
             @endphp
 
-            <div class="relative top-[-90%] p-10 rounded-lg w-2/3 mt-20 mx-auto">
+            <div class="card-wrapper mt-40">
                 @foreach ($searchTourData as $item)
-                    <div
-                        class="bg-white rounded-lg shadow-lg p-6 mb-6 flex relative cursor-pointer hover:shadow-xl transition">
-                        <!-- รูปภาพ -->
-                        @if (is_null($item->tourImage))
-                            <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination"
-                                class="w-1/3 rounded-lg">
-                        @else
-                            <img src="{{ asset('storage/' . $item->tourImage) }}" alt="image"
-                                class="w-1/3 rounded-lg">
-                        @endif
-                        <form action="/guideSearchTourDetail" method="POST">
-                            @csrf
-                            <input type="hidden" name="tourID" value={{ $item->id_tour }}>
-                            <input type="hidden" name="path" value={{ $path }}>
-                            <button type="submit" class="absolute inset-0 w-full h-full opacity-0 "></button>
-                        </form>
-                        <!-- ส่วนข้อมูล -->
-                        <div class="ml-4 w-2/3">
-                            <h2 class="text-xl font-bold">{{ ucwords($item->name) }}</h2>
-                            <div class="mb-2">
-                                <p class="text-gray-600">{{ $item->description }}</p>
+                    <div class="card-container m-4">
+                        <div class="card bg-white relative rounded-lg shadow-lg flex overflow-hidden">
+                            <!-- รูปภาพ -->
+                            @if (is_null($item->tourImage))
+                                <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination"
+                                    class="w-1/3 rounded-lg">
+                            @else
+                                <img src="{{ asset('storage/' . $item->tourImage) }}" alt="image"
+                                    class="w-1/3 rounded-lg">
+                            @endif
+                            <form action="/guideSearchTourDetail" method="POST">
+                                @csrf
+                                <input type="hidden" name="tourID" value={{ $item->id_tour }}>
+                                <input type="hidden" name="path" value={{ $path }}>
+                                <button type="submit" class="absolute inset-0 w-full h-full opacity-0 "></button>
+                            </form>
+                            <!-- ส่วนข้อมูล -->
+                            <div class="p-6 flex-1">
+                                <h2 class="text-xl font-bold">{{ ucwords($item->name) }}</h2>
+                                <div class="mb-2">
+                                    <p class="text-gray-600">{{ $item->description }}</p>
+                                </div>
+                                <div class=" mt-2 " id="card">
+                                    <p class="text-gray-400 text-xs mt-1">Start Date: {{ $item->start_tour_date }}</p>
+                                    <p class="text-gray-400 text-xs  mt-1">End Date: {{ $item->end_tour_date }}</p>
+                                    <p class="text-gray-400 text-xs mt-1">Organized by:
+                                        {{ $ownerData[$startArray]->name }}
+                                    </p>
+                                    {{-- <p class="text-gray-400 mt-2">STATUS</p> --}}
+                                    @php
+                                        $status =
+                                            (is_null($totalMember[$startArray]) ? 0 : $totalMember[$startArray]) <
+                                            $item->tour_capacity
+                                                ? 'Available'
+                                                : 'Full';
+                                    @endphp
+                                    <p
+                                        class="mt-1 text-sm font-bold {{ $status === 'Available' ? 'text-green-500' : 'text-red-500' }}">
+                                        {{ $status }}
+                                    </p>
+                                </div>
                             </div>
-                            <div class=" mt-20 " id="card">
-                                <p class="text-gray-400 text-xs mt-1">Start Date: {{ $item->start_tour_date }}</p>
-                                <p class="text-gray-400 text-xs  mt-1">End Date: {{ $item->end_tour_date }}</p>
-                                <p class="text-gray-400 text-xs mt-1">Organized by:
-                                    {{ $ownerData[$startArray]->name }}
-                                </p>
-                                {{-- <p class="text-gray-400 mt-2">STATUS</p> --}}
+
+                            <!-- ส่วน Review -->
+                            <div class="p-6 bg-gray-100 w-1/4 text-right rounded-r-lg">
+                                <p class="text-xs text-gray-500">OWNER REVIEW</p>
+                                <p class="text-lg font-bold">{{ $ownerScore[$startArray]->total_reviews }} reviews</p>
+
                                 @php
-                                    $status =
-                                        (is_null($totalMember[$startArray]) ? 0 : $totalMember[$startArray]) <
-                                        $item->tour_capacity
-                                            ? 'Available'
-                                            : 'Full';
+                                    $rating = is_null($ownerScore[$startArray]->average_score)
+                                        ? 0
+                                        : $ownerScore[$startArray]->average_score;
+                                    $fullStars = floor($rating);
+                                    $halfStar = $rating - $fullStars >= 0.5 ? true : false;
+                                    $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
                                 @endphp
-                                <p
-                                    class="mt-1 text-sm font-bold {{ $status === 'Available' ? 'text-green-500' : 'text-red-500' }}">
-                                    {{ $status }}
-                                </p>
-                            </div>
-                        </div>
 
-                        <!-- ส่วน Review -->
-                        <div
-                            class="ml-auto w-2/5 text-right flex flex-col items-end justify-start gap-2 border-l border-gray-300 pl-6">
-                            <p class="text-xs text-gray-500">OWNER REVIEW</p>
-                            <p class="text-lg font-bold">{{ $ownerScore[$startArray]->total_reviews }} reviews</p>
-
-                            @php
-                                $rating = is_null($ownerScore[$startArray]->average_score)
-                                    ? 0
-                                    : $ownerScore[$startArray]->average_score;
-                                $fullStars = floor($rating);
-                                $halfStar = $rating - $fullStars >= 0.5 ? true : false;
-                                $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
-                            @endphp
-
-                            <div class="flex text-yellow-500 text-lg">
-                                @for ($i = 0; $i < $fullStars; $i++)
-                                    <span>★</span>
-                                @endfor
-                                @if ($halfStar)
-                                    <span class="text-yellow-300">★</span>
-                                @endif
-                                @for ($i = 0; $i < $emptyStars; $i++)
-                                    <span class="text-gray-300">★</span>
-                                @endfor
-                            </div>
-                            <div class="mt-auto">
-                                <p class="text-2xl font-bold text-green-600">{{ number_format($item->price) }}฿</p>
-                                <form action="/guideSearchTourDetail" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="tourID" value={{ $item->id_tour }}>
-                                    <input type="hidden" name="path" value={{ $path }}>
-                                    <button type="submit"
-                                        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm mt-2 relative z-[50]">
-                                        INFO
-                                    </button>
-                                </form>
-                                <p
-                                    class="text-base font-semibold mt-2 {{ $status === 'Available' ? 'text-green-500' : 'text-red-500' }}">
-                                    NET AMOUNT:
-                                    {{ is_null($totalMember[$startArray]) ? 0 : $totalMember[$startArray] }}/{{ $item->tour_capacity }}
-                                </p>
+                                <div class="flex text-yellow-500 text-lg mx-64">
+                                    @for ($i = 0; $i < $fullStars; $i++)
+                                        <span>★</span>
+                                    @endfor
+                                    @if ($halfStar)
+                                        <span class="text-yellow-300">★</span>
+                                    @endif
+                                    @for ($i = 0; $i < $emptyStars; $i++)
+                                        <span class="text-gray-300">★</span>
+                                    @endfor
+                                </div>
+                                <div class="mt-20">
+                                    <p class="text-2xl font-bold text-green-600">{{ number_format($item->price) }}฿</p>
+                                    <form action="/guideSearchTourDetail" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="tourID" value={{ $item->id_tour }}>
+                                        <input type="hidden" name="path" value={{ $path }}>
+                                        <button type="submit"
+                                            class="bg-blue-900 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm mt-2 relative z-[50]">
+                                            INFO
+                                        </button>
+                                    </form>
+                                    <p
+                                        class="text-base font-semibold mt-2 {{ $status === 'Available' ? 'text-green-500' : 'text-red-500' }}">
+                                        NET AMOUNT:
+                                        {{ is_null($totalMember[$startArray]) ? 0 : $totalMember[$startArray] }}/{{ $item->tour_capacity }}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>

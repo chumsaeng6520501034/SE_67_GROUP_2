@@ -149,7 +149,7 @@
                             <!-- รูปภาพ -->
                             @if (is_null($item->tourImage))
                                 <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination"
-                                    class="w-1/3 rounded-lg">
+                                    class="w-1/3 object-cover">
                             @else
                                 <img src="{{ asset('storage/' . $item->tourImage) }}" alt="image"
                                     class="w-1/3 rounded-lg">

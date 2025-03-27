@@ -9,9 +9,9 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x/dist/cdn.min.js" defer></script>
 </head>
 
-<body class="bg-gray-100" x-data="{ openEditModal: false, openDeleteModal: false }">
+<body class="bg-gray-900" x-data="{ openEditModal: false, openDeleteModal: false }">
     <!-- Header -->
-    <div class="bg-blue-900 text-white p-4 flex items-center">
+    <div class="bg-gray-900 text-white p-4 flex items-center">
         <a href="/corpMyStaff" class="text-2xl mr-4">&#8592;</a>
         <h1 class="text-xl font-bold">PROFILE GUIDE</h1>
     </div>
