@@ -15,6 +15,50 @@
             height: 100vh;
             overflow: hidden;
         }
+        #sidebar,
+        #mainContent {
+            transition: all 0.3s ease-in-out;
+        }
+
+        #sidebar {
+            z-index: 50;
+            /* ให้ Sidebar อยู่ด้านหน้า */
+        }
+
+        #toggleSidebar {
+            position: fixed;
+            z-index: 100;
+            /* ให้ปุ่มอยู่ด้านหน้าสุด */
+        }
+
+        #sidebar {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-open #sidebar {
+            transform: translateX(0);
+        }
+
+        .sidebar-open #mainContent {
+            margin-left: 16rem;
+            /* ขยับไปทางขวาเท่ากับความกว้างของ Sidebar */
+        }
+
+        #navbar {
+            transition: all 0.3s ease-in-out;
+            width: calc(100% - 0rem);
+            /* ค่าเริ่มต้นเต็มจอ */
+            margin-left: 0;
+        }
+
+        /* เมื่อ Sidebar เปิด ให้ Navbar ลดขนาด */
+        .sidebar-open #navbar {
+            width: calc(100% - 16rem);
+            /* ลดขนาดเมื่อ Sidebar เปิด */
+            margin-left: 16rem;
+            /* ขยับ Navbar ตาม Sidebar */
+        }
+
         .card-container {
             display: flex;
             flex-wrap: wrap;
@@ -105,6 +149,7 @@
                                     <input type="hidden" name="tourID" value={{$tour['tour_id_tour']}}>
                                     <input type="hidden" name="bookingID" value={{$tour['bookingId']}}>
                                     <input type="hidden" name="path" value={{$path}}>
+                                    <button type="submit" class="absolute inset-0 w-full h-full opacity-0 "></button>
                                 </form>
                                 <div class="p-6 flex-1">
                                     <h2 class="text-xl font-bold mt-4">{{ $tour['name'] }}</h2>
@@ -233,7 +278,7 @@
                 }
                 if(guideCount==1)
                 {
-                    document.getElementById('addGuide').innerHTML="Can add just ne Guide";
+                    document.getElementById('addGuide').innerHTML="Can add just one Guide";
                 }
             }
         function resetGuideCount(){
@@ -271,6 +316,12 @@
                     console.log('Updated guideList:', data.guides);
                 });
         }
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        });
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.body.classList.toggle('sidebar-open');
+        });
     </script>
 </body>
 </html>

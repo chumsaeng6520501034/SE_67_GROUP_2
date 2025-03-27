@@ -446,7 +446,7 @@ class CorpListController extends Controller
         }
         $locationInTourAPI = $request->location;
         $tourData = [
-            "from_owner" => 'guide',
+            "from_owner" => 'corp',
             "owner_id" => session('userID')->account_id_account,
             "name" => $request->tour_name,
             "Release_date" => $request->Release,
@@ -475,7 +475,7 @@ class CorpListController extends Controller
             ];
                 LocationInTour::insert($locationInTourData);
             }
-        return redirect('/guideMyTour');
+        return redirect('/corpMyTour');
     }
 
     function getLocationsById($api)
@@ -584,12 +584,15 @@ class CorpListController extends Controller
     //เสร็จแล้ว
     function getOffer(Request $request){
         $idAccount = session('userID')->account_id_account;
-        $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
-            ->where('o.id_who_offer', $idAccount)
-            ->select('request_tour.*')
-            ->paginate(10)->appends($request->query());
-        // dd($requestTours);
-        return view('corporation.myOffer', compact('requestTours'));
+      $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
+          ->where('o.id_who_offer', $idAccount)
+          ->select('request_tour.*','o.*')
+          ->paginate(10)->appends($request->query());
+      $tourPrivate = [];
+      foreach($requestTours as $offer){
+        $tourPrivate[$offer->id_offer] = Tour::where('offer_id_offer',$offer->id_offer)->first();
+      }
+      return view('corporation.myOffer', compact('requestTours','tourPrivate'));
     }
 
     //เสร็จแล้ว
@@ -628,7 +631,7 @@ class CorpListController extends Controller
         $OfferID = $request->offerID;
         $offerData = Offer::join('request_tour', 'request_tour.id_request_tour', '=', 'offer.request_tour_id_request_tour')
             ->where('id_offer', $OfferID)->first();
-        dd($OfferID);
+        // dd($OfferID);
         $getHotel = $this->getHotelByName($offerData->hotel);
         if (empty($getHotel->original["data"])) {
             $getHotel = null;
@@ -637,9 +640,35 @@ class CorpListController extends Controller
             $provinceId = $getHotel->original["data"][0]["location"]["province"]["provinceId"];
             $getHotel = $getHotel->original["data"][0]["name"];
         }
-        dd($OfferID,$offerData,$getHotel);
+        // dd($OfferID,$offerData,$getHotel);
         return view('corporation.editOffer', compact('provinceId', 'getHotel', 'offerData'));
     }
+
+    function searchOffer(Request $request)
+  {
+      $name = $request->name;
+      $startDate = $request->startDate;
+      $endDate = $request->endDate;
+      $status = $request->status;
+      $idAccount = session('userID')->account_id_account;
+      $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
+          ->where('o.id_who_offer', $idAccount);
+      if(!empty($name)){
+        $requestTours->whereRaw('LOWER(request_tour.name) LIKE LOWER(?)', ["%$name%"]);
+      }
+      if(!empty($startDate)){
+        $requestTours->whereDate('request_tour.request_date', $startDate);
+      }
+      if(!empty($endDate)){
+        $requestTours->whereDate('request_tour.end_of_request_date', $endDate);
+      }
+      if(!empty($status)){
+        $requestTours->where('o.status','LIKE',$status);
+      }
+      $requestTours=$requestTours->select('request_tour.*','o.*')
+          ->paginate(10)->appends($request->query());
+      return view('corporation.myOffer', compact('requestTours'));
+  } 
 
     public function getHotelByName($name)
     {
@@ -695,7 +724,7 @@ class CorpListController extends Controller
     function staffDetail(Request $request){
         $guideID = $request->guideID;
         $idAccount = session('userID')->account_id_account;
-        $guideInfo = GuideList::where('account_id_account', $guideID)->get();
+        $guideInfo = GuideList::where('account_id_account', $guideID)->first();
         $guideWork = DB::table('guide_list as g')
             ->join('Tour_has_guide_list as thg', 'thg.guide_list_account_id_account', '=', 'g.account_id_account')
             ->join('tour as t', 't.id_tour', '=', 'thg.tour_id_tour')
@@ -708,8 +737,8 @@ class CorpListController extends Controller
             ->where('guide_list.account_id_account', $idAccount)
             ->selectRaw('COUNT(*) as total_reviews, AVG(review.sp_score) as average_score')
             ->first();
-        //dd($guideWork);
-        return view('corporation.profile', compact('guideInfo', 'guideWork', 'guideScore'));
+        // dd($guideInfo, $guideWork,$guideScore);
+        return view('corporation.profilemyStaff', compact('guideInfo', 'guideWork', 'guideScore'));
     }
     //เสร็จแล้ว
     function getAllPaymentHistory(Request $request){

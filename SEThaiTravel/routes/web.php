@@ -156,12 +156,20 @@ Route::post('/corpUpdateImage',[CorpListController::class,'updateImage']);
 
 Route::get('/corpToAddtour',[CorpListController::class,'getAddOffer']); //addoffer
 Route::post('/corpAddOffer',[CorpListController::class,'addOffer']);
+
 Route::get('/corpOffer',[CorpListController::class,'getOffer']); //หน้าข้อเสนอ
 Route::get('/corpOfferDetail',[CorpListController::class,'getOfferDetail']);
+Route::get('/corpSearchOffer',[CorpListController::class,'searchOffer']);
 Route::get('/corpEditOffer',[CorpListController::class,'toEditOffer']);
+Route::get('/corpGetMyOffer',[CorpListController::class,'getOffer']); //หน้าข้อเสนอ
+
+
 Route::post('/corpUpdateOffer',[CorpListController::class,'updateMyOffer']);
+
 Route::get('/corpStaff',[CorpListController::class,'getStaffInCorp']); //staff list
 Route::get('/corpStaffDetail',[CorpListController::class,'staffDetail']);
+Route::get('/corpMyStaff',[CorpListController::class,'getStaffInCorp']); //staff list
+
 Route::get('/corpPayments',[CorpListController::class,'getAllPaymentHistory']);//payments
 Route::get('/corpSearchAllPayment',[CorpListController::class,'searchPayment']);
 Route::get('/corpPaymentDetail',[CorpListController::class,'getPaymentDetail']);
@@ -218,3 +226,5 @@ Route::get('/customerReserve',[UserListController::class,'bookingTour']);
 Route::get('/customerBooking',[UserListController::class,'insertBooking']);
 Route::get('/getPaymentPage',[UserListController::class,'getPaymentPage']);
 Route::get('/customerPayBooking',[UserListController::class,'insertPayment']);
+Route::post('/insertGuide',[AccountController::class,'insertGuide']);
+Route::post('/insertCorp',[AccountController::class,'insertCorp']);

@@ -10,30 +10,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
-        <style>
-            /* Custom Scrollbar */
-            ::-webkit-scrollbar {
-                width: 8px;
-                border-radius: 1px;
-            }
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            border-radius: 1px;
+        }
 
-            ::-webkit-scrollbar-track {
-                background: transparent;
-                border-radius: 10px;
-                margin: 10px;
-            }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 10px;
+            margin: 10px;
+        }
 
-            ::-webkit-scrollbar-thumb {
-                background: rgba(0, 0, 0, 0.3);
-                border-radius: 10px;
-                border: 2px solid transparent;
-            }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 2px solid transparent;
+        }
 
-            ::-webkit-scrollbar-thumb:hover {
-                background: rgba(0, 0, 0, 0.5);
-            }
-        </style>
-     
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+
 
 </head>
 
@@ -46,21 +46,21 @@
         </a>
         <div class="text-2xl text-white font-semibold">TRAVEL & TOUR</div>
     </nav>
-    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 mt-20 w-full max-w-lg sm:max-w-xl md:max-w-2xl bg-white bg-opacity-50 backdrop-blur-md p-6 rounded-2xl shadow-lg overflow-y-auto max-h-[90vh]">
+    <div
+        class="absolute top-0 left-1/2 transform -translate-x-1/2 mt-20 w-full max-w-lg sm:max-w-xl md:max-w-2xl bg-white bg-opacity-50 backdrop-blur-md p-6 rounded-2xl shadow-lg overflow-y-auto max-h-[90vh]">
 
-        <h2 class="text-4xl font-bold text-center text-[#0F3557]">SIGN UP</h2>
+        <h2 class="text-4xl font-bold text-center text-[#0F3557]">CUSTOMER SIGN UP</h2>
 
-        <!-- อัพโหลดรูป -->
-        <div class="flex justify-center my-4 relative">
-            <label for="imageUpload"
-                class="w-20 h-20 border-4 border-[#0F3557] flex items-center justify-center rounded-full cursor-pointer overflow-hidden">
-                <img id="previewImage" src="" class="hidden w-full h-full object-cover" />
-                <span id="uploadIcon" class="text-3xl text-[#0F3557]">+</span>
-            </label>
-            <input type="file" id="imageUpload" class="hidden" accept="image/*">
-        </div>
-
-        <form action="/insertUser" method="POST">
+        <form action="/insertUser" method="POST" enctype="multipart/form-data">
+            <!-- อัพโหลดรูป -->
+            <div class="flex justify-center my-4 relative">
+                <label for="imageUpload"
+                    class="w-20 h-20 border-4 border-[#0F3557] flex items-center justify-center rounded-full cursor-pointer overflow-hidden">
+                    <img id="previewImage" src="" class="hidden w-full h-full object-cover" />
+                    <span id="uploadIcon" class="text-3xl text-[#0F3557]">+</span>
+                </label>
+                <input type="file" id="imageUpload" class="hidden" name="image" >
+            </div>
             @csrf
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <label class="flex flex-col">
@@ -148,15 +148,15 @@
                     SUBMIT
                 </button>
             </div>
-            <input type="hidden" name="username" value={{$username}}>
-            <input type="hidden" name="password" value={{$password}}>
-            <input type="hidden" name="typeOfSign" value={{$typeOfSign}}>
-            <input type="hidden" name="email" value={{$email}}>
+            <input type="hidden" name="username" value={{ $username }}>
+            <input type="hidden" name="password" value={{ $password }}>
+            <input type="hidden" name="typeOfSign" value={{ $typeOfSign }}>
+            <input type="hidden" name="email" value={{ $email }}>
         </form>
     </div>
-   
+
     @vite(['resources/js/thaiLocation.js'])
-  
+
     <!-- JavaScript -->
     <script>
         document.getElementById("imageUpload").addEventListener("change", function(event) {
@@ -179,7 +179,7 @@
             });
         });
     </script>
-   
+
 </body>
 
 </html>
