@@ -925,6 +925,10 @@ class UserListController extends Controller
     // dd($anotherReview);
     return view('customer.historyDetail', compact('anotherReview', 'myReview', 'totalMember', 'productData', 'path'));
   }
+  function searchRequest(Request $request)
+  {
+    
+  }
   function searchHistory(Request $request)
   {
     $name = $request->name;

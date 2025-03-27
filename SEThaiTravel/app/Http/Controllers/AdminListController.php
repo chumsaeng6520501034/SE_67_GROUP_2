@@ -173,23 +173,19 @@ class AdminListController extends Controller
         ]);
         return redirect()->route('account');
     }
-    function statusAvai(Request $request){
-        // dd($request->status);
-        $account = Account::where('id_account', $request->id)->first();
-        // dd($account);
-        $account->update([
-            'status' => $request->status,
-        ]);
-        return redirect()->route('account');
+    function statusAvai(Request $request) {
+        $account = Account::find($request->id);
+        $account->status = 'available';
+        $account->save();
+        
+        return redirect()->back(); // หรือไปยังหน้าที่ต้องการ
     }
-    function statusDis(Request $request){
-        // dd($request->status);
-        $account = Account::where('id_account', $request->id)->first();
-        // dd($account);
-        $account->update([
-            'status' => $request->status,
-        ]);
-        return redirect()->route('account');
+    function statusDis(Request $request) {
+        $account = Account::find($request->id);
+        $account->status = 'disappear';
+        $account->save();
+        
+        return redirect()->back(); // หรือไปยังหน้าที่ต้องการ
     }
     function viewProfile(){
         $id = session('userID')->account_id_account;

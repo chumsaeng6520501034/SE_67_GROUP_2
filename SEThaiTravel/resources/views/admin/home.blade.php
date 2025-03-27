@@ -16,9 +16,9 @@
         <div class="flex-1 p-6">
             <!-- Search and Add Button -->
             <div class="flex justify-between mb-4">
-                <div class="flex items-center space-x-2 ">
+                <div class="flex items-center space-x-2">
                     <input type="text" id="searchInput" class="p-2 border border-gray-600 bg-white text-gray-500 rounded-md w-[1110px] mx-auto" placeholder="Search..." onkeyup="searchTable()">
-                    <button class="bg-blue-900  text-white px-4 py-2 rounded-md">Search</button>
+                    <button class="bg-blue-900 text-white px-4 py-2 rounded-md">Search</button>
                 </div>
             </div>
 
@@ -95,31 +95,60 @@
                     </tbody>
                 </table>
             </div>
-            
+        </div>
+    </div>
+
+    <!-- Popup for status change -->
+    <div id="popup" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden">
+        <div class="bg-white p-6 rounded-md shadow-lg">
+            <h2 class="text-xl mb-4">Change Status</h2>
+            <div class="flex justify-between">
+                <button id="changeAvailable" class="bg-green-600 text-white px-4 py-2 rounded-md">Available</button>
+                <button id="changeDisappear" class="bg-red-600 text-white px-4 py-2 rounded-md">Disappear</button>
+            </div>
+            <button id="closePopup" class="mt-4 bg-gray-500 text-white px-4 py-2 rounded-md">Close</button>
         </div>
     </div>
 
     <script>
-        function searchTable() {
-            const searchInput = document.getElementById('searchInput').value.toLowerCase();
-            const table = document.getElementById('accountTable');
-            const rows = table.getElementsByTagName('tr');
+        function openPopup(accountId, currentStatus) {
+            const popup = document.getElementById('popup');
+            popup.classList.remove('hidden');
             
-            // Loop through all rows, except the header row
-            for (let i = 1; i < rows.length; i++) {
-                let row = rows[i];
-                let username = row.cells[1].textContent.toLowerCase();
-                let permission = row.cells[2].textContent.toLowerCase();
-                let email = row.cells[3].textContent.toLowerCase();
-                let status = row.cells[5].querySelector('button') ? row.cells[5].querySelector('button').textContent.toLowerCase() : ''; // ดึงข้อความจากปุ่มในคอลัมน์สถานะ
+            const changeAvailableButton = document.getElementById('changeAvailable');
+            const changeDisappearButton = document.getElementById('changeDisappear');
+            const closePopupButton = document.getElementById('closePopup');
+            
+            changeAvailableButton.onclick = function() {
+                changeStatus(accountId, 'avai'); // ส่งไปเส้นทาง '/statusAvai'
+            };
+            
+            changeDisappearButton.onclick = function() {
+                changeStatus(accountId, 'dis'); // ส่งไปเส้นทาง '/statusDis'
+            };
+            
+            closePopupButton.onclick = function() {
+                popup.classList.add('hidden');
+            };
+        }
 
-                // Check if the search input matches any column (USERNAME, PERMISSION, EMAIL, or STATUS)
-                if (username.includes(searchInput) || permission.includes(searchInput) || email.includes(searchInput) || status.includes(searchInput)) {
-                    row.style.display = ''; // Show matching row
-                } else {
-                    row.style.display = 'none'; // Hide non-matching row
-                }
+        function changeStatus(accountId, status) {
+            // สร้างฟอร์มและส่งคำขอไปยังเส้นทางที่ต้องการ
+            const form = document.createElement('form');
+            form.method = 'POST';
+            
+            if (status === 'avai') {
+                form.action = '/statusAvai'; // ส่งไปที่ /statusAvai
+            } else if (status === 'dis') {
+                form.action = '/statusDis'; // ส่งไปที่ /statusDis
             }
+            
+            form.innerHTML = `
+                <input type="hidden" name="id" value="${accountId}">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            `;
+            document.body.appendChild(form);
+            form.submit();
         }
     </script>
 
