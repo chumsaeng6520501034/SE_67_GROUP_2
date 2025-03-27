@@ -745,11 +745,12 @@ class UserListController extends Controller
         $tourData = [
             "request_status" => 'cancal'
         ];
+        //  dd($request->tourID);
         RequestTour::where('id_request_tour', $request->tourID)->update($tourData);
         return redirect('/myRequest');
     }
   function getRequestDetail(Request $request){
-      // dd($request->requestID);
+      //dd($request->requestID);
       $idAccount = session('userID')->account_id_account;
       $RequestDetail = RequestTour::join('user_list', 'request_tour.user_list_account_id_account', '=', 'user_list.account_id_account')
             ->where('id_request_tour',$request->requestID)
