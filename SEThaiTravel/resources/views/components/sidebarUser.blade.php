@@ -15,7 +15,7 @@
 <body class="bg-gray-100">
 
     <!-- Button Toggle Sidebar -->
-    <button id="toggleSidebar" class="fixed top-4 left-4 text-white text-2xl p-3 rounded-md z-[110] shadow-lg hover:bg-blue-800 transition-all duration-300">
+    <button id="toggleSidebar" class="fixed top-4 left-4 text-white text-2xl p-3 rounded-md z-[110]">
         ☰
     </button>
 
