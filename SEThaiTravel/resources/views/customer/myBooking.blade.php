@@ -71,7 +71,7 @@
 
         <!-- Sidebar -->
         <aside id="sidebar"
-            class="fixed top-0 left-0 w-64 h-screen bg-blue-900 text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300 open">
+            class="fixed top-0 left-0 w-64 h-screen bg-gray-900 text-white shadow-lg flex flex-col transform -translate-x-full transition-transform duration-300 open">
             <div class="p-6 text-center">
                 <a href="/userProfile">
                     <img class="h-16 w-16 rounded-full mx-auto" src="https://avatars.githubusercontent.com/u/64538277"

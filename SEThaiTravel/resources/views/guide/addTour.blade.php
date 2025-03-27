@@ -101,9 +101,12 @@
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium">Image</label>
-                    <input type="file" name="image" class="w-full p-2 border rounded shadow-sm">
+                    <input type="file" name="image" class="w-full p-2 border rounded shadow-sm" id="imageInput">
                 </div>
-
+                <div class="mt-2">
+                        <img src="https://quintessentially.com/assets/noted/Header_2023-04-12-154210_sigz.webp"
+                            alt="Bangkok" class="w-full object-cover mt-2" id="imagePreview">
+                </div>
                 <div class="flex justify-center mt-6 space-x-4">
                     <!-- ปุ่ม BACK -->
                     <a href="/guideHomePage" class="bg-gray-500 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-red-700 transition">
@@ -138,7 +141,6 @@
         const locationSelect = document.getElementById('locationSelect');
         const selectedContainer = document.getElementById('selectedLocations');
         const selectedLocations = [];
-
         function loadLocations(provinceId) {
 
             fetch(`/api/locationsInprovince/${provinceId}`)
@@ -171,7 +173,17 @@
                 selectedContainer.appendChild(tag);
             });
         }
-
+        document.getElementById('imageInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // ใช้ FileReader เพื่อแสดงตัวอย่างภาพที่เลือก
+                    document.getElementById('imagePreview').src = e.target.result;
+                };
+                reader.readAsDataURL(file); // อ่านไฟล์เป็น data URL
+            }
+        });
         function removeLocation(index) {
             const removed = selectedLocations.splice(index, 1)[0];
             updateSelectedLocations();
