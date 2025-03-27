@@ -215,9 +215,12 @@ class UserListController extends Controller
       'kid_qty' => $request->kidqty,
       'status' => 'paid'
     ];
-     Booking::insert($bookingData);
+    $booking = new Booking($bookingData);
+    $booking->save();
+    $bookingId = $booking->id_booking;
+    Booking::insert($bookingData);
     $paymentData =[
-      'booking_Tour_id_Tour' => $request->tourID,
+      'booking_Tour_id_Tour' => $bookingId,
       'booking_user_list_account_id_account' => session('userID')->account_id_account,
       'payment_date' => Carbon::now()->toDateTimeString(),
       'checknumber' => $request->checknumber,
@@ -975,7 +978,7 @@ class UserListController extends Controller
     ];
      Booking::where('id_booking',$request->bookingID)->update($bookingData);
     $paymentData =[
-      'booking_Tour_id_Tour' => $request->tourID,
+      'booking_Tour_id_Tour' => $request->bookingID,
       'booking_user_list_account_id_account' => session('userID')->account_id_account,
       'payment_date' => Carbon::now()->toDateTimeString(),
       'checknumber' => $request->checknumber,

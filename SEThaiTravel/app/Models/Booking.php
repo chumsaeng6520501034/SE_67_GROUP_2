@@ -14,6 +14,15 @@ class Booking extends Model
     public $timestamps = false;
     protected $fillable = [
         'status',
+        'user_list_account_id_account',  // ใส่คอลัมน์อื่นๆ ที่ต้องการ
+        'tour_id_tour',
+        'booked_date',
+        'payment_date',
+        'total_price',
+        'description',
+        'adult_qty',
+        'kid_qty',
     ];
+    
     use HasFactory;
 }
