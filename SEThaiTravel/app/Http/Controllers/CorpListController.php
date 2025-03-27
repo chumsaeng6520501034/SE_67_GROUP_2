@@ -563,6 +563,7 @@ class CorpListController extends Controller
             'status' => 'new',
             'offer_date' => Carbon::now()->toDateString(),
         ];
+        // dd($offerData);
         Offer::insert($offerData);
         return redirect('/corpOffer');
     }
@@ -572,8 +573,6 @@ class CorpListController extends Controller
    
 //
 
-
-
     //เสร็จแล้ว
     function getOffer(Request $request){
         $idAccount = session('userID')->account_id_account;
@@ -581,8 +580,10 @@ class CorpListController extends Controller
             ->where('o.id_who_offer', $idAccount)
             ->select('request_tour.*')
             ->paginate(10)->appends($request->query());
+        // dd($requestTours);
         return view('corporation.myOffer', compact('requestTours'));
     }
+
     //เสร็จแล้ว
     function getOfferDetail(Request $request){
         $idAccount = session('userID')->account_id_account;
@@ -614,11 +615,45 @@ class CorpListController extends Controller
         return view('corporation.detailMyOffer', compact('offerByMe','RequestDetail','offerData'));
     }
 
-    //เสร็จแล้ว
-    function toEditOffer(Request $request){
+    function toEditOffer(Request $request)
+    {
         $OfferID = $request->offerID;
-        return view('corporation.editOffer', compact('OfferID'));
+        $offerData = Offer::join('request_tour', 'request_tour.id_request_tour', '=', 'offer.request_tour_id_request_tour')
+            ->where('id_offer', $OfferID)->first();
+        dd($OfferID);
+        $getHotel = $this->getHotelByName($offerData->hotel);
+        if (empty($getHotel->original["data"])) {
+            $getHotel = null;
+            $provinceId = null;
+        } else {
+            $provinceId = $getHotel->original["data"][0]["location"]["province"]["provinceId"];
+            $getHotel = $getHotel->original["data"][0]["name"];
+        }
+        dd($OfferID,$offerData,$getHotel);
+        return view('corporation.editOffer', compact('provinceId', 'getHotel', 'offerData'));
     }
+
+    public function getHotelByName($name)
+    {
+        $response = Http::withHeaders([
+            'accept' => 'application/json',
+            'Accept-Language' => 'th',
+            'x-api-key' => env('TAT_API_KEY')
+        ])->get("https://tatdataapi.io/api/v2/places?keyword=$name&place_category_id=2&limit=300");
+
+        if ($response->successful()) {
+            return response()->json($response->json());
+        } else {
+            return response()->json(['error' => 'ไม่สามารถดึงข้อมูลสถานที่ท่องเที่ยวได้'], 500);
+        }
+    }
+    //เสร็จแล้ว
+    // function toEditOffer(Request $request){
+    //     $OfferID = $request->offerID;
+
+    //     // dd($OfferID);
+    //     return view('corporation.editOffer', compact('OfferID'));
+    // }
     //เสร็จแล้ว
     function updateMyOffer(Request $request){
         $idOffer = $request->offerID;
@@ -638,6 +673,7 @@ class CorpListController extends Controller
             ->update($validated);
         return redirect('/corpOffer');
     }
+
     //เสร็จแล้ว
     function getStaffInCorp(Request $request){
         $idAccount = session('userID')->account_id_account;
