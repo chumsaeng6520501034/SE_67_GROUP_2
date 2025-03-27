@@ -39,14 +39,14 @@
 
         <!-- Menu Items -->
         <nav class="flex flex-col space-y-2">
-            <a href="/corpHomepage" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SEARCH</a>
-            <a href="/corpAddTourPage" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ADD TOUR</a>
-            <a href="/corpMyTour" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY TOUR</a>
-            <a href="/corpHistory" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">SELL HISTORY</a>
-            <a href="/corpOffer" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY OFFER</a>
-            <a href="/corpStaff" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">MY STAFF</a>
-            <a href="/corpPayments" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">ALL PAYMENT</a>
-            <a href="/corpStatistic" class="block py-3 px-6 hover:bg-blue-700 transition duration-300">STATISTIC</a>
+            <a href="/corpHomepage" class="block py-3 px-6 hover:bg-gray-700 transition duration-300">SEARCH</a>
+            <a href="/corpAddTourPage" class="block py-3 px-6 hover:bg-gray-700 transition duration-300">ADD TOUR</a>
+            <a href="/corpMyTour" class="block py-3 px-6 hover:bg-gray-700 transition duration-300">MY TOUR</a>
+            <a href="/corpHistory" class="block py-3 px-6 hover:bg-gray-700 transition duration-300">SELL HISTORY</a>
+            <a href="/corpOffer" class="block py-3 px-6 hover:bg-gray-700 transition duration-300">MY OFFER</a>
+            <a href="/corpStaff" class="block py-3 px-6 hover:bg-gray-700 transition duration-300">MY STAFF</a>
+            <a href="/corpPayments" class="block py-3 px-6 hover:bg-gray-700 transition duration-300">ALL PAYMENT</a>
+            <a href="/corpStatistic" class="block py-3 px-6 hover:bg-gray-700 transition duration-300">STATISTIC</a>
         </nav>
 
         <!-- Log Out -->
