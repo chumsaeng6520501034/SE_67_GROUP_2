@@ -23,14 +23,6 @@
             /* ให้ปุ่มอยู่ด้านหน้าสุด */
         }
 
-        #sidebar {
-            transform: translateX(-100%);
-        }
-
-        .sidebar-open #sidebar {
-            transform: translateX(0);
-        }
-
         .sidebar-open #mainContent {
             margin-left: 16rem;
             /* ขยับไปทางขวาเท่ากับความกว้างของ Sidebar */
@@ -50,9 +42,19 @@
             margin-left: 16rem;
             /* ขยับ Navbar ตาม Sidebar */
         }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
 
-        .sidebar-open #card {
-            margin-top: 90px;
+        .card {
+            width: 80%;
+        }
+
+        #sidebar.open~#mainContent .card {
+            width: 90%;
         }
 
         body {
@@ -137,7 +139,7 @@
                             <div class="card bg-white relative rounded-lg shadow-lg flex overflow-hidden">
                                 <!-- รูปภาพ -->
                                 <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination"
-                                    class="w-1/3 object-cover">
+                                    class="w-1/3 rounded-lg">
                                 <form action="/guideSearchRequestDetail" method="POST">
                                     @csrf
                                     <input type="hidden" name="requestID" value={{ $item->id_request_tour }}>
@@ -188,7 +190,7 @@
                 @endforeach
                 {{ $searchRequestData->links() }}
             </div>
-        </div>
+    </div>
 
 
     <script>
@@ -209,11 +211,8 @@
         function updateMaxValue(value) {
             document.getElementById("max_value").innerText = parseInt(value).toLocaleString();
         }
-        document.getElementById('toggleSidebar').addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('-translate-x-full');
-        });
-        document.getElementById('toggleSidebar').addEventListener('click', function() {
-            document.body.classList.toggle('sidebar-open');
+        document.getElementById("toggleSidebar").addEventListener("click", function () {
+            document.body.classList.toggle("sidebar-open");
         });
     </script>
 </body>
