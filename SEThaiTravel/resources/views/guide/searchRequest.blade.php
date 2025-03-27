@@ -134,7 +134,7 @@
             <div class="card-wrapper mt-40">
                 @foreach ($searchRequestData as $item)
                     <div class="card-container m-4">
-                            <div class="card bg-white rounded-lg shadow-lg flex overflow-hidden">
+                            <div class="card bg-white relative rounded-lg shadow-lg flex overflow-hidden">
                                 <!-- รูปภาพ -->
                                 <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination"
                                     class="w-1/3 rounded-lg">
