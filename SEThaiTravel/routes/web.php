@@ -53,7 +53,10 @@ Route::get('/logIn',[AccountController::class,'viewLogin']);
 Route::get('/logOut',[AccountController::class,'logOut']);
 Route::post('/checkLogIn',[AccountController::class,'checkLogin']);
 Route::get('/calendar',[UserListController::class,'viewCalendar']);
+
 Route::get('/myBooking',[UserListController::class,'viewMyBooking']);
+Route::get('/customerBooking',[UserListController::class,'viewMyBooking']);
+
 Route::post('/searchBooking',[UserListController::class,'searchBooking']);
 
 Route::get('/myRequest',[UserListController::class,'getAllRequestTour']);
