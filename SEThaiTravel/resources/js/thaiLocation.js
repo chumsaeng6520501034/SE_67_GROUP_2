@@ -64,4 +64,5 @@ export async function loadTambons(amphoeId, amphoeName, tambonSelectId) {
 
 document.addEventListener("DOMContentLoaded", () => {
     loadProvinces("province", "amphoe", "tambon");
+    loadProvinces("province2", "amphoe2", "tambon2");
 });

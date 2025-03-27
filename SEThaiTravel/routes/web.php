@@ -222,3 +222,5 @@ Route::get('/customerReserve',[UserListController::class,'bookingTour']);
 Route::get('/customerBooking',[UserListController::class,'insertBooking']);
 Route::get('/getPaymentPage',[UserListController::class,'getPaymentPage']);
 Route::get('/customerPayBooking',[UserListController::class,'insertPayment']);
+Route::post('/insertGuide',[AccountController::class,'insertGuide']);
+Route::post('/insertCorp',[AccountController::class,'insertCorp']);

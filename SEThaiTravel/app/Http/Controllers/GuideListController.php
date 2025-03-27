@@ -827,8 +827,8 @@ class GuideListController extends Controller
             $payments->whereDate('p.payment_date', $date);
         }
         if (!empty($searchKey)) {
-            $payments->where('t.id_tour', 'LIKE', "%$searchKey%")
-                ->orWhere('p.checknumber', 'LIKE', "%$searchKey%");
+            $payments->where('p.booking_Tour_id_Tour', 'LIKE', "%$searchKey%")
+                ->orWhere('p.checknumber', 'LIKE', "$searchKey");
         }
         $payments = $payments->select(
             'p.id_payment',

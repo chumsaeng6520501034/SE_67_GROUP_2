@@ -149,6 +149,7 @@
                                     <input type="hidden" name="tourID" value={{$tour['tour_id_tour']}}>
                                     <input type="hidden" name="bookingID" value={{$tour['bookingId']}}>
                                     <input type="hidden" name="path" value={{$path}}>
+                                    <button type="submit" class="absolute inset-0 w-full h-full opacity-0 "></button>
                                 </form>
                                 <div class="p-6 flex-1">
                                     <h2 class="text-xl font-bold mt-4">{{ $tour['name'] }}</h2>
@@ -277,7 +278,7 @@
                 }
                 if(guideCount==1)
                 {
-                    document.getElementById('addGuide').innerHTML="Can add just ne Guide";
+                    document.getElementById('addGuide').innerHTML="Can add just one Guide";
                 }
             }
         function resetGuideCount(){
