@@ -53,13 +53,14 @@
                     <svg class="h-8 w-8 text-gray-500 mx-2"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"> 
                         <circle cx="11" cy="11" r="8" />  <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
-                        <input type="text" placeholder="Search" class="outline-none px-2 py-1 w-full">
+                    <input type="text" id="searchInput" placeholder="Search" class="outline-none px-2 py-1 w-full">
+
                     </div>
                     <div class="flex items-center px-2 text-blue-900 text-xl mx-2">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 24" width="48" height="48" fill="currentColor">
                             <path d="M2 12l4-4v8l-4-4zM30 12l-4 4V8l4 4zM8 10h16v4H8v-4z"/>
                         </svg>
-                        <input type="date" class="outline-none px-2 py-1 w-full mx-2 text-black text-lg">
+                        <input type="date" id="dateFilter" class="outline-none px-2 py-1 w-full mx-2 text-black text-lg">
                     </div>
                     <button type="submit" class="bg-blue-900 text-white font-bold py-2 px-6 rounded-lg ">
                         SEARCH
@@ -114,6 +115,32 @@
         document.getElementById('toggleSidebar').addEventListener('click', function () {
         document.body.classList.toggle('sidebar-open');
     });
+         document.getElementById('searchInput').addEventListener('keyup', function () {
+            let filter = this.value.toLowerCase();
+            let rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+            let text = row.innerText.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+        });
+    });
+        document.getElementById('searchInput').addEventListener('keyup', filterTable);
+        document.getElementById('dateFilter').addEventListener('change', filterTable);
+
+        function filterTable() {
+        let searchText = document.getElementById('searchInput').value.toLowerCase();
+        let selectedDate = document.getElementById('dateFilter').value; // วันที่จากปฏิทิน (YYYY-MM-DD)
+        let rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+            let textMatch = row.innerText.toLowerCase().includes(searchText);
+            let dateCell = row.cells[2]?.innerText.trim(); // ค่าจากคอลัมน์ DATE PAYMENT
+            let formattedDate = dateCell.split(" ")[0]; // ตัดเวลาออก เหลือแค่ YYYY-MM-DD
+            let dateMatch = selectedDate ? (formattedDate === selectedDate) : true; 
+
+            row.style.display = (textMatch && dateMatch) ? "" : "none";
+        });
+    }
     </script>
 
 </body>

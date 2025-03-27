@@ -71,6 +71,15 @@
         #sidebar.open~#mainContent .card {
             width: 90%;
         }
+        .modal {
+            position: fixed;
+            inset: 0; /* ทำให้ modal ครอบคลุมทั้งหน้าจอ */
+            background-color: rgba(0, 0, 0, 0.5); /* ทำให้พื้นหลังมืดลง */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100; /* ให้ modal อยู่หน้าสุด */
+        }
     </style>
 </head>
 <body class="bg-gray-900">
@@ -133,14 +142,16 @@
                         <!-- ปุ่มลบ มุมขวาบน -->
                         <button onclick="openModal('{{ $All_req->id_request_tour }}')" 
                             class="absolute top-2 right-2 cursor-pointer bg-red-500 hover:bg-red-700 text-white rounded-full p-2"
-                            @if($All_req->request_status == 'cancel' || $All_req->request_status == 'finish') style="display: none;" @endif>
+                            @if($All_req->request_status == 'cancal' || $All_req->request_status == 'finish') style="display: none;" @endif>
                             <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="3 6 5 6 21 6"></polyline>
                                 <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m5 6l4 4m0-4l-4 4"></path>
                             </svg>
                         </button>
+
                         <!-- Modal ยืนยันการลบ -->
-                        <div id="deleteModal_{{ $All_req->id_request_tour }}" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden">
+                        <div id="deleteModal_{{ $All_req->id_request_tour }}" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-50">
+
                             <div class="bg-white rounded-lg p-6 shadow-lg w-96">
                                 <h2 class="text-xl font-bold text-gray-800">ยืนยันการลบ</h2>
                                 <p class="text-gray-600 mt-2">คุณแน่ใจหรือไม่ว่าต้องการลบรายการนี้?</p>
@@ -154,6 +165,7 @@
                                 </form>
                             </div>
                         </div>
+
 
                         <!-- Icon บนขวา ที่สามารถกดได้ -->
                         <form action="/editAddtour" method="POST">
@@ -172,15 +184,21 @@
                         </form>
                             <img src="https://quintessentially.com/assets/noted/Header_2023-04-12-154210_sigz.webp" alt="Bangkok" class="w-1/3 object-cover">
                             <div class="p-6 flex-1">
-                                <h2 class="text-xl font-bold">{{  ucwords($All_req->name) }}</h2>
+                                <form action="/requestDetail" method="Post">
+                                    @csrf
+                                    <input type="hidden" name="requestID" value="{{ $All_req->id_request_tour }}">
+                                    <button type="submit" class="text-xl font-bold text-blue-500 hover:underline">
+                                        {{ ucwords($All_req->name) }}
+                                    </button>
+                                </form>
                                 <p class="text-gray-600">{{ $All_req->request_date}}</p>
                                 @switch($All_req->request_status)
                                 @case("finish")
                                 <p class="text-green-700 mt-2">{{ ucwords($All_req->request_status) }}</p>@break
                                 @case("ongoing")
                                 <p class="text-yellow-700 mt-2">{{ ucwords($All_req->request_status) }}</p>@break
-                                @case("cancel")
-                                <p class="text-red-700 mt-2">{{ ucwords($request_tour->request_status) }}</p>@break
+                                @case("cancal")
+                                <p class="text-red-700 mt-2">Cancel</p>@break
                                 @endswitch
                             </div>
                             <div class="p-6 bg-gray-100 w-1/4 text-right rounded-r-lg">
@@ -258,13 +276,14 @@
     <!-- JavaScript เปิด/ปิด Modal -->
     <script>
         function openModal(tourID) {
-            document.getElementById("tourID").value = tourID;
-            document.getElementById("deleteModal").classList.remove("hidden");
+            document.getElementById("deleteModal_" + tourID).classList.remove("hidden");
         }
 
-        function closeModal() {
-            document.getElementById("deleteModal").classList.add("hidden");
+        function closeModal(tourID) {
+            document.getElementById("deleteModal_" + tourID).classList.add("hidden");
         }
+
+
         document.getElementById("filterDropdown").addEventListener("change", function() {
             const colors = {
                 "": "text-black",
