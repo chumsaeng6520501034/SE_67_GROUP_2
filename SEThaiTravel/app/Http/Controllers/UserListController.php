@@ -486,7 +486,7 @@ class UserListController extends Controller
   {
     $idAccount = session('userID')->account_id_account;
     $paymentHistory = Payment::where('booking_user_list_account_id_account', $idAccount)->get();
-
+    // dd( $paymentHistory);
     return view('customer.payments', compact('paymentHistory'));
   }
   //รายละเอียดการโอนเงินครั้งใด ๆ ที่โดนเลือก//
@@ -494,14 +494,21 @@ class UserListController extends Controller
   {
     $idAccount = session('userID')->account_id_account;
     $idPayment = $request->paymentID;
-    $bill = payment::table('payment as p')
+    $bill = DB::table('payment as p')
       ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
       ->join('user_list as u', 'u.account_id_account', '=', 'p.booking_user_list_account_id_account')
       ->where('p.booking_user_list_account_id_account', $idAccount)
       ->where('p.id_payment', $idPayment)
-      ->get();
-    dd($bill);
-    return view('???', compact('bill'));
+      ->first();
+      $adultQty = (int) $bill->adult_qty;
+      $kidQty = (int) $bill->kid_qty;
+      $totalPrice = (float) $bill->total_price;
+
+      $totalPeople = $adultQty + $kidQty;
+      $finalTotal = $totalPeople * $totalPrice;
+
+    // dd($idAccount, $idPayment,$bill,$finalTotal);
+    return view('customer.detailPayment', compact('bill','finalTotal','totalPeople'));
   }
 
   function getAllRequestTour()

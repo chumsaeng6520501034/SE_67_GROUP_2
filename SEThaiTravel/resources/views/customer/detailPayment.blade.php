@@ -17,7 +17,7 @@
 
     <!-- Navbar -->
     <nav class="fixed top-0 left-0 w-full bg-gray-900 p-4 flex items-center space-x-4 z-50 shadow-lg">
-        <a href="/" class="text-2xl text-white font-bold pl-4 hover:text-gray-300 transition">
+        <a href="/retuntopayment" class="text-2xl text-white font-bold pl-4 hover:text-gray-300 transition">
             &#x2190;
         </a>
         <div class="text-2xl text-white font-semibold">PAYMENT</div>
@@ -37,44 +37,36 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <p class="text-sm text-gray-500">เลขที่การจอง</p>
-                        <p class="font-semibold text-blue-700">AAA123456</p>
+                        <p class="font-semibold text-blue-700">{{$bill->checknumber}}</p>
                     </div>
                     <div class="text-right">
                         <p class="text-sm text-gray-500">วันที่</p>
-                        <p class="font-semibold text-blue-700">25/03/2025</p>
+                        <p class="font-semibold text-blue-700">{{$bill->payment_date}}</p>
                     </div>
                 </div>
 
                 <div class="border-t border-b border-gray-200 py-4">
                     <div class="flex justify-between mb-2">
                         <span class="text-gray-600">ชื่อ</span>
-                        <span class="font-semibold">สมสุข สุขมากมาย</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">รหัสทัวร์</span>
-                        <span class="font-semibold text-blue-600">T98765</span>
+                        <span class="font-semibold">{{$bill->name .' ' .$bill->surname}}</span>
                     </div>
                 </div>
 
                 <div class="space-y-2">
                     <div class="flex justify-between">
                         <span class="text-gray-600">จำนวนคน</span>
-                        <span class="font-semibold">5</span>
+                        <span class="font-semibold">{{$totalPeople}}</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">ราคาทัวร์</span>
-                        <span class="font-semibold">฿5,000</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-red-600">ส่วนลด</span>
-                        <span class="text-red-600 font-semibold">-฿500</span>
+                        <span class="font-semibold">฿{{$bill->total_price}}</span>
                     </div>
                 </div>
 
                 <div class="border-t pt-4 mt-4">
                     <div class="flex justify-between items-center">
                         <span class="text-xl font-bold text-gray-800">ยอดรวม</span>
-                        <span class="text-2xl font-bold text-green-600">฿4,500</span>
+                        <span class="text-2xl font-bold text-green-600">฿{{$finalTotal}}</span>
                     </div>
                 </div>
             </div>
