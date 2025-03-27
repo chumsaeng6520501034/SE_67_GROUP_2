@@ -802,7 +802,6 @@ class GuideListController extends Controller
                 'user_list.name',
                 'user_list.surname'
             )->get();
-        // dd($payments);
         return view('guide.allPayment', compact('payments'));
     }
     public function searchPayment(Request $request)
