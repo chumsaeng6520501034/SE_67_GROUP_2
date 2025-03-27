@@ -67,7 +67,7 @@
         }
 
         body {
-            background-image: url('https://newsroom.aaa.com/wp-content/uploads/2023/10/iStock-816320512-1024x453.jpg');
+            background-image: url('https://codyduncan.com/blogimages/2012/12/cody-duncan-landscape-2012-01.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
