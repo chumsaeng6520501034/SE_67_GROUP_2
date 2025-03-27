@@ -7,18 +7,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background-image: url('https://codyduncan.com/blogimages/2012/12/cody-duncan-landscape-2012-01.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            font-family: 'Sarabun', sans-serif;
-            height: 100vh;
-            overflow: hidden;
-        }
+    background-image: url('https://codyduncan.com/blogimages/2012/12/cody-duncan-landscape-2012-01.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: 'Sarabun', sans-serif;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden; /* ป้องกันการเลื่อนของหน้าหลัก */
+}
         #sidebar,
         #mainContent {
-            transition: all 0.3s ease-in-out;
-        }
+    height: 100vh; /* ให้พื้นที่เนื้อหาครอบคลุมความสูงทั้งหมดของหน้าจอ */
+    overflow-y: auto; /* ทำให้มีการเลื่อนในกรณีที่เนื้อหามากกว่าความสูง */
+    padding: 20px;
+    box-sizing: border-box;
+}
 
         #sidebar {
             z-index: 50;
@@ -60,11 +64,12 @@
         }
 
         .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+}
 
         .card {
             width: 80%;

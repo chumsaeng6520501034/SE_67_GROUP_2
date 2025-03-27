@@ -18,6 +18,7 @@
             <div class="flex justify-between mb-4">
                 <div class="flex items-center space-x-2">
                     <input type="text" id="searchInput" class="p-2 border border-gray-600 bg-white text-gray-500 rounded-md w-[1110px] mx-auto" placeholder="Search..." onkeyup="searchTable()">
+
                     <button class="bg-blue-900 text-white px-4 py-2 rounded-md">Search</button>
                 </div>
             </div>
@@ -150,6 +151,35 @@
             document.body.appendChild(form);
             form.submit();
         }
+        function searchTable() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById('accountTable');
+    const rows = table.getElementsByTagName('tr');
+
+    for (let i = 1; i < rows.length; i++) {  // เริ่มจาก 1 เพราะแถวแรกเป็นหัวตาราง
+        const cells = rows[i].getElementsByTagName('td');
+        let match = false;
+
+        for (let j = 0; j < cells.length; j++) {
+            const cell = cells[j];
+            if (cell) {
+                const textValue = cell.textContent || cell.innerText;
+                if (textValue.toLowerCase().indexOf(filter) > -1) {
+                    match = true;
+                }
+            }
+        }
+
+        // ถ้าตรงกับคำค้นหาให้แสดงแถวนี้, ไม่งั้นซ่อนแถว
+        if (match) {
+            rows[i].style.display = '';
+        } else {
+            rows[i].style.display = 'none';
+        }
+    }
+}
+
     </script>
 
 </body>
