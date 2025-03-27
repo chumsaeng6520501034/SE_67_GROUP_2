@@ -12,7 +12,7 @@
     <!-- Navbar -->
     <nav
         class="fixed top-0 left-1/2 transform -translate-x-1/2 p-4 flex justify-start items-center space-x-6 z-50  bg-[#205781] w-full text-center ">
-        <a href="/guideGetMyOffer" class="text-2xl text-white font-bold">&#x2190;</a>
+        <a href="/corpGetMyOffer" class="text-2xl text-white font-bold">&#x2190;</a>
         <span class="font-bold text-xl text-white">THAI TRAVEL & TOUR</span>
     </nav>
 
