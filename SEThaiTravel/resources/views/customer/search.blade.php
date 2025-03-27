@@ -148,8 +148,8 @@
                         <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination" class="w-1/3 object-cover">
                         <form action="/customerViewProductDetail" method="POST">
                             @csrf
-                            <input type="hidden" name="tourID" value={{$item->id_tour}}>
-                            <input type="hidden" name="path" value={{$path}}>
+                            <input type="hidden" name="tourID" value={{ $item->id_tour }}>
+                            <input type="hidden" name="path" value={{ $path }}>
                             <button type="submit" class="absolute inset-0 w-full h-full opacity-0 "></button>
                         </form>
                         <!-- ส่วนข้อมูล -->
@@ -207,7 +207,8 @@
                             <div class="mt-32">
                                 <p class="text-2xl font-bold text-green-700">{{ number_format($item->price) }}฿</p>
                                 @if ($status === 'Available')
-                                    <form action="/logIn" method="GET">
+                                    <form action="/customerReserve" method="GET">
+                                        <input type="hidden" name="tourId" value={{$item->id_tour}}>
                                         <button type="submit"
                                             class="bg-blue-900 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm mt-2 relative z-[50]">
                                             RESERVE NOW
@@ -222,11 +223,14 @@
                                 <p
                                     class="text-base font-semibold mt-2 {{ $status === 'Available' ? 'text-green-700' : 'text-red-700' }}">
                                     NET AMOUNT:
-                                    {{ is_null($totalMember[$startArray]) ? 0 : $totalMember[$startArray++] }}/{{ $item->tour_capacity }}
+                                    {{ is_null($totalMember[$startArray]) ? 0 : $totalMember[$startArray] }}/{{ $item->tour_capacity }}
                                 </p>
                             </div>
                         </div>
                     </div>
+                    @php
+                        $startArray++;
+                    @endphp
                 @endforeach
             </div>
                 {{ $searchTourData->links() }}

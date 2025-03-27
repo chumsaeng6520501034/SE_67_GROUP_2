@@ -67,7 +67,7 @@
                     <div>
                         <label class="block text-gray-700 font-medium">Hotel price</label>
                         <input type="number" name="hotelPrice" min="1"
-                            class="w-full p-2 border rounded shadow-sm" value="{{ $offerData->hotel_price }}">
+                            class="w-full p-2 border rounded shadow-sm" value={{ $offerData->hotel_price }}>
                     </div>
                 </div>
                 <!-- Row 4 -->
