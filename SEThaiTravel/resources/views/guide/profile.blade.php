@@ -11,7 +11,7 @@
 
 <body class="bg-gray-100" x-data="{ openEditModal: false, openDeleteModal: false }">
     <!-- Header -->
-    <div class="bg-blue-900 text-white p-4 flex items-center">
+    <div class="bg-gray-900 text-white p-4 flex items-center">
         <a href="/guideHomePage" class="text-2xl mr-4">&#8592;</a>
         <h1 class="text-xl font-bold">PROFILE</h1>
     </div>

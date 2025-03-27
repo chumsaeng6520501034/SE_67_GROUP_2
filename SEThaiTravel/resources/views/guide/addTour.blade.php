@@ -18,7 +18,7 @@
     <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
         <!-- กล่องเนื้อหาที่อาจยาวจนต้อง scroll -->
         <div
-            class="bg-white bg-opacity-80 backdrop-blur-md p-10 rounded-2xl shadow-lg w-[600px] my-5 max-h-[90vh] overflow-y-auto">
+            class="bg-white bg-opacity-50 backdrop-blur-lg p-10 rounded-2xl shadow-lg w-[900px] my-5 max-h-[90vh] overflow-y-auto">
             <h2 class="text-center text-4xl font-bold text-[#002D62] mb-6">ADD TOUR</h2>
 
             <form action="/guideAddTour" method="POST" enctype="multipart/form-data">
