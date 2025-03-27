@@ -157,7 +157,7 @@ Route::get('/corpToAddtour',[CorpListController::class,'getAddOffer']); //addoff
 Route::post('/corpAddOffer',[CorpListController::class,'addOffer']);
 Route::get('/corpOffer',[CorpListController::class,'getOffer']); //หน้าข้อเสนอ
 Route::get('/corpOfferDetail',[CorpListController::class,'getOfferDetail']);
-Route::post('/corpEditOffer',[CorpListController::class,'toEditOffer']);
+Route::get('/corpEditOffer',[CorpListController::class,'toEditOffer']);
 Route::post('/corpUpdateOffer',[CorpListController::class,'updateMyOffer']);
 Route::get('/corpStaff',[CorpListController::class,'getStaffInCorp']); //staff list
 Route::get('/corpStaffDetail',[CorpListController::class,'staffDetail']);
