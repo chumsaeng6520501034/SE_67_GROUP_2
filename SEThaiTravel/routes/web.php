@@ -61,6 +61,10 @@ Route::post('/searchBooking',[UserListController::class,'searchBooking']);
 
 Route::get('/myRequest',[UserListController::class,'getAllRequestTour']);
 Route::get('/payments',[UserListController::class,'getUserPaymentHistory']);
+Route::get('/detailPayment',[UserListController::class,'getPaymentDetails']);
+Route::get('/retuntopayment',[UserListController::class,'getUserPaymentHistory']);
+
+
 Route::get('/deleteAccount',[AccountController::class,'deleteAccount']);
 Route::match(['get', 'post'],'/detailBooking',[UserListController::class,'getDetailBooking']);
 Route::match(['get', 'post'],'/editAddtour',[UserListController::class,'viewEditRequestTour']);
@@ -174,7 +178,6 @@ Route::get('/corpPayments',[CorpListController::class,'getAllPaymentHistory']);/
 Route::get('/corpSearchAllPayment',[CorpListController::class,'searchPayment']);
 Route::get('/corpPaymentDetail',[CorpListController::class,'getPaymentDetail']);
 Route::get('/corpStatistic',[CorpListController::class,'getStatistic']);//stat
-
 
 //guide section
 Route::get('/guideProfile',[GuideListController::class,'viewProfile']);//profile
