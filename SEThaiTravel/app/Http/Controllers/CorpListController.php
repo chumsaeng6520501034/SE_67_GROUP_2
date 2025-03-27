@@ -724,7 +724,7 @@ class CorpListController extends Controller
     function staffDetail(Request $request){
         $guideID = $request->guideID;
         $idAccount = session('userID')->account_id_account;
-        $guideInfo = GuideList::where('account_id_account', $guideID)->get();
+        $guideInfo = GuideList::where('account_id_account', $guideID)->first();
         $guideWork = DB::table('guide_list as g')
             ->join('Tour_has_guide_list as thg', 'thg.guide_list_account_id_account', '=', 'g.account_id_account')
             ->join('tour as t', 't.id_tour', '=', 'thg.tour_id_tour')
@@ -737,8 +737,8 @@ class CorpListController extends Controller
             ->where('guide_list.account_id_account', $idAccount)
             ->selectRaw('COUNT(*) as total_reviews, AVG(review.sp_score) as average_score')
             ->first();
-        //dd($guideWork);
-        return view('corporation.profile', compact('guideInfo', 'guideWork', 'guideScore'));
+        // dd($guideInfo, $guideWork,$guideScore);
+        return view('corporation.profilemyStaff', compact('guideInfo', 'guideWork', 'guideScore'));
     }
     //เสร็จแล้ว
     function getAllPaymentHistory(Request $request){
