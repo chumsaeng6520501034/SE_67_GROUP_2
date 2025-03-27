@@ -72,6 +72,9 @@ Route::get('/de', function () {
 Route::get('/addTour',[UserListController::class,'viewAddTour']);
 Route::post('/addRequest',[UserListController::class,'insertRequest']);
 Route::post('/deleteRequestTour',[UserListController::class,'deleteMyTour']);
+Route::match(['get', 'post'],'/requestDetail',[UserListController::class,'getRequestDetail'])->name('requestDetail');
+Route::post('/statusApprove',[UserListController::class,'statusApprove']);
+Route::post('/statusReject',[UserListController::class,'statusReject']);
 
 Route::get('/customerProfile',[UserListController::class,'viewProfile']);
 Route::post('/customerEditProfile',[UserListController::class,'updateUser']);
@@ -145,9 +148,9 @@ Route::post('/corpUpdateImage',[CorpListController::class,'updateImage']);
 
 Route::get('/corpToAddtour',[CorpListController::class,'getAddOffer']); //addoffer
 Route::post('/corpAddOffer',[CorpListController::class,'addOffer']);
-Route::get('/corpOffer',[CorpListController::class,'getOffer']); //offer lsit
-Route::post('/corpOfferDetail',[CorpListController::class,'getOfferDetail']);
-Route::post('/corpEditOffer',[CorpListController::class,'toEditOffer']); //update offer
+Route::get('/corpOffer',[CorpListController::class,'getOffer']); //หน้าข้อเสนอ
+Route::get('/corpOfferDetail',[CorpListController::class,'getOfferDetail']);
+Route::post('/corpEditOffer',[CorpListController::class,'toEditOffer']);
 Route::post('/corpUpdateOffer',[CorpListController::class,'updateMyOffer']);
 Route::get('/corpStaff',[CorpListController::class,'getStaffInCorp']); //staff list
 Route::get('/corpStaffDetail',[CorpListController::class,'staffDetail']);
@@ -190,4 +193,7 @@ Route::get('/guideSearchOffer',[GuideListController::class,'searchOffer']);
 Route::get('/guideOfferDetail',[GuideListController::class,'getOfferDetail']);
 Route::get('/guideEditOffer',[GuideListController::class,'toEditOffer']);
 Route::post('/guideUpdateOffer',[GuideListController::class,'updateOffer']);
+Route::post('/guideDeleteOffer',[GuideListController::class,'deleteOffer']);
+Route::get('/getAddOfferPage',[GuideListController::class,'getAddOfferPage']);
+Route::post('/guideAddOffer',[GuideListController::class,'addOfferS']);
 
