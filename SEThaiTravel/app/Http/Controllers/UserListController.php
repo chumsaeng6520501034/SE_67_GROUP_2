@@ -177,27 +177,14 @@ class UserListController extends Controller
       ->where('status', 'NOT LIKE', 'cancel')
       ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
       ->value('Total_Member'); // อันนี้คือคำสั่งหาจำนวนของคนที่จองมาทั้งหมดที่ยังไม่ยกเลิกเอาไว้ใช้เช็คตอนกดจองถ้าเต็มก็จะไม่สามารถกดจองได้เพราะเต็ม
-    $tourCapacity = $request->Capacity; //$request->Capacity
-    //อันนี้ไว้เผื่อตอนกดจองมาในตอนที่ทัวร์เต็ม หรือมีอีกทางแก้ที่ UI คือ ถ้าทัวร์เต็มก็ไม่มีให้กดจอง ได้เเค่ดูรายละเอียด
-    if ($totalMember == $tourCapacity) {
-      return redirect()->back()->withErrors(['fullBooking' => 'Full Booking']);
-    }
-    $tourName = $request->tourName; //$request->tourName
-    $tourPrice = $request->tourPrice; //$request->tourPrice
-    $userID = session('userID')->account_id_account; //$request->userId
-    return view('bookingTour', compact('tourID', 'userID', 'tourName', 'tourPrice', 'totalMember', 'tourCapacity'));
+    $tourData = Tour::where('id_tour',$tourID)->first();
+    return view('customer.buyTour',compact('tourData','totalMember'));
   }
   function insertBooking(Request $request)
-  { //เพิ่มการจองทัวร์ลงใน database
-    if ($request->adultqty == 0 && $request->kidqty == 0) {
-      return redirect()->back()->withErrors(['zero_Input' => 'adultqty or kid qty must be greater than 0'])->withInput();
-    }
+  { 
+    if($request->payment_option == 'later'){
     $tourPrice = $request->tourPrice;
     $totalPeople = $request->adultqty + $request->kidqty;
-    //เงื่อนไขไว้เช็คตอนจองเกินจำนวนคนที่เหลือ
-    if ($totalPeople + $request->totalMember > $request->tourCapacity) {
-      return redirect()->back()->withErrors(['OverBooking' => "You have overbooked by " . $totalPeople + $request->totalMember - $request->tourCapacity . " people. Please reduce the number of reservations."])->withInput();
-    }
     $totalPrice = $tourPrice * $totalPeople;
     $bookingData = [
       'user_list_account_id_account' => session('userID')->account_id_account,
@@ -210,9 +197,38 @@ class UserListController extends Controller
       'kid_qty' => $request->kidqty,
       'status' => 'In process'
     ];
-    // dd($bookingData);
     Booking::insert($bookingData);
-    return view('summaryBooking', compact('totalPrice'));
+    return redirect('/myBooking');
+   }
+   else{
+    $tourPrice = $request->tourPrice;
+    $totalPeople = $request->adultqty + $request->kidqty;
+    $totalPrice = $tourPrice * $totalPeople;
+    $bookingData = [
+      'user_list_account_id_account' => session('userID')->account_id_account,
+      'tour_id_tour' => $request->tourID,
+      'booked_date' => Carbon::now()->toDateString(),
+      'payment_date' => Carbon::now()->addDays(5)->toDateTimeString(),
+      'total_price' => $totalPrice,
+      'description' => $request->description,
+      'adult_qty' => $request->adultqty,
+      'kid_qty' => $request->kidqty,
+      'status' => 'paid'
+    ];
+    $booking = new Booking($bookingData);
+    $booking->save();
+    $bookingId = $booking->id_booking;
+    Booking::insert($bookingData);
+    $paymentData =[
+      'booking_Tour_id_Tour' => $bookingId,
+      'booking_user_list_account_id_account' => session('userID')->account_id_account,
+      'payment_date' => Carbon::now()->toDateTimeString(),
+      'checknumber' => $request->checknumber,
+      'total_price' => $totalPrice
+    ];
+    Payment::insert($paymentData);
+    return redirect('/myBooking');
+   }
   }
   function cancelBookingTour(Request $request)
   { //ยกเลิกทัวร์
@@ -309,14 +325,14 @@ class UserListController extends Controller
     $path = $_SERVER['REQUEST_URI'];
     if (is_numeric($name)) { //เช็คว่าเป็นตัวเลขไหมถ้าเป็นจะ search แบบ private 
       $searchTourData = Tour::where(function ($query) use ($name, $startDate, $endDate, $capacity) {
-        $query->where('name', 'LIKE', '%' . $name . '%')
+        $query->where('offer_id_offer', '=', $name)
           ->orWhere('start_tour_date', '=', $startDate) // เปลี่ยน LIKE เป็น =
           ->orWhere('end_tour_date', '=', $endDate) // เปลี่ยน LIKE เป็น =
           ->orWhere('tour_capacity', '>=', $capacity); // ไม่มี LIKE กับตัวเลข
       })
         ->where('status', 'LIKE', 'ongoing')
         ->where('type_tour', 'LIKE', 'private')
-        ->paginate(2)->appends($request->query());
+        ->paginate(10)->appends($request->query());
     } else {
       $searchTourData = Tour::where(function ($query) use ($name, $startDate, $endDate, $capacity) {
         $query->where('start_tour_date', '=', $startDate)
@@ -326,34 +342,35 @@ class UserListController extends Controller
         ->whereRaw('LOWER(tour.name) LIKE LOWER(?)', ['%' . $name . '%'])
         ->where('status', 'LIKE', 'ongoing')
         ->where('type_tour', 'LIKE', 'public')
-        ->paginate(2)->appends($request->query());
+        ->paginate(10)->appends($request->query());
     }
+    $totalData = $searchTourData->count();
     $ownerData = [];
     $totalMember = [];
     $ownerScore = [];
-    foreach ($searchTourData as $data) { //อันนหาหาข้อมูลของเจ้าของทัวร์นั้นๆแล้วส่งไปใน view ด้วยเผื่อใช้
-      switch ($data->from_owner) {
+    for ($i = 0; $i < $totalData; $i++) { //อันนหาหาข้อมูลของเจ้าของทัวร์นั้นๆแล้วส่งไปใน view ด้วยเผื่อใช้
+      switch ($searchTourData[$i]->from_owner) {
         case "guide":
-          $ownerData[] = GuideList::find($data->owner_id)->first();
+          $ownerData[] = GuideList::where('account_id_account', '=', $searchTourData[$i]->owner_id)->first();
           $ownerScore[] = Review::leftJoin('guide_list', 'review.guide_list_account_id_account', '=', 'guide_list.account_id_account')
-            ->where('guide_list.account_id_account', $data->owner_id) // กรองเฉพาะ owner_id ที่ต้องการ
+            ->where('guide_list.account_id_account', $searchTourData[$i]->owner_id) // กรองเฉพาะ owner_id ที่ต้องการ
             ->selectRaw('COUNT(*) as total_reviews, AVG(review.sp_score) as average_score')
             ->first();
           break;
         case "corp":
-          $ownerData[] = CorpList::find($data->owner_id)->first();
+          $ownerData[] = CorpList::find($searchTourData[$i]->owner_id)->first();
           $ownerScore[] = Review::leftJoin('booking', 'review.booking_id_booking', '=', 'booking.id_booking')
             ->leftJoin('tour', function ($join) {
               $join->on('tour.id_tour', '=', 'booking.tour_id_tour')
                 ->where('tour.from_owner', 'LIKE', 'corp');
             })
             ->leftJoin('corp_list', 'corp_list.account_id_account', '=', 'tour.owner_id')
-            ->where('corp_list.account_id_account', $data->owner_id)
+            ->where('corp_list.account_id_account', $searchTourData[$i]->owner_id)
             ->selectRaw('COUNT(*) as total_reviews, AVG(review.sp_score) as average_score')
             ->first(); // ใช้ `first()` เพราะดึงแค่บริษัทเดียว
           break;
       }
-      $totalMember[] = Booking::where('tour_id_tour', $data->id_tour) //TourID ใช้ของที่กดจองมา
+      $totalMember[] = Booking::where('tour_id_tour', $searchTourData[$i]->id_tour) //TourID ใช้ของที่กดจองมา
         ->where('status', 'NOT LIKE', 'cancel')
         ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
         ->value('Total_Member');
@@ -365,31 +382,28 @@ class UserListController extends Controller
     $name = $request->searchKey;
     $startDate = $request->startDate;
     $endDate = $request->endDate;
-    $capacity = $request->capacity;
     $minBudget = $request->minBudget;
     $maxBudget = $request->maxBudget;
     $path = $_SERVER['REQUEST_URI'];
     if (is_numeric($name)) { //เช็คว่าเป็นตัวเลขไหมถ้าเป็นจะ search แบบ private 
-      $searchTourData = Tour::where(function ($query) use ($name, $startDate, $endDate, $capacity) {
+      $searchTourData = Tour::where(function ($query) use ($name, $startDate, $endDate) {
         $query->where('offer_id_offer', '=', $name)
           ->orWhere('start_tour_date', '=', $startDate) // เปลี่ยน LIKE เป็น =
-          ->orWhere('end_tour_date', '=', $endDate) // เปลี่ยน LIKE เป็น =
-          ->orWhere('tour_capacity', '>=', $capacity); // ไม่มี LIKE กับตัวเลข
+          ->orWhere('end_tour_date', '=', $endDate);
       })
         ->where('status', 'LIKE', 'ongoing')
         ->where('type_tour', 'LIKE', 'private')
-        ->paginate(2)->appends($request->query());
+        ->paginate(10)->appends($request->query());
     } else {
-      $searchTourData = Tour::where(function ($query) use ($name, $startDate, $endDate, $capacity) {
-        $query->where('start_tour_date', '=', $startDate)
-          ->orWhere('end_tour_date', '=',  $endDate)
-          ->orWhere('tour_capacity', '>=', $capacity);
+      $searchTourData = Tour::where(function ($query) use ($name, $startDate, $endDate) {
+        $query->whereRaw('LOWER(tour.name) LIKE LOWER(?)', ['%' . $name . '%'])
+          ->orWhere('start_tour_date', '=', $startDate)
+          ->orWhere('end_tour_date', '=',  $endDate);
       })
-        ->whereRaw('LOWER(tour.name) LIKE LOWER(?)', ['%' . $name . '%'])
         ->where('status', 'LIKE', 'ongoing')
         ->whereBetween('price', [$minBudget, $maxBudget])
         ->where('type_tour', 'LIKE', 'public')
-        ->paginate(2)->appends($request->query());
+        ->paginate(10)->appends($request->query());
     }
     $ownerData = [];
     $totalMember = [];
@@ -397,7 +411,7 @@ class UserListController extends Controller
     foreach ($searchTourData as $data) { //อันนหาหาข้อมูลของเจ้าของทัวร์นั้นๆแล้วส่งไปใน view ด้วยเผื่อใช้
       switch ($data->from_owner) {
         case "guide":
-          $ownerData[] = GuideList::find($data->owner_id)->first();
+          $ownerData[] = GuideList::where('account_id_account', '=', $data->owner_id)->first();
           $ownerScore[] = Review::leftJoin('guide_list', 'review.guide_list_account_id_account', '=', 'guide_list.account_id_account')
             ->where('guide_list.account_id_account', $data->owner_id) // กรองเฉพาะ owner_id ที่ต้องการ
             ->selectRaw('COUNT(*) as total_reviews, AVG(review.sp_score) as average_score')
@@ -745,11 +759,12 @@ class UserListController extends Controller
         $tourData = [
             "request_status" => 'cancal'
         ];
+        //  dd($request->tourID);
         RequestTour::where('id_request_tour', $request->tourID)->update($tourData);
         return redirect('/myRequest');
     }
   function getRequestDetail(Request $request){
-      // dd($request->requestID);
+      //dd($request->requestID);
       $idAccount = session('userID')->account_id_account;
       $RequestDetail = RequestTour::join('user_list', 'request_tour.user_list_account_id_account', '=', 'user_list.account_id_account')
             ->where('id_request_tour',$request->requestID)
@@ -952,5 +967,24 @@ class UserListController extends Controller
     // dd($historyData);
     return view('customer.history', compact('historyData', 'path'));
   }
-  
+  public function getPaymentPage(Request $request){
+    $tourData = Tour::where('id_tour',$request->tourID)->first();
+    $bookingData = Booking::where('id_booking',$request->bookingID)->first();
+    return view('customer.payBooking',compact('tourData','bookingData'));
+  }
+  public function insertPayment(Request $request){
+    $bookingData = [
+      'status' => 'paid'
+    ];
+     Booking::where('id_booking',$request->bookingID)->update($bookingData);
+    $paymentData =[
+      'booking_Tour_id_Tour' => $request->bookingID,
+      'booking_user_list_account_id_account' => session('userID')->account_id_account,
+      'payment_date' => Carbon::now()->toDateTimeString(),
+      'checknumber' => $request->checknumber,
+      'total_price' => $request->totalPrice
+    ];
+    Payment::insert($paymentData);
+    return redirect('/myBooking');
+  }
 }

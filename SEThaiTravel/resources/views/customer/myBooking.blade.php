@@ -180,7 +180,19 @@
                                 <p class="text-gray-600 text-md font-semibold">
                                     {{ date('Y-m-d', strtotime($booking->payment_date)) }}</p>
                                 <p class="text-gray-800 m-2 text-md font-bold">{{ $booking->total_price }} ฿</p>
-                                <button class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">PAY NOW</button>
+                                @switch($booking->status)
+                                @case("paid")
+                                <button class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">ALREADY PAID</button>
+                                @break
+        
+                                @case("In process")
+                                <form action="/getPaymentPage" method="get">
+                                    <input type="hidden" name="tourID" value={{$booking->tour_id_tour}}>
+                                    <input type="hidden" name="bookingID" value={{$booking->id_booking}}>
+                                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">PAY NOW</button>
+                                </form>
+                                @break
+                                @endswitch
                             </div>
                         </div>
                     </div>

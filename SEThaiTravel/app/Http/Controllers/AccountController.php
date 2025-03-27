@@ -37,7 +37,7 @@ class AccountController extends Controller
     // }
     $account = Account::where('username', $request->username)->where('password', $request->password)->where('status', 'NOT LIKE', 'disappear')->where('status', 'NOT LIKE', 'pending')->first();
     if (is_null($account)) {
-      return redirect()->back()->withErrors(['login_failed' => 'Invalid username or password'])->withInput();
+      return redirect()->back()->withErrors(['login_failed' => 'Invalid username or password or Your account is pending'])->withInput();
     } else {
       switch ($account->permittion_acc) {
         case "admin":
@@ -206,7 +206,7 @@ class AccountController extends Controller
       })
         ->where('status', 'LIKE', 'ongoing')
         ->where('type_tour', 'LIKE', 'private')
-        ->paginate(2)->appends($request->query());
+        ->paginate(10)->appends($request->query());
     } else {
       $searchTourData = Tour::where(function ($query) use ($name, $startDate, $endDate, $capacity) {
         $query->where('start_tour_date', '=', $startDate)
@@ -216,7 +216,7 @@ class AccountController extends Controller
         ->whereRaw('LOWER(tour.name) LIKE LOWER(?)', ['%' . $name . '%'])
         ->where('status', 'LIKE', 'ongoing')
         ->where('type_tour', 'LIKE', 'public')
-        ->paginate(2)->appends($request->query());
+        ->paginate(10)->appends($request->query());
     }
     $ownerData = [];
     $totalMember = [];
