@@ -93,7 +93,7 @@
                     <div class="relative flex-1 text-white text-xl font-bold">
                         <label>Tour name</label>
                         <input type="text" id="searchBar" name="name" placeholder="Search"
-                            class="w-full p-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="w-full p-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black">
                         <span class="absolute left-3 top-8 text-gray-500">🔍</span>
                     </div>
                     <div class="relative flex-1 text-white text-xl font-bold">

@@ -11,7 +11,7 @@
 <body class="bg-gray-900">
     <!-- Navbar -->
     <nav
-        class="fixed top-0 left-1/2 transform -translate-x-1/2 p-4 flex justify-start items-center space-x-6 z-50  bg-blue-900 w-full ">
+        class="fixed top-0 left-1/2 transform -translate-x-1/2 p-4 flex justify-start items-center space-x-6 z-50  bg-gray-900 w-full ">
         <a href="{{ $path }}" class="text-2xl text-white font-bold">&#x2190;</a>
         <h1 class="text-xl font-bold text-white">HISTORY</h1>
     </nav>
