@@ -65,11 +65,11 @@
 
 <body>
     <div class="flex">
-        @include('components.sidebarCorporation')
+         @include('components.sidebarCorporation')
 
         <div id="mainContent" class="flex-1 p-10 transition-all duration-300 overflow-y-auto ml-2">
             <!-- Search and Filter -->
-            <form action="/guideSearchOffer" method="GET">
+            <form action="/corpSearchOffer" method="GET">
                 <div class="flex items-center bg-white/10 backdrop-blur-2xl p-4 rounded-lg mb-4 space-x-4 w-3/4 mx-52">
                     <div class="relative flex-1 text-white font-bold text-xl">
                         <label>Tour name</label>
@@ -105,7 +105,7 @@
             </form>
             {{-- เริ่มตรงนี้ --}}
             <div class="card-wrapper">
-                @foreach ($requestTours as $offer)
+                @foreach ($requestTours as $myoffer)
                     <div class="card-container m-4">
                         <div class="card bg-white rounded-lg shadow-lg flex overflow-hidden">
                             <img src="https://quintessentially.com/assets/noted/Header_2023-04-12-154210_sigz.webp"
@@ -122,57 +122,57 @@
                                 @dd($offer->status)
                                 @switch($offer->status)
                                     @case('new')
-                                        <p class="text-[#007BFF] text-sm mt-2 font-bold">{{ ucwords($offer->status) }}</p>
+                                        <p class="text-[#007BFF] text-sm mt-2 font-bold">{{ ucwords($myoffer->status) }}</p>
                                     @break
 
                                     @case('reject')
-                                        <p class="text-[#FF5733] text-sm mt-2 font-bold">{{ ucwords($offer->status) }}</p>
+                                        <p class="text-[#FF5733] text-sm mt-2 font-bold">{{ ucwords($myoffer->status) }}</p>
                                     @break
 
                                     @case('approve')
-                                        <p class="text-[#28A745] text-sm mt-2 font-bold">{{ ucwords($offer->status) }}</p>
+                                        <p class="text-[#28A745] text-sm mt-2 font-bold">{{ ucwords($myoffer->status) }}</p>
                                     @break
                                 @endswitch
-                                <p class="text-gray-400 text-xs mt-1">Start Date: {{ $offer->start_tour_date }}</p>
-                                <p class="text-gray-400 text-xs  mt-1">End Date: {{ $offer->end_tour_date }}</p>
+                                <p class="text-gray-400 text-xs mt-1">Start Date: {{ $myoffer->start_tour_date }}</p>
+                                <p class="text-gray-400 text-xs  mt-1">End Date: {{ $myoffer->end_tour_date }}</p>
                             </div>
                             <div class="bg-white rounded-lg p-4 shadow h-full flex flex-col justify-between">
                                 <!-- ส่วนบน: วันที่ -->
                                 <div class="text-right">
                                     <h2 class="font-bold">Request Date</h2>
-                                    <p>{{ $offer->request_date }}</p>
+                                    <p>{{ $myoffer->request_date }}</p>
                                     <h2 class="font-bold mt-2">End Request Date</h2>
-                                    <p>{{ $offer->end_of_request_date }}</p>
+                                    <p>{{ $myoffer->end_of_request_date }}</p>
                                 </div>
 
                                 <!-- ส่วนล่าง: ปุ่ม -->
                                 <div class="flex justify-end space-x-2 mt-4">
-                                    <form action="/guideEditOffer" method="GET">
-                                        <input type="hidden" name="offerID" value="{{ $offer->id_offer }}">
+                                    <form action="/corpEditOffer" method="GET">
+                                    <input type="hidden" name="offerID" value={{ $myoffer->id_offer }}>
                                         <button
                                             class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
                                     </form>
-                                    <button onclick="openModal({{ $offer->id_offer }})"
+                                    <button onclick="openModal({{ $myoffer->id_offer }})"
                                         class="bg-red-600 text-white px-4 py-2 rounded-md font-bold">Delete</button>
                                 </div>
                             </div>
 
                         </div>
                     </div>
-                    <div id="deleteModal{{ $offer->id_offer }}"
+                    <div id="deleteModal{{ $myoffer->id_offer }}"
                         class="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 hidden">
                         <div class="bg-white p-6 rounded-md shadow-lg w-1/3">
                             <h3 class="text-lg font-semibold text-gray-800">Are you sure you want to delete this offer?
                             </h3>
-                            <p class="text-sm text-gray-600">{{ $offer->name }}</p>
+                            <p class="text-sm text-gray-600">{{ $myoffer->name }}</p>
                             <div class="mt-4 flex justify-between">
                                 <!-- Cancel Button -->
-                                <button onclick="closeModal({{ $offer->id_offer }})"
+                                <button onclick="closeModal({{ $myoffer->id_offer }})"
                                     class="bg-gray-400 text-white px-4 py-2 rounded-md">Cancel</button>
                                 <!-- Confirm Button (Form for Deleting) -->
-                                <form action="/guideDeleteOffer" method="POST">
+                                <form action="/corpDeleteOffer" method="POST">
                                     @csrf
-                                    <input type="hidden" name="offerID" value={{ $offer->id_offer }}>
+                                    <input type="hidden" name="offerID" value={{ $myoffer->id_offer }}>
                                     <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md">Confirm
                                         Delete</button>
                                 </form>

@@ -932,6 +932,7 @@ class GuideListController extends Controller
         $OfferID = $request->offerID;
         $offerData = Offer::join('request_tour', 'request_tour.id_request_tour', '=', 'offer.request_tour_id_request_tour')
             ->where('id_offer', $OfferID)->first();
+            
         $getHotel = $this->getHotelByName($offerData->hotel);
         if (empty($getHotel->original["data"])) {
             $getHotel = null;
@@ -940,9 +941,9 @@ class GuideListController extends Controller
             $provinceId = $getHotel->original["data"][0]["location"]["province"]["provinceId"];
             $getHotel = $getHotel->original["data"][0]["name"];
         }
-
         return view('guide.editOffer', compact('provinceId', 'getHotel', 'offerData'));
     }
+
     public function getHotelByName($name)
     {
         $response = Http::withHeaders([
