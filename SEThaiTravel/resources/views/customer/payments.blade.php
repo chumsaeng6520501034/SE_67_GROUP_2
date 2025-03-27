@@ -61,6 +61,9 @@
                         </svg>
                         <input type="date" class="outline-none px-2 py-1 w-full mx-2 text-black text-lg">
                     </div>
+                    <button type="submit" class="bg-blue-900 text-white font-bold py-2 px-6 rounded-lg ">
+                        SEARCH
+                    </button>
                 </div>
 
                 <!-- Payment Table -->

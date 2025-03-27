@@ -9,7 +9,7 @@
 <body class="relative w-full h-screen bg-cover bg-center" style="background-image: url('https://my.kapook.com/imagescontent/fb_img/816/s_96528_4076.jpg');">
     
     <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
-        <div class="bg-white bg-opacity-80 backdrop-blur-md p-10 rounded-2xl shadow-lg w-[900px]">
+        <div class="bg-white bg-opacity-50 backdrop-blur-lg p-10 rounded-2xl shadow-lg w-[900px]">
             <h2 class="text-center text-4xl font-bold text-[#002D62] mb-6">ADD TOUR</h2>
 
             <form action="/addRequest" method="POST">
@@ -88,7 +88,7 @@
                     <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded shadow-lg text-lg hover:bg-blue-800 transition">
                         Submit
                     </button>
-                    <button type="button" onclick="window.history.back();" class="bg-gray-500 text-white px-6 py-2 rounded shadow-lg text-lg hover:bg-gray-700 transition ml-4">
+                    <button type="button" onclick="window.history.back();" class="bg-red-700 text-white px-6 py-2 rounded shadow-lg text-lg hover:bg-red-600 transition ml-4">
                         Cancel
                     </button>
                 </div>
