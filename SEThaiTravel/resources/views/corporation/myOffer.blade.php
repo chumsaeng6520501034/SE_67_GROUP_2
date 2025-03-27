@@ -145,7 +145,7 @@
 
                                 <!-- ส่วนล่าง: ปุ่ม -->
                                 <div class="flex justify-end space-x-2 mt-4">
-                                    <form action="/guideEditOffer" method="GET">
+                                    <form action="/corpEditOffer" method="GET">
                                         <input type="hidden" name="offerID" value="{{ $offer->id_offer }}">
                                         <button
                                             class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>

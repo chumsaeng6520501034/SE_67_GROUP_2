@@ -53,7 +53,10 @@ Route::get('/logIn',[AccountController::class,'viewLogin']);
 Route::get('/logOut',[AccountController::class,'logOut']);
 Route::post('/checkLogIn',[AccountController::class,'checkLogin']);
 Route::get('/calendar',[UserListController::class,'viewCalendar']);
+
 Route::get('/myBooking',[UserListController::class,'viewMyBooking']);
+Route::get('/customerBooking',[UserListController::class,'viewMyBooking']);
+
 Route::post('/searchBooking',[UserListController::class,'searchBooking']);
 
 Route::get('/myRequest',[UserListController::class,'getAllRequestTour']);
@@ -137,8 +140,12 @@ Route::post('/corpAddTour',[CorpListController::class,'addTour']);
 //ยังไม่เสร็จ ตั้งแต่ตรงนี้
 Route::get('/corpMyTour',[CorpListController::class,'getTour']); //หน้าทัวร์ของฉัน
 Route::post('/corpDetailMyTour',[CorpListController::class,'getMyTourDetail']);
+Route::get('/corpMyinTour',[CorpListController::class,'getTour']); //หน้าทัวร์ของฉัน
 
 Route::get('/corpHistory',[CorpListController::class,'getHistory']); //หน้าประวัติขาย
+Route::post('/corpDetailSellHistory',[CorpListController::class,'getSellHistoryDetail']);
+Route::get('/corpSellHistory',[CorpListController::class,'getHistory']);
+
 //ถึงตรงนี้
 Route::get('/corpEditTourPage',[CorpListController::class,'editMyTourPage']);
 

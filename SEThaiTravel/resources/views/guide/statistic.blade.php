@@ -7,10 +7,18 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script> 
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap">
     <title>Statistic</title>
     <style>
-        body,
+        body {
+            background-image: url('https://codyduncan.com/blogimages/2012/12/cody-duncan-landscape-2012-01.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: 'Sarabun', sans-serif;
+        }
+    
         html {
             height: 100%;
         }
@@ -64,16 +72,16 @@
     <div class="flex h-screen">
         <main class="p-6" id="mainContent">
             <!-- Row for graphs -->
-            <div class="flex justify-between space-x-2 mb-6 w-full" id="chart">
+            <div class="flex justify-between space-x-2 w-full mt-12 text-white" id="chart ">
                 <!-- Tourist per Month Graph -->
-                <div class="bg-white p-6 rounded-lg shadow-lg w-full sm:w-6/12 lg:w-6/12 xl:w-6/12">
-                    <div class="text-xl font-semibold text-center mb-4">Tourists per month</div>
+                <div class="bg-white/10 backdrop-blur-2xl p-6 rounded-lg shadow-lg w-full sm:w-6/12 lg:w-6/12 xl:w-6/12">
+                    <div class="text-xl font-semibold text-center mb-4 ">Tourists / month</div>
                     <canvas id="touristPerMonthChart"></canvas>
                 </div>
 
                 <!-- Revenue per Month Graph -->
-                <div class="bg-white p-6 rounded-lg shadow-lg w-full  sm:w-6/12 lg:w-6/12 xl:w-6/12">
-                    <div class="text-xl font-semibold text-center mb-4">Revenue per month</div>
+                <div class="bg-white/10 backdrop-blur-2xl p-6 rounded-lg shadow-lg w-full  sm:w-6/12 lg:w-6/12 xl:w-6/12">
+                    <div class="text-xl font-semibold text-center mb-4">Revenue / month</div>
                     <canvas id="revenuePerMonthChart"></canvas>
                 </div>
             </div>
@@ -81,13 +89,13 @@
 
 
             <!-- Data Display Boxes -->
-            <div class="flex justify-between space-x-6 mt-auto mb-2">
-                <div class="bg-[#f0f8ff] p-6 rounded-lg shadow-md w-1/4 text-center flex  flex-col justify-center item-center">
-                    <div class="font-bold text-lg">Tourists per month</div>
-                    <div class="mt-4">{{ $avgTourist[0]->avgTourist }}</div>
+            <div class="flex justify-between space-x-6 mt-auto mb-2 text-white">
+                <div class="bg-white/10 backdrop-blur-2xl p-6 rounded-lg shadow-md w-[300px] text-center flex  flex-col justify-center item-center">
+                    <div class="font-bold text-xl ">Tourists / month</div>
+                    <div class="mt-4 text-lg">{{ $avgTourist[0]->avgTourist }}</div>
                 </div>
-                <div class="bg-[#f0f8ff] p-6 rounded-lg shadow-md w-1/4 text-center flex  flex-col justify-center item-center">
-                    <div class="font-bold text-lg">Revenue per month</div>
+                <div class="bg-white/10 backdrop-blur-2xl p-6 rounded-lg shadow-md w-[300px] text-center flex  flex-col justify-center item-center">
+                    <div class="font-bold text-xl">Revenue / month</div>
                     <div class="mt-4">
                         @if (is_null($avgRevenue[0]->avgRevenue))
                             0
@@ -97,13 +105,13 @@
 
                     </div>
                 </div>
-                <div class="bg-[#f0f8ff] p-6 rounded-lg shadow-md w-1/4 text-center flex  flex-col justify-center item-center">
-                    <div class="font-bold text-lg">Tourists per <br> year</div>
-                    <div class="mt-4">{{ $touristPerYear[0]->tourListPerYear }}</div>
+                <div class="bg-white/10 backdrop-blur-2xl p-6 rounded-lg shadow-md w-[300px] text-center flex  flex-col justify-center item-center">
+                    <div class="font-bold text-xl">Tourists / year</div>
+                    <div class="mt-4 text-lg">{{ $touristPerYear[0]->tourListPerYear }}</div>
                 </div>
-                <div class="bg-[#f0f8ff] p-6 rounded-lg shadow-md w-1/4 text-center flex flex-col justify-center item-center">
-                    <div class="font-bold text-lg">Revenue per <br> year</div>
-                    <div class="mt-4">
+                <div class="bg-white/10 backdrop-blur-2xl p-6 rounded-lg shadow-md w-[300px] text-center flex flex-col justify-center item-center">
+                    <div class="font-bold text-xl">Revenue / year</div>
+                    <div class="mt-4 text-lg">
                         @if (is_null($revenuePerYear[0]->revenuePerYear))
                             0
                         @else
@@ -140,35 +148,61 @@
             x: item.YM,
             y: item.revenuePerMonth
         }));
-        var revenuePerMonthChart = new Chart(ctxRevenuePerMonth, {
-            type: 'bar',
-            data: {
-                datasets: [{
-                    label: 'Revenue per month',
-                    data: chartRevenueData,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
-                }]
-            },
-            options: {
-                responsive: true, // Make the chart responsive
-                aspectRatio: 1.7,
-            }
-        });
         var touristPerMonthChart = new Chart(ctxTouristPerMonth, {
             type: 'bar',
             data: {
                 datasets: [{
                     label: 'Tourists per month',
                     data: chartData,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgb(138, 197, 236)',
+                    borderWidth: 2,
                 }]
             },
             options: {
                 responsive: true,
-                // Make the chart responsive
                 aspectRatio: 1.7,
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#ffffff' // เปลี่ยนสีข้อความแกน X เป็นสีขาว
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#ffffff' // เปลี่ยนสีข้อความแกน Y เป็นสีขาว
+                        }
+                    }
+                }
+            }
+        });
+
+        var revenuePerMonthChart = new Chart(ctxRevenuePerMonth, {
+            type: 'bar',
+            data: {
+                datasets: [{
+                    label: 'Revenue per month',
+                    data: chartRevenueData,
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgb(238, 156, 173)',
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                responsive: true,
+                aspectRatio: 1.7,
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#ffffff' // เปลี่ยนสีข้อความแกน X เป็นสีขาว
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#ffffff' // เปลี่ยนสีข้อความแกน Y เป็นสีขาว
+                        }
+                    }
+                }
             }
         });
 

@@ -498,7 +498,7 @@ class CorpListController extends Controller
         return view('corporation.sellHistory', compact('histours'));
     }
 
-    public function getJobHistoryDetail(Request $request)
+    public function getSellHistoryDetail(Request $request)
     {
         $tourID = $request->tourID;
         $tour = Tour::where('id_tour', $tourID)->first();
@@ -530,6 +530,7 @@ class CorpListController extends Controller
         foreach ($locationInTourAPI as $api) {
             $locations[] = $this->getLocationsById($api->loc_api);
         }
+        // dd($tourID, $tour , $totalMember, $anotherReview , $locations);
         return view('corporation.detailSellhistory', compact('totalMember', 'tourData', 'anotherReview', 'locations'));
     }
 
