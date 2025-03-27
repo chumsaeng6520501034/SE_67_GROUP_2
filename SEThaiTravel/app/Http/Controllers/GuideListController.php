@@ -173,6 +173,7 @@ class GuideListController extends Controller
         $totalMember = [];
         foreach ($tourData as $tour) {
             $totalMember[] = Booking::where('tour_id_tour', $tour->id_tour) //TourID ใช้ของที่กดจองมา
+                ->where('status','NOT LIKE','cancel')
                 ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
                 ->value('Total_Member');
         }
@@ -301,6 +302,7 @@ class GuideListController extends Controller
         $tourID = $request->tourID;
         $tourData = Tour::where('id_tour', $tourID)->first();
         $totalMember = Booking::where('tour_id_tour', $tourID) //TourID ใช้ของที่กดจองมา
+            ->where('status','NOT LIKE','cancel')
             ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
             ->value('Total_Member');
         $bookingInTour = Booking::join('user_list', 'user_list.account_id_account', '=', 'booking.user_list_account_id_account')
@@ -347,6 +349,7 @@ class GuideListController extends Controller
                 break;
         }
         $totalMember = Booking::where('tour_id_tour', $tourID) //TourID ใช้ของที่กดจองมา
+            ->where('status','NOT LIKE','cancel')
             ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
             ->value('Total_Member');
         $anotherReview = Review::join('booking', 'booking.id_booking', '=', 'review.booking_id_booking')
@@ -414,6 +417,7 @@ class GuideListController extends Controller
                 break;
         }
         $totalMember = Booking::where('tour_id_tour', $tourID) //TourID ใช้ของที่กดจองมา
+            ->where('status','NOT LIKE','cancel')
             ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
             ->value('Total_Member');
         $anotherReview = Review::join('booking', 'booking.id_booking', '=', 'review.booking_id_booking')
@@ -679,6 +683,7 @@ class GuideListController extends Controller
                 break;
         }
         $totalMember = Booking::where('tour_id_tour', $tourID) //TourID ใช้ของที่กดจองมา
+            ->where('status','NOT LIKE','cancel')
             ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
             ->value('Total_Member');
         $locationInTourAPI = LocationInTour::where('tour_id_tour', $tourID)->get();
@@ -1113,6 +1118,7 @@ class GuideListController extends Controller
                 break;
         }
         $totalMember = Booking::where('tour_id_tour', $tourID) //TourID ใช้ของที่กดจองมา
+            ->where('status','NOT LIKE','cancel')
             ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
             ->value('Total_Member');
         $anotherReview = Review::join('booking', 'booking.id_booking', '=', 'review.booking_id_booking')

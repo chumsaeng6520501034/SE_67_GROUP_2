@@ -142,7 +142,7 @@
                 $startArray = 0;
             @endphp
 
-            <div class="card-wrapper mt-40">
+            <div class="relative top-[-90%] p-10 rounded-lg w-2/3 mt-20 mx-auto">
                 @foreach ($searchTourData as $item)
                     <div class="card-container m-4">
                         <div class="card bg-white rounded-lg shadow-lg flex overflow-hidden">

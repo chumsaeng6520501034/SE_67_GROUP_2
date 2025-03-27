@@ -51,19 +51,8 @@
             /* ขยับ Navbar ตาม Sidebar */
         }
 
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-
-        .card {
-            width: 80%;
-        }
-
-        #sidebar.open~#mainContent .card {
-            width: 90%;
+        .sidebar-open #card {
+            margin-top: 90px;
         }
 
         body {
