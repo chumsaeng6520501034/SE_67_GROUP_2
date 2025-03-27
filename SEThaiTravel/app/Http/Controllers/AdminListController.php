@@ -191,4 +191,12 @@ class AdminListController extends Controller
         ]);
         return redirect()->route('account');
     }
+    function viewProfile(){
+        $id = session('userID')->account_id_account;
+        $accountData = Account::where('id_account', $id)->first();
+        $userData = UserList::where('account_id_account', $id)->first();
+        $countrys =  AccountController::getCountry();
+        return view('admin.profile', compact('accountData', 'userData', 'countrys'));
+    }
+    
 }

@@ -104,6 +104,7 @@ Route::get('/searchHistory',[UserListController::class,'searchHistory']);
 //     return response()->json(['status' => $account->status]);
 // });
 //admin section
+Route::get('/adminProfile',[UserListController::class,'viewProfile']);
 Route::post('/statusAvai',[AdminListController::class,'statusAvai']);
 Route::post('/statusDis',[AdminListController::class,'statusDis']);
 Route::post('/statusChange',[AdminListController::class,'statusChange']);
@@ -164,8 +165,11 @@ Route::get('/corpGetMyOffer',[CorpListController::class,'getOffer']); //หน�
 
 
 Route::post('/corpUpdateOffer',[CorpListController::class,'updateMyOffer']);
+
 Route::get('/corpStaff',[CorpListController::class,'getStaffInCorp']); //staff list
 Route::get('/corpStaffDetail',[CorpListController::class,'staffDetail']);
+Route::get('/corpMyStaff',[CorpListController::class,'getStaffInCorp']); //staff list
+
 Route::get('/corpPayments',[CorpListController::class,'getAllPaymentHistory']);//payments
 Route::get('/corpSearchAllPayment',[CorpListController::class,'searchPayment']);
 Route::get('/corpPaymentDetail',[CorpListController::class,'getPaymentDetail']);
