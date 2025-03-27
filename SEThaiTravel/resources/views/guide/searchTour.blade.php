@@ -142,14 +142,14 @@
                 $startArray = 0;
             @endphp
 
-            <div class="relative top-[-90%] p-10 rounded-lg w-2/3 mt-20 mx-auto">
+            <div class="card-wrapper mt-40">
                 @foreach ($searchTourData as $item)
                     <div class="card-container m-4">
                         <div class="card bg-white rounded-lg shadow-lg flex overflow-hidden relative">
                             <!-- รูปภาพ -->
                             @if (is_null($item->tourImage))
                                 <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination"
-                                    class="w-1/3 object-cover">
+                                    class="w-1/3 rounded-lg">
                             @else
                                 <img src="{{ asset('storage/' . $item->tourImage) }}" alt="image"
                                     class="w-1/3 rounded-lg">
