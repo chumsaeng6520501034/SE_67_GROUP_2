@@ -26,8 +26,13 @@
         <!-- User Profile -->
         <div class="p-6 text-center">
             <a href="/corpProfile">
-                <img class="h-16 w-16 rounded-full mx-auto border-2 border-white" src="https://avatars.githubusercontent.com/u/64538277"
-                alt="avatar" />
+            @if (is_null(session('userID')->photo))
+                    <img class="h-16 w-16 rounded-full mx-auto border-2 border-white"
+                        src="https://avatars.githubusercontent.com/u/64538277" alt="avatar" />
+                @else
+                    <img class="h-16 w-16 rounded-full mx-auto border-2 border-white"
+                        src="{{ asset('storage/' . session('userID')->photo) }}" alt="avatar" />
+                @endif>
             </a>
             <h2 class="text-lg font-bold mt-2">{{session('userID')->name}}</h2>
         </div>
