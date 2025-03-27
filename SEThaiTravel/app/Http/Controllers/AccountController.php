@@ -90,7 +90,8 @@ class AccountController extends Controller
         case 'corp':
           return view('account.signUpCorperation', compact('username', 'password', 'typeOfSign', 'email', 'allCountry'));
         case 'guide':
-          return view('account.signUpGuide', compact('username', 'password', 'typeOfSign', 'email', 'allCountry'));
+            $corpData = CorpList::all();
+          return view('account.signUpGuide', compact('username', 'password', 'typeOfSign', 'email', 'allCountry','corpData'));
         case 'user':
           return view('account.signUpCustomer', compact('username', 'password', 'typeOfSign', 'email', 'allCountry'));
       }
@@ -100,6 +101,15 @@ class AccountController extends Controller
   }
   function insertCorp(Request $request)
   { //เพิ่ม บริษัทเข้าฐานข้อมูลแล้ว Redirect ไปหน้า Home
+    $request->validate([
+      'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+    ]);
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $path = $image->store('images', 'public');
+    } else {
+        $path = NULL;
+    }
     $accountData = [
       'permittion_acc' => $request->typeOfSign,
       'username' => $request->username,
@@ -113,7 +123,7 @@ class AccountController extends Controller
     $corpData = [
       'account_id_account' => $idAcc->id_account,
       'corp_license' => $request->registNum,
-      'logo' => "logo.png",
+      'logo' => $path,
       'name' => $request->corpName,
       'address' => $request->address . " " . $request->district . " " . $request->subdistict .
         " " . $request->province,
@@ -125,15 +135,24 @@ class AccountController extends Controller
       'dob' => $request->dob,
       'owner _address' => $request->ownerAddress . " " . $request->ownerDistrict . " " . $request->ownerSubdistrict .
         " " . $request->ownerProvince . " " . $request->ownerPostalNum,
-      'owner_country_code' => 1
+      'owner_country_code' => $request->ownerCountry
     ];
     // dd($corpData);
     CorpList::insert($corpData);
-    return view('home');
+    return redirect('/');
   }
 
   function insertUser(Request $request)
   { //เพิ่ม ลูกค้าเข้าฐานข้อมูลแล้ว Redirect ไปหน้า Home
+    $request->validate([
+      'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+    ]);
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $path = $image->store('images', 'public');
+    } else {
+        $path = NULL;
+    }
     $accountData = [
       'permittion_acc' => $request->typeOfSign,
       'username' => $request->username,
@@ -148,7 +167,7 @@ class AccountController extends Controller
       'account_id_account' => $idAcc->id_account, //สมมมุตินะของจริงต้องใช้ id ที่พึ่งใส่ไป $idAcc->id_account
       'name' => $request->name,
       'surname' => $request->surname,
-      'photo' => NULL,
+      'photo' => $path,
       'phonenumber' => $request->phonenumber,
       'fake_BAN' => $request->fake_BAN,
       'address' => $request->address . " " . $request->district . " " . $request->subdistrict .
@@ -162,6 +181,15 @@ class AccountController extends Controller
   }
   function insertGuide(Request $request)
   { //เพิ่ม ไกด์เข้าฐานข้อมูลแล้ว Redirect ไปหน้า Home
+    $request->validate([
+      'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+    ]);
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $path = $image->store('images', 'public');
+    } else {
+        $path = NULL;
+    }
     $accountData = [
       'permittion_acc' => $request->typeOfSign,
       'username' => $request->username,
@@ -177,18 +205,18 @@ class AccountController extends Controller
       'guide_license' => $request->GuideLicense,
       'name' => $request->FirstName,
       'surname' => $request->LastName,
-      'photo' => "photo.png",
+      'photo' => $path,
       'corp_list_account_id_account' => $request->corp,
       'phonenumber' => $request->PhoneNum,
       'fake_BAN' => $request->CardNum,
       'address' => $request->Address . " " . $request->District . " " . $request->Subdistrict .
         " " . $request->Province,
       'postcode' => $request->PostNum,
-      'country' => 1 //อันนี้ก็สมมติของจริงน่าจะมีเงื่อนไขเเล้วค่อยนำค่ามาใส่
+      'country' => $request->country //อันนี้ก็สมมติของจริงน่าจะมีเงื่อนไขเเล้วค่อยนำค่ามาใส่
     ];
     // dd($guideData);
     GuideList::insert($guideData);
-    return view('home');
+    return redirect('/');
   }
   function search(Request $request)
   { // ค้นหาทัวร์ที่วางขายอยู่
