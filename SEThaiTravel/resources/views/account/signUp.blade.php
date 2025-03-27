@@ -8,7 +8,7 @@
 </head>
 <body class="bg-cover bg-center h-screen flex justify-center items-center" style="background-image: url('https://my.kapook.com/imagescontent/fb_img/816/s_96528_4076.jpg');">
     <!-- Navbar -->
-    <nav class="fixed top-0 left-0 w-full bg-blue-800 p-4 flex items-center space-x-4 z-50 shadow-lg">
+    <nav class="fixed top-0 left-0 w-full bg-gray-900 p-4 flex items-center space-x-4 z-50 shadow-lg">
         <a href="/" class="text-2xl text-white font-bold pl-4 hover:text-gray-300 transition">
             &#x2190;
         </a>
@@ -43,7 +43,7 @@
                 </select>
             </div>
 
-            <button type="submit" class="w-full bg-blue-700 text-white p-3 rounded-lg text-lg font-semibold shadow-md hover:bg-blue-800 transition">
+            <button type="submit" class="w-full bg-blue-900 text-white p-3 rounded-lg text-lg font-semibold shadow-md hover:bg-blue-800 transition">
                 SUBMIT
             </button>
         </form>
