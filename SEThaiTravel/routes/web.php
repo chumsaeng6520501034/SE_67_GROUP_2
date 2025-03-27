@@ -104,6 +104,7 @@ Route::get('/searchHistory',[UserListController::class,'searchHistory']);
 //     return response()->json(['status' => $account->status]);
 // });
 //admin section
+Route::get('/adminProfile',[UserListController::class,'viewProfile']);
 Route::post('/statusAvai',[AdminListController::class,'statusAvai']);
 Route::post('/statusDis',[AdminListController::class,'statusDis']);
 Route::post('/statusChange',[AdminListController::class,'statusChange']);

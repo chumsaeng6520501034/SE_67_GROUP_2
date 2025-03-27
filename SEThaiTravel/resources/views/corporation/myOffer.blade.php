@@ -114,13 +114,13 @@
                                 <form action="/corpDetailMyTour" method="POST">
                                     @csrf
                                     <div class="text-2xl font-bold text-black-600 hover:text-blue-500">
-                                        <input type="hidden" name="requestID" value="{{ $offer->id_request_tour }}">
-                                        <button type="submit">{{ ucwords($offer->name) }}</button>
+                                        <input type="hidden" name="requestID" value="{{ $myoffer->id_request_tour }}">
+                                        <button type="submit">{{ ucwords($myoffer->name) }}</button>
                                     </div>
                                 </form>
-                                <p class="text-gray-600 mt-1">{{ $offer->description }}</p>
-                                @dd($offer->status)
-                                @switch($offer->status)
+                                <p class="text-gray-600 mt-1">{{ $myoffer->description }}</p>
+                                {{-- @dd($offer->status) --}}
+                                @switch($myoffer->status)
                                     @case('new')
                                         <p class="text-[#007BFF] text-sm mt-2 font-bold">{{ ucwords($myoffer->status) }}</p>
                                     @break

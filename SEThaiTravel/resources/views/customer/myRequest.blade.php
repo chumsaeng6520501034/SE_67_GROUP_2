@@ -59,7 +59,7 @@
     @include('components.sidebarCustomer')
     <div id="mainContent" class="flex-1 p-10 transition-all duration-300 overflow-y-auto ml-2">
         <!-- Search and Filter -->
-        <form action="/searchBooking" method="POST">
+        <form action="#" method="POST">
             @csrf
             <div class="flex items-center p-4 rounded-xl mb-4 space-x-4 bg-white/10 backdrop-blur-2xl mx-52 w-3/4">
                 <div class="relative flex-1 text-white text-xl font-bold">
@@ -180,6 +180,19 @@
             document.getElementById('deleteModal_' + tourId).style.display = 'none';
             document.getElementById('modalBackground').style.display = 'none';
         }
+        document.getElementById("searchBar").addEventListener("input", function() {
+        let searchText = this.value.toLowerCase();
+        let cards = document.querySelectorAll(".card-container");
+
+        cards.forEach(card => {
+            let tourName = card.querySelector("button.text-xl").textContent.toLowerCase();
+            if (tourName.includes(searchText)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+            });
+        });
     </script>
 </body>
 </html>
