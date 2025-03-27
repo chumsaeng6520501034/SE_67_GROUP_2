@@ -196,7 +196,10 @@
     
     <!-- Tab Bar ด้านล่าง -->
     <div class="fixed bottom-0 right-0 w-full bg-gray-900 p-4 shadow-lg flex justify-end items-center space-x-8">
-        <button class="bg-green-700 text-white px-4 py-2 rounded-lg shadow-md font-bold text-xl">Reserve Now</button>
+        <form action="/customerReserve" method="get">
+            <input type="hidden" name="tourId" value={{$productData->id_tour}}>
+            <button class="bg-green-700 text-white px-4 py-2 rounded-lg shadow-md font-bold text-xl">Reserve Now</button>
+        </form>
     </div>
     <script>
         const minBudgetInput = document.getElementById("min_budget");

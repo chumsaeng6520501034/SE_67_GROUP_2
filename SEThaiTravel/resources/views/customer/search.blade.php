@@ -70,51 +70,51 @@
     @include('components.sidebarCustomer')
     <!-- Navbar -->
     <div id="mainContent">
-    <nav id="navbar" class="fixed top-0 left-0 w-full p-4 z-[60] transition-all duration-300">
-        <div class="max-w-7xl mx-auto flex flex-col space-y-3 p-4 rounded-lg">
-            <form action="/customerFilterSearch" method="GET">
-                <!-- บรรทัดแรก: แบรนด์ + ช่องค้นหา -->
-                <div class="flex justify-between items-center w-full">
-                    <div class="text-2xl text-white font-bold pl-4">TRAVEL</div>
-                    <div class="flex-grow mx-4">
-                        <input type="text" name="searchKey" placeholder="Search tour name..."
-                            class="w-full px-4 py-2 border rounded-lg">
-                    </div>
-                    <button type="submit"
-                        class="bg-blue-700 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-900 transition duration-300">
-                        SEARCH
-                    </button>
-                </div>
-
-                <!-- บรรทัดที่สอง: ตัวกรอง Filters -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-1 items-center mt-4 mx-6">
-                    <!-- From + To -->
-                    <div class="flex items-center space-x-1">
-                        <label for="start_date" class="text-black font-bold">From:</label>
-                        <input type="date" id="start_date" name="startDate" class="border px-2 py-1 rounded-lg">
-                    </div>
-                    <div class="flex items-center space-x-1">
-                        <label for="end_date" class="text-black font-bold">To:</label>
-                        <input type="date" id="end_date" name="endDate" class="border px-2 py-1 rounded-lg">
+        <nav id="navbar" class="fixed top-0 left-0 w-full p-4 z-[60] transition-all duration-300">
+            <div class="max-w-7xl mx-auto flex flex-col space-y-3 p-4 rounded-lg">
+                <form action="/customerFilterSearch" method="GET">
+                    <!-- บรรทัดแรก: แบรนด์ + ช่องค้นหา -->
+                    <div class="flex justify-between items-center w-full">
+                        <div class="text-2xl text-white font-bold pl-4">TRAVEL</div>
+                        <div class="flex-grow mx-4">
+                            <input type="text" name="searchKey" placeholder="Search tour name..."
+                                class="w-full px-4 py-2 border rounded-lg">
+                        </div>
+                        <button type="submit"
+                            class="bg-blue-700 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-900 transition duration-300">
+                            SEARCH
+                        </button>
                     </div>
 
-                    <!-- Min + Max Budget -->
-                    <div class="flex items-center space-x-1">
-                        <label for="min_budget" class="text-black font-bold">Min:</label>
-                        <input type="range" id="min_budget" name="minBudget" min="0" max="1000000"
-                            value="0" step="10000" class="w-24" oninput="updateMinValue(this.value)">
-                        <span id="min_value" class="text-sm font-bold text-black">0</span>
+                    <!-- บรรทัดที่สอง: ตัวกรอง Filters -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-1 items-center mt-4 mx-6">
+                        <!-- From + To -->
+                        <div class="flex items-center space-x-1">
+                            <label for="start_date" class="text-black font-bold">From:</label>
+                            <input type="date" id="start_date" name="startDate" class="border px-2 py-1 rounded-lg">
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <label for="end_date" class="text-black font-bold">To:</label>
+                            <input type="date" id="end_date" name="endDate" class="border px-2 py-1 rounded-lg">
+                        </div>
+
+                        <!-- Min + Max Budget -->
+                        <div class="flex items-center space-x-1">
+                            <label for="min_budget" class="text-black font-bold">Min:</label>
+                            <input type="range" id="min_budget" name="minBudget" min="0" max="1000000"
+                                value="0" step="10000" class="w-24" oninput="updateMinValue(this.value)">
+                            <span id="min_value" class="text-sm font-bold text-black">0</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <label for="max_budget" class="text-black font-bold">Max:</label>
+                            <input type="range" id="max_budget" name="maxBudget" min="0" max="1000000"
+                                value="1000000" step="10000" class="w-24" oninput="updateMaxValue(this.value)">
+                            <span id="max_value" class="text-sm font-bold text-black">1,000,000</span>
+                        </div>
                     </div>
-                    <div class="flex items-center space-x-1">
-                        <label for="max_budget" class="text-black font-bold">Max:</label>
-                        <input type="range" id="max_budget" name="maxBudget" min="0" max="1000000"
-                            value="1000000" step="10000" class="w-24" oninput="updateMaxValue(this.value)">
-                        <span id="max_value" class="text-sm font-bold text-black">1,000,000</span>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </nav>
+                </form>
+            </div>
+        </nav>
 
 
 
@@ -138,14 +138,15 @@
 
             <div class="relative top-[-90%] p-10 rounded-lg w-2/3 mt-20 mx-auto">
                 @foreach ($searchTourData as $item)
-                    <div class="bg-white rounded-lg shadow-lg p-6 mb-6 flex relative cursor-pointer hover:shadow-xl transition">
+                    <div
+                        class="bg-white rounded-lg shadow-lg p-6 mb-6 flex relative cursor-pointer hover:shadow-xl transition">
                         <!-- รูปภาพ -->
                         <img src="https://static.independent.co.uk/2025/01/03/14/newFile-12.jpg" alt="Destination"
                             class="w-1/3 rounded-lg">
                         <form action="/customerViewProductDetail" method="POST">
                             @csrf
-                            <input type="hidden" name="tourID" value={{$item->id_tour}}>
-                            <input type="hidden" name="path" value={{$path}}>
+                            <input type="hidden" name="tourID" value={{ $item->id_tour }}>
+                            <input type="hidden" name="path" value={{ $path }}>
                             <button type="submit" class="absolute inset-0 w-full h-full opacity-0 "></button>
                         </form>
                         <!-- ส่วนข้อมูล -->
@@ -204,7 +205,8 @@
                             <div class="mt-auto">
                                 <p class="text-2xl font-bold text-green-600">{{ number_format($item->price) }}฿</p>
                                 @if ($status === 'Available')
-                                    <form action="/logIn" method="GET">
+                                    <form action="/customerReserve" method="GET">
+                                        <input type="hidden" name="tourId" value={{$item->id_tour}}>
                                         <button type="submit"
                                             class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm mt-2 relative z-[50]">
                                             RESERVE NOW
@@ -219,11 +221,14 @@
                                 <p
                                     class="text-base font-semibold mt-2 {{ $status === 'Available' ? 'text-green-500' : 'text-red-500' }}">
                                     NET AMOUNT:
-                                    {{ is_null($totalMember[$startArray]) ? 0 : $totalMember[$startArray++] }}/{{ $item->tour_capacity }}
+                                    {{ is_null($totalMember[$startArray]) ? 0 : $totalMember[$startArray] }}/{{ $item->tour_capacity }}
                                 </p>
                             </div>
                         </div>
                     </div>
+                    @php
+                        $startArray++;
+                    @endphp
                 @endforeach
                 {{ $searchTourData->links() }}
                 {{-- <!-- ปุ่ม Pagination -->

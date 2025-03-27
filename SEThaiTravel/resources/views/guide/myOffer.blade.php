@@ -145,13 +145,31 @@
 
                                 <!-- ส่วนล่าง: ปุ่ม -->
                                 <div class="flex justify-end space-x-2 mt-4">
-                                    <form action="/guideEditOffer" method="GET">
-                                        <input type="hidden" name="offerID" value="{{ $offer->id_offer }}">
-                                        <button
-                                            class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
-                                    </form>
-                                    <button onclick="openModal({{ $offer->id_offer }})"
-                                        class="bg-red-600 text-white px-4 py-2 rounded-md font-bold">Delete</button>
+                                    @switch($offer->status)
+                                        @case('new')
+                                            <form action="/guideEditOffer" method="GET">
+                                                <input type="hidden" name="offerID" value="{{ $offer->id_offer }}">
+                                                <button
+                                                    class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">Edit</button>
+                                            </form>
+                                            <button onclick="openModal({{ $offer->id_offer }})"
+                                                class="bg-red-600 text-white px-4 py-2 rounded-md font-bold">Delete</button>
+                                        @break
+
+                                        @case('approve')
+                                            @if (is_null($tourPrivate[$offer->id_offer]))
+                                                <form action="/guideAddPrivateTour" method="GET">
+                                                    <input type="hidden" name="offerID" value="{{ $offer->id_offer }}">
+                                                    <button
+                                                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-bold">ADD
+                                                        PRIVATE TOUR</button>
+                                                </form>
+                                            @else
+                                            <button
+                                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-bold">ALREADY HAVE TOUR</button>
+                                            @endif
+                                        @break
+                                    @endswitch
                                 </div>
                             </div>
 

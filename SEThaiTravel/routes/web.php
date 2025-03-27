@@ -193,4 +193,17 @@ Route::post('/guideUpdateOffer',[GuideListController::class,'updateOffer']);
 Route::post('/guideDeleteOffer',[GuideListController::class,'deleteOffer']);
 Route::get('/getAddOfferPage',[GuideListController::class,'getAddOfferPage']);
 Route::post('/guideAddOffer',[GuideListController::class,'addOfferS']);
+Route::get('/guideSellHistory',[GuideListController::class,'getSellHistory']);
+Route::get('/guideSearchSellHistory',[GuideListController::class,'searchSellHistory']);
+Route::post('/guideSellHistoryDetail',[GuideListController::class,'sellHistoryDetail']);
+Route::get('/guideAddPrivateTour',[GuideListController::class,'addPrivateTourPage']);
+Route::post('/guideAddPrivateTour',[GuideListController::class,'addPrivateTour']);
 
+
+
+
+//customer addition
+Route::get('/customerReserve',[UserListController::class,'bookingTour']);
+Route::get('/customerBooking',[UserListController::class,'insertBooking']);
+Route::get('/getPaymentPage',[UserListController::class,'getPaymentPage']);
+Route::get('/customerPayBooking',[UserListController::class,'insertPayment']);

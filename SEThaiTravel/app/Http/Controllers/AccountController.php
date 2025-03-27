@@ -206,7 +206,7 @@ class AccountController extends Controller
       })
         ->where('status', 'LIKE', 'ongoing')
         ->where('type_tour', 'LIKE', 'private')
-        ->paginate(2)->appends($request->query());
+        ->paginate(10)->appends($request->query());
     } else {
       $searchTourData = Tour::where(function ($query) use ($name, $startDate, $endDate, $capacity) {
         $query->where('start_tour_date', '=', $startDate)
@@ -216,7 +216,7 @@ class AccountController extends Controller
         ->whereRaw('LOWER(tour.name) LIKE LOWER(?)', ['%' . $name . '%'])
         ->where('status', 'LIKE', 'ongoing')
         ->where('type_tour', 'LIKE', 'public')
-        ->paginate(2)->appends($request->query());
+        ->paginate(10)->appends($request->query());
     }
     $ownerData = [];
     $totalMember = [];

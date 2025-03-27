@@ -9,12 +9,12 @@
 <body class="bg-gray-900 text-white">
     <!-- Navbar -->
     <nav class="fixed top-0 left-0 w-full bg-blue-800 p-4 flex items-center space-x-4 z-50">
-        <a href="/home" class="text-2xl text-white font-bold pl-4">
+        <a href="/myBooking" class="text-2xl text-white font-bold pl-4">
             &#x2190;
         </a>
         <div class="text-2xl text-white font-bold">PAYMENT</div>
     </nav>
-    <form action="/customerBooking" method="GET">
+    <form action="/customerPayBooking" method="GET">
     <div class="container mx-auto p-6 pt-16 mt-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="md:col-span-2 bg-white text-black p-6 rounded-lg shadow-md">
@@ -38,10 +38,8 @@
                             <div class="flex items-center justify-between border p-4 rounded-lg">
                                 <span class="font-bold">ผู้ใหญ่</span>
                                 <div class="flex items-center">
-                                    <button type="button" onclick="updateCount('adults', -1)" class="bg-gray-300 text-black px-3 py-1 rounded-md">-</button>
-                                    <span id="adults-count" class="mx-4">1</span>
-                                    <input type="hidden" name="adultqty" value="1" id="adult">
-                                    <button type="button" onclick="updateCount('adults', 1)" class="bg-gray-300 text-black px-3 py-1 rounded-md">+</button>
+                                    <span id="adults-count" class="mx-4">{{$bookingData->adult_qty}}</span>
+                                    <input type="hidden" name="adultqty" value={{$bookingData->adult_qty}} id="adult">
                                 </div>
                             </div>
 
@@ -49,33 +47,23 @@
                             <div class="flex items-center justify-between border p-4 rounded-lg">
                                 <span class="font-bold">เด็ก</span>
                                 <div class="flex items-center">
-                                    <button type="button" onclick="updateCount('children', -1)" class="bg-gray-300 text-black px-3 py-1 rounded-md">-</button>
-                                    <span id="children-count" class="mx-4">0</span>
-                                    <input type="hidden" name="kidqty" value="0" id="kid">
-                                    <button type="button" onclick="updateCount('children', 1)" class="bg-gray-300 text-black px-3 py-1 rounded-md">+</button>
+                                    <span id="children-count" class="mx-4">{{$bookingData->kid_qty}}</span>
+                                    <input type="hidden" name="kidqty" value={{$bookingData->kid_qty}} id="kid">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="md:col-span-2">
                         <label class="block mb-2 font-bold">DESCRIPTION</label>
-                        <input type="text" class="w-full border p-2 rounded" placeholder="detail..." name="description">
+                        <input type="text" readonly class="w-full border p-2 rounded" placeholder="detail..." name="description" value={{$bookingData->description}} >
                     </div>
                 </div>
                 <!-- Payment Section -->
                 <h2 class="text-xl font-bold mb-4">เลือกชำระเงิน</h2>
-                <!-- Pay Later Option -->
-                <div class="border rounded-lg p-4">
-                    <label class="flex items-center space-x-2">
-                        <input type="radio" name="payment_option" id="pay-later" class="form-radio" value="later" checked>
-                        <span>PAY LATER</span>
-                    </label>
-                </div>
-
                 <!-- Pay Now Option -->
                 <div class="border rounded-lg p-4 mt-4">
                     <label class="flex items-center space-x-2">
-                        <input type="radio" name="payment_option" id="pay-now" class="form-radio" value="now">
+                        <input type="radio" name="payment_option" id="pay-now" class="form-radio" value="now" required>
                         <span>จ่ายทันที</span>
                         <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" class="h-10">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" class="h-10">
@@ -124,12 +112,13 @@
                 </div>
                 <!-- เพิ่มการใช้ flex-grow เพื่อให้เนื้อหาข้างบนขยาย และราคาสุทธิจะอยู่ล่างสุด -->
                 <div class="text-xl font-bold text-blue-600 flex justify-between pt-2 mt-auto">
-                    <span>ราคารวมสุทธิ:</span> <span id="totalPrice">{{$tourData->price}}</span>
+                    <span>ราคารวมสุทธิ:</span> <span id="totalPrice">{{$bookingData->total_price}}</span>
                 </div>
             </div>
         </div>
-        <input type="hidden" name="tourPrice" value={{$tourData->price}}>
+        <input type="hidden" name="totalPrice" value={{$bookingData->total_price}}>
         <input type="hidden" name="tourID" value={{$tourData->id_tour}}>
+        <input type="hidden" name="bookingID" value={{$bookingData->id_booking }}>
         <!-- Confirm -->
         <div class="flex justify-end mt-6">
             <button type="submit" class="bg-blue-900 text-white px-6 py-3 rounded-lg shadow-md text-xl font-bold">Submit</button>
@@ -137,14 +126,8 @@
     </form>
     </div>
     <script>
-        let member;
+        let member=0;
         let price= @json($tourData->price);
-        if(@json($totalMember)=== null){
-            member=0;
-        }
-        else{
-            member=@json($totalMember);
-        }
         let maxCapacity = @json($tourData->tour_capacity)-member; // จำนวนที่ Tour เปิดรับ
         let adults = 1;
         let children = 0;
