@@ -201,7 +201,14 @@ class GuideListController extends Controller
             $tourData->whereDate('tour.end_tour_date', $endDate);
         }
         $tourData = $tourData->paginate(10)->appends($request->query());
-        return view('guide.myTour', compact('tourData'));
+        $totalMember = [];
+        foreach ($tourData as $tour) {
+            $totalMember[] = Booking::where('tour_id_tour', $tour->id_tour) //TourID ใช้ของที่กดจองมา
+                ->where('status','NOT LIKE','cancel')
+                ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
+                ->value('Total_Member');
+        }
+        return view('guide.myTour', compact('tourData','totalMember'));
     }
     function deleteMyTour(Request $request)
     {
@@ -253,7 +260,7 @@ class GuideListController extends Controller
         }
         $locationInTourAPI = $request->location;
         $tourData = [
-            "from_owner" => 'corp',
+            "from_owner" => 'guide',
             "owner_id" => session('userID')->account_id_account,
             "name" => $request->tour_name,
             "Release_date" => $request->Release,
@@ -282,20 +289,15 @@ class GuideListController extends Controller
             ];
             LocationInTour::insert($locationInTourData);
         }
-
-        $selectedGuides = $request->input('guideintour', []);
-
         // ลบข้อมูลไกด์เก่าก่อน
         DB::table('Tour_has_guide_list')->where('tour_id_tour', $tourId)->delete();
 
         // เพิ่มข้อมูลไกด์ที่เลือกใหม่เข้าไป
-        foreach ($selectedGuides as $guideId) {
             DB::table('Tour_has_guide_list')->insert([
                 'tour_id_tour' => $tourId,
-                'guide_list_account_id_account' => $guideId
-            ]);
-        }
-        return redirect('/corpMyTour');
+                'guide_list_account_id_account' => session('userID')->account_id_account
+            ]);  
+        return redirect('/guideMyTour');
     }
     public function getMyTourDetail(Request $request)
     {
