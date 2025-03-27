@@ -507,7 +507,7 @@ class UserListController extends Controller
       $totalPeople = $adultQty + $kidQty;
       $finalTotal = $totalPeople * $totalPrice;
 
-    // dd($idAccount, $idPayment,$bill,$finalTotal);
+    dd($idAccount, $idPayment,$bill,$finalTotal);
     return view('customer.detailPayment', compact('bill','finalTotal','totalPeople'));
   }
 
@@ -925,10 +925,6 @@ class UserListController extends Controller
     // dd($anotherReview);
     return view('customer.historyDetail', compact('anotherReview', 'myReview', 'totalMember', 'productData', 'path'));
   }
-  function searchRequest(Request $request)
-  {
-    
-  }
   function searchHistory(Request $request)
   {
     $name = $request->name;
@@ -978,6 +974,45 @@ class UserListController extends Controller
     // dd($historyData);
     return view('customer.history', compact('historyData', 'path'));
   }
+
+  function searchRequest(Request $request)
+  {
+        $name = $request->name;
+        $startDate = $request->startDate;
+        $endDate = $request->endDate;
+        $status = $request->status;
+        $path = $_SERVER['REQUEST_URI'];
+    
+        $requestData = DB::table('request_tour')
+            ->where('user_list_account_id_account', session('userID')->account_id_account);
+    
+        // ✅ กรองชื่อทัวร์
+        if (!empty($name)) {
+            $requestData->whereRaw('LOWER(name) LIKE LOWER(?)', ["%$name%"]);
+        }
+    
+        // ✅ กรองวันที่เริ่มทัวร์
+        if (!empty($startDate)) {
+            $requestData->whereDate('start_tour_date', '>=', $startDate);
+        }
+    
+        // ✅ กรองวันที่สิ้นสุดทัวร์
+        if (!empty($endDate)) {
+            $requestData->whereDate('end_tour_date', '<=', $endDate);
+        }
+    
+        // ✅ กรองสถานะ
+        if (!empty($status)) {
+            $requestData->where('request_status', $status);
+        }
+    
+        // ✅ เรียงลำดับจากใหม่ไปเก่า
+        $requestData = $requestData->orderBy('time', 'desc')->get();
+    
+        return view('customer.myRequest', compact('requestData', 'path'));
+    }
+
+
   public function getPaymentPage(Request $request){
     $tourData = Tour::where('id_tour',$request->tourID)->first();
     $bookingData = Booking::where('id_booking',$request->bookingID)->first();

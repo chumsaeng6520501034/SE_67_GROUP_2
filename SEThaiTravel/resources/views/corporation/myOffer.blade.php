@@ -74,7 +74,7 @@
                     <div class="relative flex-1 text-white font-bold text-xl">
                         <label>Tour name</label>
                         <input type="text" id="searchBar" name="name" placeholder="Search Tours name..."
-                            class="w-full p-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
+                            class="w-full p-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg text-black">
                         <span class="absolute left-3 top-8 text-gray-500">🔍</span>
                     </div>
                     <div class="relative flex-1 text-white font-bold text-xl">
