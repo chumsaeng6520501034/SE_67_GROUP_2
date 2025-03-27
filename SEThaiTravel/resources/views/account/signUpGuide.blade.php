@@ -29,7 +29,7 @@
 <body class="relative w-full h-screen bg-cover bg-center flex items-center justify-center" 
     style="background-image: url('https://my.kapook.com/imagescontent/fb_img/816/s_96528_4076.jpg');">
      <!-- Navbar -->
-     <nav class="fixed top-0 left-0 w-full bg-blue-800 p-4 flex items-center space-x-4 z-50 shadow-lg">
+     <nav class="fixed top-0 left-0 w-full bg-gray-900 p-4 flex items-center space-x-4 z-50 shadow-lg">
         <a href="/" class="text-2xl text-white font-bold pl-4 hover:text-gray-300 transition">
             &#x2190;
         </a>
@@ -130,12 +130,12 @@
 
             <div class="flex justify-between mt-6">
                 <a href="/signUp"
-                    class="bg-gray-500 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-red-700 transition">
+                    class="bg-red-700 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-red-600 transition">
                     BACK
                 </a>
 
                 <button type="submit"
-                    class="bg-blue-600 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-blue-800 transition">
+                    class="bg-blue-900 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-blue-600 transition">
                     SUBMIT
                 </button>
             </div>

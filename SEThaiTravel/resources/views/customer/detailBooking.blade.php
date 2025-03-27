@@ -8,10 +8,9 @@
     
 </head>
 <body class="bg-gray-900">
-    @include('components.sidebarCustomer')
     <!-- Navbar -->
-    <nav class="fixed top-0 left-1/2 transform -translate-x-1/2 p-4 flex justify-center items-center space-x-6 z-50">
-        <a href="/" class="text-2xl text-white font-bold">&#x2190;</a>
+    <nav class="fixed top-0 left-1/2 transform -translate-x-1/2 p-4 flex justify-center items-center bg-gray-900 space-x-6 z-50">
+        <a href="/customerBooking" class="text-2xl text-white font-bold">&#x2190;</a>
         <div class="text-2xl text-white font-bold pl-10">TRAVEL</div>
         <div class="flex space-x-4 items-center">
             <input type="text" placeholder="Search" class="border px-4 py-2 rounded-lg">

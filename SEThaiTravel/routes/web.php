@@ -53,7 +53,10 @@ Route::get('/logIn',[AccountController::class,'viewLogin']);
 Route::get('/logOut',[AccountController::class,'logOut']);
 Route::post('/checkLogIn',[AccountController::class,'checkLogin']);
 Route::get('/calendar',[UserListController::class,'viewCalendar']);
+
 Route::get('/myBooking',[UserListController::class,'viewMyBooking']);
+Route::get('/customerBooking',[UserListController::class,'viewMyBooking']);
+
 Route::post('/searchBooking',[UserListController::class,'searchBooking']);
 
 Route::get('/myRequest',[UserListController::class,'getAllRequestTour']);
@@ -72,6 +75,9 @@ Route::get('/de', function () {
 Route::get('/addTour',[UserListController::class,'viewAddTour']);
 Route::post('/addRequest',[UserListController::class,'insertRequest']);
 Route::post('/deleteRequestTour',[UserListController::class,'deleteMyTour']);
+Route::match(['get', 'post'],'/requestDetail',[UserListController::class,'getRequestDetail'])->name('requestDetail');
+Route::post('/statusApprove',[UserListController::class,'statusApprove']);
+Route::post('/statusReject',[UserListController::class,'statusReject']);
 
 Route::get('/customerProfile',[UserListController::class,'viewProfile']);
 Route::post('/customerEditProfile',[UserListController::class,'updateUser']);
@@ -134,8 +140,12 @@ Route::post('/corpAddTour',[CorpListController::class,'addTour']);
 //ยังไม่เสร็จ ตั้งแต่ตรงนี้
 Route::get('/corpMyTour',[CorpListController::class,'getTour']); //หน้าทัวร์ของฉัน
 Route::post('/corpDetailMyTour',[CorpListController::class,'getMyTourDetail']);
+Route::get('/corpMyinTour',[CorpListController::class,'getTour']); //หน้าทัวร์ของฉัน
 
 Route::get('/corpHistory',[CorpListController::class,'getHistory']); //หน้าประวัติขาย
+Route::post('/corpDetailSellHistory',[CorpListController::class,'getSellHistoryDetail']);
+Route::get('/corpSellHistory',[CorpListController::class,'getHistory']);
+
 //ถึงตรงนี้
 Route::get('/corpEditTourPage',[CorpListController::class,'editMyTourPage']);
 
@@ -145,9 +155,9 @@ Route::post('/corpUpdateImage',[CorpListController::class,'updateImage']);
 
 Route::get('/corpToAddtour',[CorpListController::class,'getAddOffer']); //addoffer
 Route::post('/corpAddOffer',[CorpListController::class,'addOffer']);
-Route::get('/corpOffer',[CorpListController::class,'getOffer']); //offer lsit
-Route::post('/corpOfferDetail',[CorpListController::class,'getOfferDetail']);
-Route::post('/corpEditOffer',[CorpListController::class,'toEditOffer']); //update offer
+Route::get('/corpOffer',[CorpListController::class,'getOffer']); //หน้าข้อเสนอ
+Route::get('/corpOfferDetail',[CorpListController::class,'getOfferDetail']);
+Route::post('/corpEditOffer',[CorpListController::class,'toEditOffer']);
 Route::post('/corpUpdateOffer',[CorpListController::class,'updateMyOffer']);
 Route::get('/corpStaff',[CorpListController::class,'getStaffInCorp']); //staff list
 Route::get('/corpStaffDetail',[CorpListController::class,'staffDetail']);

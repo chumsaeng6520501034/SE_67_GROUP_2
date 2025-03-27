@@ -12,7 +12,7 @@
     <!-- Navbar -->
     <nav
         class="fixed top-0 left-1/2 transform -translate-x-1/2 p-4 flex justify-start items-center space-x-6 z-50  bg-gray-900 w-full text-center ">
-        <a href="/guideGetMyOffer" class="text-2xl text-white font-bold">&#x2190;</a>
+        <a href="/myRequest" class="text-2xl text-white font-bold">&#x2190;</a>
         <span class="font-bold text-xl text-white">THAI TRAVEL & TOUR</span>
     </nav>
 
@@ -120,66 +120,103 @@
             </div>
         </div>
     </div>
-    <div class="bg-white py-6 px-6 rounded-lg shadow-md mt-4 w-[1485px] mx-auto mb-10">
-        <h4 class="text-2xl font-bold mb-3">Your Offer</h4>
+    {{-- ส่วนของoffer ด้านล่าง --}}
+    <div class="bg-white py-6 px-6 rounded-lg shadow-md mt-4 w-full mx-auto mb-10">
+        <h4 class="text-2xl font-bold mb-3">All Offer</h4>
         @php
             $i = 1;
         @endphp
         <!-- กล่องรีวิวแบบเลื่อน -->
         <div class="max-h-[390px] overflow-y-auto space-y-2 p-2 bg-grey-500 rounded-lg shadow-inner">
             @foreach ($offerByMe as $offer)
-                <div class="bg-green-200 p-6 rounded-lg shadow-md  mx-auto w-full">
-                    <h2 class="text-2xl font-bold text-left mb-6">Offer{{$i." ($offer->status)"}}
-                    </h2>
-                    @php
-                        $i++;
-                    @endphp
-                    <div class="grid grid-cols-2 gap-6">
-                        {{-- {/* Row 1 */} --}}
-                        <div class="flex flex-col">
-                            <span class="font-medium text-gray-700">Contact:</span>
-                            <span class="text-gray-600">{{ $offer->contect }}</span>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="font-medium text-gray-700">Price:</span>
-                            <span class="text-gray-600">{{ $offer->price }}</span>
-                        </div>
-
-                        {{-- {/* Row 2 */} --}}
-                        <div class="flex flex-col">
-                            <span class="font-medium text-gray-700">Description:</span>
-                            <span class="text-gray-600">{{ $offer->description }}</span>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="font-medium text-gray-700">Hotel:</span>
-                            <span class="text-gray-600">{{ $offer->hotel }}</span>
-                        </div>
-
-                        {{-- {/* Row 3 */} --}}
-                        <div class="flex flex-col">
-                            <span class="font-medium text-gray-700">Hotel Price:</span>
-                            <span class="text-gray-600">{{ $offer->hotel_price }}</span>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="font-medium text-gray-700">Travel:</span>
-                            <span class="text-gray-600">{{ $offer->travel }}</span>
-                        </div>
-
-                        {{-- {/* Row 4 */} --}}
-                        <div class="flex flex-col">
-                            <span class="font-medium text-gray-700">Travel Price:</span>
-                            <span class="text-gray-600">{{ $offer->travel_price }}</span>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="font-medium text-gray-700">Guide Quantity:</span>
-                            <span class="text-gray-600">{{ $offer->guide_qty }}</span>
-                        </div>
-                    </div>
+            @php
+            $backgroundClass = '';
+            if ($offer->status == 'new') {
+                $backgroundClass = 'bg-blue-200';
+            } elseif ($offer->status == 'approve') {
+                $backgroundClass = 'bg-green-200';
+            } elseif ($offer->status == 'reject') {
+                $backgroundClass = 'bg-gray-200';
+            }
+            @endphp
+        
+        <div class="{{ $backgroundClass }} p-6 rounded-lg shadow-md mx-auto w-full">
+            <h2 class="text-2xl font-bold text-left mb-6">Offer {{$i . " ($offer->status)"}}</h2>
+            @php
+                $i++;
+            @endphp
+            <div class="grid grid-cols-2 gap-6">
+                {{-- Row 1 --}}
+                <div class="flex flex-col">
+                    <span class="font-medium text-gray-700">Contact:</span>
+                    <span class="text-gray-600">{{ $offer->contect }}</span>
                 </div>
+                <div class="flex flex-col">
+                    <span class="font-medium text-gray-700">Price:</span>
+                    <span class="text-gray-600">{{ $offer->price }}</span>
+                </div>
+        
+                {{-- Row 2 --}}
+                <div class="flex flex-col">
+                    <span class="font-medium text-gray-700">Description:</span>
+                    <span class="text-gray-600">{{ $offer->description }}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-medium text-gray-700">Hotel:</span>
+                    <span class="text-gray-600">{{ $offer->hotel }}</span>
+                </div>
+        
+                {{-- Row 3 --}}
+                <div class="flex flex-col">
+                    <span class="font-medium text-gray-700">Hotel Price:</span>
+                    <span class="text-gray-600">{{ $offer->hotel_price }}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-medium text-gray-700">Travel:</span>
+                    <span class="text-gray-600">{{ $offer->travel }}</span>
+                </div>
+        
+                {{-- Row 4 --}}
+                <div class="flex flex-col">
+                    <span class="font-medium text-gray-700">Travel Price:</span>
+                    <span class="text-gray-600">{{ $offer->travel_price }}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-medium text-gray-700">Guide Quantity:</span>
+                    <span class="text-gray-600">{{ $offer->guide_qty }}</span>
+                </div>
+            </div>
+        
+            @if($offer->status == 'new')
+                <div class="mt-4 flex justify-end space-x-4">
+                    <!-- Approve Button -->
+                    <form action="/statusApprove" method="POST">
+                        @csrf
+                        {{-- @dd($offer->request_tour_id_request_tour); --}}
+                        <input type="hidden" name="requestID" value="{{ $offer->request_tour_id_request_tour }}">
+                        <input type="hidden" name="offerID" value="{{$offer->id_offer}}">
+                        <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                            Approve
+                        </button>
+                    </form>
+                
+                    <!-- Reject Button -->
+                    <form action="/statusReject" method="POST">
+                        @csrf
+                        <input type="hidden" name="requestID" value="{{ $offer->request_tour_id_request_tour }}">
+                        <input type="hidden" name="offerID" value="{{$offer->id_offer}}">
+                        <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                            Reject
+                        </button>
+                    </form>
+                </div>
+            @endif
+        </div>
+        
             @endforeach
         </div>
     </div>
-    <div class="bg-white py-6 px-6 rounded-lg shadow-md mt-4 w-[1485px] mx-auto mb-10">
+    {{-- <div class="bg-white py-6 px-6 rounded-lg shadow-md mt-4 w-[1485px] mx-auto mb-10">
         <h4 class="text-2xl font-bold mb-3">Offer in Request</h4>
 
         <!-- กล่องรีวิวแบบเลื่อน -->
@@ -226,7 +263,7 @@
                 </div>
             @endforeach
         </div>
-    </div>
+    </div> --}}
 
     <script>
         const minBudgetInput = document.getElementById("min_budget");

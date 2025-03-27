@@ -85,18 +85,12 @@
                             <td class="border border-white px-4 py-2">{{ $payment->booking_user_list_account_id_account }}</td>
                             <td class="border border-white px-4 py-2">{{ $payment->booking_Tour_id_Tour }}</td>
                             <td class="border border-white px-4 py-2">{{ $payment->total_price}}</td>
-                            <td class="border border-white px-4 py-2">
-                                @if($payment->receipt_url)
-                                    <a href="/" target="_blank">
-                                        <button class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition">
-                                            View Receipt
-                                        </button>
-                                    </a>
-                                @else
-                                    <button class="bg-red-700 text-white px-4 py-2 rounded-lg cursor-not-allowed" disabled>
-                                        No Receipt
+                            <td class="border border-white px-4 py-2 text-center">
+                                <a href="{{ $payment->receipt_url ?: '#' }}" target="_blank" class="inline-block">
+                                    <button class="bg-green-700 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition">
+                                        View Receipt
                                     </button>
-                                @endif
+                                </a>
                             </td>
                         </tr>
                         @endforeach 

@@ -8,7 +8,7 @@
 </head>
 <body class="bg-gray-900 text-white">
     <!-- Navbar -->
-    <nav class="fixed top-0 left-0 w-full bg-blue-800 p-4 flex items-center space-x-4 z-50">
+    <nav class="fixed top-0 left-0 w-full bg-gray-900 p-4 flex items-center space-x-4 z-50">
         <a href="/home" class="text-2xl text-white font-bold pl-4">
             &#x2190;
         </a>

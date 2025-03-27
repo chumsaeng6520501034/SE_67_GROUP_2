@@ -70,8 +70,8 @@
         <div id="mainContent" class="flex-1 p-10 transition-all duration-300 overflow-y-auto ml-2">
             <!-- Search and Filter -->
             <form action="/guideSearchMyJob" method="GET">
-                <div class="flex items-center bg-white/10 backdrop-blur-2xl p-4 rounded-lg mb-4 space-x-4 w-3/4 mx-52">
-                    <div class="relative flex-1">
+                <div class="flex items-center p-4 rounded-lg mb-4 space-x-4 bg-white/10 backdrop-blur-2xl rounded-xl w-3/4 mx-52">
+                    <div class="relative flex-1 text-white text-">
                         <label>Tour name</label>
                         <input type="text" id="searchBar" name="name" placeholder="Search Tours name..."
                             class="w-full p-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
