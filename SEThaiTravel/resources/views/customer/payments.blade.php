@@ -91,9 +91,12 @@
                             <td class="border border-white px-4 py-2">{{ $payment->total_price}}</td>
                             <td class="border border-white px-4 py-2 text-center">
                                 <a href="{{ $payment->receipt_url ?: '#' }}" target="_blank" class="inline-block">
-                                    <button class="bg-green-700 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition">
-                                        View Receipt
-                                    </button>
+                                <form action="/corpStaffDetail" method="GET">
+                                    <input type="hidden" name="guideID" value={{$payment->account_id_account}}>
+                                        <button class="bg-green-700 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition">
+                                            View Receipt
+                                        </button>
+                                </form>
                                 </a>
                             </td>
                         </tr>
