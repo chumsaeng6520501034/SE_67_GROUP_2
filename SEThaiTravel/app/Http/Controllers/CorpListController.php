@@ -325,7 +325,15 @@ class CorpListController extends Controller
 
         return redirect('/corpHomepage');
     }
-
+    function deleteTour(Request $request)
+    {
+        $tourData = [
+            "status" => 'cancal'
+        ];
+        //  dd($request->tourID);
+        Tour::where('id_tour', $request->tourID)->update($tourData);
+        return redirect('/corpMyTour');
+    }
     //เอารายการสินค้าทั้งหมด ทำเเล้ว
     function getTour(Request $request)
     {

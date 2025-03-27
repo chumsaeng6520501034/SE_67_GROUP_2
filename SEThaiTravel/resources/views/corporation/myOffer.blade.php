@@ -103,7 +103,7 @@
                     </div>
                 </div>
             </form>
-
+            {{-- เริ่มตรงนี้ --}}
             <div class="card-wrapper">
                 @foreach ($requestTours as $myoffer)
                     <div class="card-container m-4">
@@ -111,14 +111,16 @@
                             <img src="https://quintessentially.com/assets/noted/Header_2023-04-12-154210_sigz.webp"
                                 alt="Bangkok" class="w-1/3 object-cover">
                             <div class="p-6 flex-1">
-                                <form action="/guideOfferDetail" method="GET">
-                                    <h2 class="text-2xl font-bold text-black-600 hover:text-blue-500">
-                                        <input type="hidden" name="requestID" value={{ $myoffer->id_request_tour }}>
-                                        <button type="submit"> {{ ucwords($myoffer->name) }} </button>
-                                    </h2>
+                                <form action="/corpDetailMyTour" method="POST">
+                                    @csrf
+                                    <div class="text-2xl font-bold text-black-600 hover:text-blue-500">
+                                        <input type="hidden" name="requestID" value="{{ $offer->id_request_tour }}">
+                                        <button type="submit">{{ ucwords($offer->name) }}</button>
+                                    </div>
                                 </form>
-                                <p class="text-gray-600 mt-1">{{ $myoffer->description }}</p>
-                                @switch($myoffer->status)
+                                <p class="text-gray-600 mt-1">{{ $offer->description }}</p>
+                                @dd($offer->status)
+                                @switch($offer->status)
                                     @case('new')
                                         <p class="text-[#007BFF] text-sm mt-2 font-bold">{{ ucwords($myoffer->status) }}</p>
                                     @break
