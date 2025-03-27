@@ -137,8 +137,12 @@ Route::post('/corpAddTour',[CorpListController::class,'addTour']);
 //ยังไม่เสร็จ ตั้งแต่ตรงนี้
 Route::get('/corpMyTour',[CorpListController::class,'getTour']); //หน้าทัวร์ของฉัน
 Route::post('/corpDetailMyTour',[CorpListController::class,'getMyTourDetail']);
+Route::get('/corpMyinTour',[CorpListController::class,'getTour']); //หน้าทัวร์ของฉัน
 
 Route::get('/corpHistory',[CorpListController::class,'getHistory']); //หน้าประวัติขาย
+Route::post('/corpDetailSellHistory',[CorpListController::class,'getSellHistoryDetail']);
+Route::get('/corpSellHistory',[CorpListController::class,'getHistory']);
+
 //ถึงตรงนี้
 Route::get('/corpEditTourPage',[CorpListController::class,'editMyTourPage']);
 
