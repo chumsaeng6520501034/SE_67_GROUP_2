@@ -87,10 +87,10 @@
     @include('components.sidebarCustomer')
         <div id="mainContent" class="flex-1 p-10 transition-all duration-300 overflow-y-auto ml-2">
             <!-- Search and Filter -->
-            <form action="/searchBooking" method="POST">
+            <form action="#" method="POST">
                 @csrf
                 <div class="flex items-center p-4 rounded-xl mb-4 space-x-4 bg-white/10 backdrop-blur-2xl mx-52 w-3/4">
-                    <div class="relative flex-1 text-white text-xl font-bold">
+                    <div class="relative flex-1 text-black text-xl font-bold">
                         <label>Tour name</label>
                         <input type="text" id="searchBar" name="name" placeholder="Search"
                             class="w-full p-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black">
