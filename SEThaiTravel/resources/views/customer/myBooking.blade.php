@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap">
     <style>
         body {
-            background-image: url('https://www.bsr.org/images/heroes/bsr-travel-hero..jpg');
+            background-image: url('https://codyduncan.com/blogimages/2012/12/cody-duncan-landscape-2012-01.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -106,27 +106,27 @@
             <!-- Search and Filter -->
             <form action="/searchBooking" method="POST">
                 @csrf
-                <div class="flex items-center p-4 rounded-lg mb-4 space-x-4 text-black">
-                    <div class="relative flex-1 text-2xl">
-                        <label>Tour name</label>
+                <div class="flex items-center p-4 rounded-xl mb-4 space-x-4 bg-white/10 backdrop-blur-2xl mx-52 w-3/4">
+                <div class="relative flex-1 text-white text-xl font-bold">
+                <label>Tour name</label>
                         <input type="text" id="searchBar" name="name" placeholder="Search Booking tours..."
                             class="w-full p-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black">
                         <span class="absolute left-3 top-8 text-gray-500">🔍</span>
                     </div>
-                    <div class="relative flex-1">
+                    <div class="relative flex-1 text-white text-xl font-bold">
                         <label>Start Date</label>
                         <input type="date" name="startDate" id="startDate"
-                            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black">
                     </div>
-                    <div class="relative flex-1">
+                    <div class="relative flex-1 text-white text-xl font-bold">
                         <label>End Date</label>
                         <input type="date" name="endDate" id="endDate"
-                            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black">
                     </div>
-                    <div class="relative flex-1">
+                    <div class="relative flex-1 text-white text-xl font-bold">
                         <label>Status</label>
                         <select id="filterDropdown" name="status"
-                            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black">
                             <option value="" style="color: black;">All Status</option>
                             <option value="paid" style="color: rgb(12, 236, 12);">PAID</option>
                             <option value="In process" style="color: rgb(255, 255, 44);">IN PROCESS</option>
