@@ -608,6 +608,12 @@ class CorpListController extends Controller
         // dd($offerByMe, $offerInRequest,$RequestDetail);
         return view('corporation.detailMyOffer', compact('offerByMe', 'RequestDetail', 'offerData'));
     }
+    public function deleteOffer(Request $request)
+    {
+        $idOffer = $request->offerID;
+        Offer::where('id_offer', $idOffer)->delete();
+        return redirect('/corpOffer');
+    }
 
     function toEditOffer(Request $request)
     {
@@ -678,7 +684,7 @@ class CorpListController extends Controller
         $validated = ([
             'contect' => $request->contect,
             'price' => $request->price,
-            'contect' =>$request->contact,
+            'contect' => $request->contact,
             'description' => $request->description,
             'hotel' => $request->hotel,
             'hotel_price' => $request->hotel_price,

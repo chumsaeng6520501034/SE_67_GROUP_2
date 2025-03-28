@@ -162,7 +162,7 @@ Route::get('/corpSearchOffer',[CorpListController::class,'searchOffer']);
 Route::get('/corpEditOffer',[CorpListController::class,'toEditOffer']);
 Route::get('/corpGetMyOffer',[CorpListController::class,'getOffer']); //หน้าข้อเสนอ
 Route::post('/corpUpdateOffer',[CorpListController::class,'updateMyOffer']);
-
+Route::post('/corpDeleteOffer',[CorpListController::class,'deleteOffer']);
 
 
 Route::get('/corpStaff',[CorpListController::class,'getStaffInCorp']); //staff list
