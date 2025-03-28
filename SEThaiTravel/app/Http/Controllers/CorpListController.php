@@ -210,8 +210,6 @@ class CorpListController extends Controller
             return view('corporation.searchRequest', compact('ownerData', 'searchRequestData', 'path'));
         }
     }
-
-
     public function getSearchTourDetail(Request $request)
     {
         $tourID = $request->tourID;
@@ -326,16 +324,17 @@ class CorpListController extends Controller
 
         return redirect('/corpHomepage');
     }
-    function deleteTour(Request $request)
+    //แ
+    function deleteMyTour(Request $request)
     {
         $tourData = [
             "status" => 'cancal'
         ];
-        //  dd($request->tourID);
+
         Tour::where('id_tour', $request->tourID)->update($tourData);
         return redirect('/corpMyTour');
     }
-    //เอารายการสินค้าทั้งหมด ทำเเล้ว
+    //c
     function getTour(Request $request)
     {
         $idAccount = session('userID')->account_id_account;
@@ -343,46 +342,12 @@ class CorpListController extends Controller
             ->where('from_owner', 'LIKE', 'corp')
             ->where('owner_id', $idAccount)
             ->where('end_tour_date', '>', now())
+            ->orderBy('id_tour', 'desc')
             ->paginate(10)->appends($request->query());
         // dd($tours);
         return view('corporation.myTour', compact('tours'));
     }
-
-    function viewProductDetail(Request $request)
-    {
-        $tourID = $request->tourID;
-        $path = $request->path;
-        $tourData = Tour::where('id_tour', $tourID)->first();
-        switch ($tourData->from_owner) {
-            case "guide":
-                $productData = Tour::join('guide_list', 'tour.owner_id', '=', 'guide_list.account_id_account')
-                    ->where('tour.id_tour', $tourID)
-                    ->select('tour.*', 'guide_list.name as guide_name', 'guide_list.surname as guide_surname')
-                    ->first();
-                break;
-            case "corp":
-                $productData = Tour::join('corp_list', 'tour.owner_id', '=', 'corp_list.account_id_account')
-                    ->where('tour.id_tour', $tourID)
-                    ->select('tour.*', 'corp_list.name as corp_name')
-                    ->first();
-                break;
-        }
-        $totalMember = Booking::where('tour_id_tour', $tourID) //TourID ใช้ของที่กดจองมา
-            ->where('status', 'NOT LIKE', 'cancel')
-            ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
-            ->value('Total_Member');
-        // $locationInTourData = LocationInTour::where('tour_id_tour',$tourID)->pluck('loc_api');
-        // $locationFetchApi = $locationInTourData->map(function ($apiUrl) {
-        //   $response = Http::get($apiUrl);
-        //   return $response->successful() ? $response->json() : null;
-        // })->filter();
-        // return view('viewProduct',[
-        //   'tour_info' => $productData,
-        //   'locations' => $locationFetchApi
-        // ]);
-        return view('customer.detailSearch', compact('path', 'totalMember', 'productData'));
-    }
-    // แสดงรายละเอียดของสินค้าของ tour ที่เลือก
+    // c
     function getMyTourDetail(Request $request)
     {
         $tourID = $request->tourID;
@@ -409,30 +374,37 @@ class CorpListController extends Controller
 
         return view('corporation.detailMyTour', compact('totalMember', 'tourData', 'guideintour', 'locations'));
     }
-
-
+    //c
     public function editMyTourPage(Request $request)
     {
-
+        $idAccount = session('userID')->account_id_account;
         $tourId = $request->tourID;
-        // dd( $tourId);
         $locationInTourAPI = LocationInTour::where('tour_id_tour', $tourId)->get();
         $tourData = Tour::where("id_tour", $tourId)->first();
         $locations = [];
-        // $guideintour = [];
         $guideintour = DB::table('Tour_has_guide_list')
             ->join('guide_list', 'guide_list.account_id_account', '=', 'Tour_has_guide_list.guide_list_account_id_account')
             ->where('Tour_has_guide_list.tour_id_tour', $tourId)
             ->get();
         // dd($guideintour);
+        $guideincorps = DB::table('guide_list')
+            ->where('corp_list_account_id_account', $idAccount)
+            ->get();
         foreach ($locationInTourAPI as $api) {
             $locations[] = $this->getLocationsById($api->loc_api);
         }
-        $provinceId = $locations[0]->original["location"]["province"]["provinceId"];
-        return view('corporation.editTour', compact('provinceId', 'locations', 'tourData', 'guideintour'));
+        if (empty($locations)) {
+            $provinceId = [];
+        } else {
+            $provinceId = $locations[0]->original["location"]["province"]["provinceId"];
+        }
+
+        return view('corporation.editTour', compact('provinceId', 'locations', 'tourData', 'guideintour', 'guideincorps'));
     }
 
-    public function updateMyTour(Request $request){
+    //f
+    public function updateMyTour(Request $request)
+    {
         $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
@@ -440,12 +412,13 @@ class CorpListController extends Controller
             $image = $request->file('image');
             $path = $image->store('images', 'public');
         } else {
-            if(is_null($request->tourImage))
+            if (is_null($request->tourImage))
                 $path = NULL;
             else
                 $path = $request->tourImage;
         }
         $locationInTourAPI = $request->location;
+        $guideInCorp = $request->guideintour;
         $tourData = [
             "from_owner" => 'corp',
             "owner_id" => session('userID')->account_id_account,
@@ -468,17 +441,25 @@ class CorpListController extends Controller
         ];
         $tourId = $request->tourID;
         Tour::find($tourId)->update($tourData);
-        LocationInTour::where('tour_id_tour',$tourId)->delete();
+        LocationInTour::where('tour_id_tour', $tourId)->delete();
         foreach ($locationInTourAPI as $api) {
             $locationInTourData = [
                 "loc_api" => "https://tatdataapi.io/api/v2/places/$api",
                 "tour_id_tour" => $tourId
             ];
-                LocationInTour::insert($locationInTourData);
-            }
+            LocationInTour::insert($locationInTourData);
+        }
+        foreach ($guideInCorp as $guide) {
+            $guideInTour = [
+                "guide_list_account_id_account" => $guide,
+                "tour_id_tour" => $tourId
+            ];
+            TourHasGuideList::insert($guideInTour);
+        }
         return redirect('/corpMyTour');
     }
 
+    //c
     function getLocationsById($api)
     {
         $response = Http::withHeaders([
@@ -494,7 +475,7 @@ class CorpListController extends Controller
         }
     }
 
-    //เอารายการสินค้าที่หมดอายุทั้งหมด
+    //c
     function getHistory(Request $request)
     {
         $idAccount = session('userID')->account_id_account;
@@ -502,11 +483,13 @@ class CorpListController extends Controller
             ->where('from_owner', 'LIKE', 'corp')
             ->where('owner_id', $idAccount)
             ->where('end_tour_date', '<', now())
+            ->orderBy('id_tour', 'desc')
             ->paginate(10)->appends($request->query());
         //dd($histours);
         return view('corporation.sellHistory', compact('histours'));
     }
 
+    //c
     public function getSellHistoryDetail(Request $request)
     {
         $tourID = $request->tourID;
@@ -543,7 +526,7 @@ class CorpListController extends Controller
         return view('corporation.detailSellhistory', compact('totalMember', 'tourData', 'anotherReview', 'locations'));
     }
 
-    //เสร็จแล้ว
+    //c
     function getAddOffer(Request $request)
     {
         $offer = $request->tourID;
@@ -553,7 +536,7 @@ class CorpListController extends Controller
         return view('corporation.addOffer', compact('requestTour'));
     }
 
-    //เสร็จแล้ว
+    //c
     function addOffer(Request $request)
     {
         $idAccount = session('userID')->account_id_account;
@@ -576,28 +559,27 @@ class CorpListController extends Controller
         Offer::insert($offerData);
         return redirect('/corpOffer');
     }
-//
-    
-    
-   
-//
 
-    //เสร็จแล้ว
-    function getOffer(Request $request){
+
+    //c
+    function getOffer(Request $request)
+    {
         $idAccount = session('userID')->account_id_account;
-      $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
-          ->where('o.id_who_offer', $idAccount)
-          ->select('request_tour.*','o.*')
-          ->paginate(10)->appends($request->query());
-      $tourPrivate = [];
-      foreach($requestTours as $offer){
-        $tourPrivate[$offer->id_offer] = Tour::where('offer_id_offer',$offer->id_offer)->first();
-      }
-      return view('corporation.myOffer', compact('requestTours','tourPrivate'));
+        $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
+            ->where('o.id_who_offer', $idAccount)
+            ->select('request_tour.*', 'o.*')
+            ->orderBy('id_offer', 'desc')
+            ->paginate(10)->appends($request->query());
+        $tourPrivate = [];
+        foreach ($requestTours as $offer) {
+            $tourPrivate[$offer->id_offer] = Tour::where('offer_id_offer', $offer->id_offer)->first();
+        }
+        return view('corporation.myOffer', compact('requestTours', 'tourPrivate'));
     }
 
-    //เสร็จแล้ว
-    function getOfferDetail(Request $request){
+    //c
+    function getOfferDetail(Request $request)
+    {
         $idAccount = session('userID')->account_id_account;
         $offerByMe = DB::table('offer')
             ->where('id_who_offer', $idAccount)
@@ -608,7 +590,7 @@ class CorpListController extends Controller
             ->select('request_tour.*', 'user_list.name as uName', 'user_list.surname', 'user_list.phonenumber')  // เลือกคอลัมน์ทั้งหมดจากทั้ง 2 ตาราง
             ->first();
         $offerInRequest = Offer::where('request_tour_id_request_tour', $request->requestID)->get();
-            $offerData = [];
+        $offerData = [];
         foreach ($offerInRequest as $offer) {
             switch ($offer->from_who_offer) {
                 case 'corp':
@@ -623,8 +605,8 @@ class CorpListController extends Controller
                     break;
             }
         }
-            // dd($offerByMe, $offerInRequest,$RequestDetail);
-        return view('corporation.detailMyOffer', compact('offerByMe','RequestDetail','offerData'));
+        // dd($offerByMe, $offerInRequest,$RequestDetail);
+        return view('corporation.detailMyOffer', compact('offerByMe', 'RequestDetail', 'offerData'));
     }
 
     function toEditOffer(Request $request)
@@ -645,32 +627,34 @@ class CorpListController extends Controller
         return view('corporation.editOffer', compact('provinceId', 'getHotel', 'offerData'));
     }
 
+    //c
     function searchOffer(Request $request)
-  {
-      $name = $request->name;
-      $startDate = $request->startDate;
-      $endDate = $request->endDate;
-      $status = $request->status;
-      $idAccount = session('userID')->account_id_account;
-      $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
-          ->where('o.id_who_offer', $idAccount);
-      if(!empty($name)){
-        $requestTours->whereRaw('LOWER(request_tour.name) LIKE LOWER(?)', ["%$name%"]);
-      }
-      if(!empty($startDate)){
-        $requestTours->whereDate('request_tour.request_date', $startDate);
-      }
-      if(!empty($endDate)){
-        $requestTours->whereDate('request_tour.end_of_request_date', $endDate);
-      }
-      if(!empty($status)){
-        $requestTours->where('o.status','LIKE',$status);
-      }
-      $requestTours=$requestTours->select('request_tour.*','o.*')
-          ->paginate(10)->appends($request->query());
-      return view('corporation.myOffer', compact('requestTours'));
-  } 
+    {
+        $name = $request->name;
+        $startDate = $request->startDate;
+        $endDate = $request->endDate;
+        $status = $request->status;
+        $idAccount = session('userID')->account_id_account;
+        $requestTours = RequestTour::join('offer as o', 'o.request_tour_id_request_tour', '=', 'request_tour.id_request_tour')
+            ->where('o.id_who_offer', $idAccount);
+        if (!empty($name)) {
+            $requestTours->whereRaw('LOWER(request_tour.name) LIKE LOWER(?)', ["%$name%"]);
+        }
+        if (!empty($startDate)) {
+            $requestTours->whereDate('request_tour.request_date', $startDate);
+        }
+        if (!empty($endDate)) {
+            $requestTours->whereDate('request_tour.end_of_request_date', $endDate);
+        }
+        if (!empty($status)) {
+            $requestTours->where('o.status', 'LIKE', $status);
+        }
+        $requestTours = $requestTours->select('request_tour.*', 'o.*')
+            ->paginate(10)->appends($request->query());
+        return view('corporation.myOffer', compact('requestTours'));
+    }
 
+    //o
     public function getHotelByName($name)
     {
         $response = Http::withHeaders([
@@ -685,25 +669,22 @@ class CorpListController extends Controller
             return response()->json(['error' => 'ไม่สามารถดึงข้อมูลสถานที่ท่องเที่ยวได้'], 500);
         }
     }
-    //เสร็จแล้ว
-    // function toEditOffer(Request $request){
-    //     $OfferID = $request->offerID;
 
-    //     // dd($OfferID);
-    //     return view('corporation.editOffer', compact('OfferID'));
-    // }
-    //เสร็จแล้ว
-    function updateMyOffer(Request $request){
+    //f
+    function updateMyOffer(Request $request)
+    {
+
         $idOffer = $request->offerID;
-        $validated = $request->validate([
+        $validated = ([
             'contect' => $request->contect,
             'price' => $request->price,
+            'contect' =>$request->contact,
             'description' => $request->description,
             'hotel' => $request->hotel,
             'hotel_price' => $request->hotel_price,
             'travel' => $request->travel,
             'travel_price' => $request->travel_price,
-            'guide_qty' => $request->guide_qty,
+            'guide_qty' => $request->quantity,
             'status' => 'new'
         ]);
         DB::table('offer')
@@ -712,8 +693,11 @@ class CorpListController extends Controller
         return redirect('/corpOffer');
     }
 
-    //เสร็จแล้ว
-    function getStaffInCorp(Request $request){
+
+
+    //c
+    function getStaffInCorp(Request $request)
+    {
         $idAccount = session('userID')->account_id_account;
         $guides = DB::table('guide_list')
             ->where('corp_list_account_id_account', $idAccount)
@@ -722,9 +706,11 @@ class CorpListController extends Controller
         return view('corporation.myStaf', compact('guides'));
     }
     //ยังไม่เทส
-    function staffDetail(Request $request){
+    function staffDetail(Request $request)
+    {
         $guideID = $request->guideID;
         $idAccount = session('userID')->account_id_account;
+        $countrys =  AccountController::getCountry();
         $guideInfo = GuideList::where('account_id_account', $guideID)->first();
         $guideWork = DB::table('guide_list as g')
             ->join('Tour_has_guide_list as thg', 'thg.guide_list_account_id_account', '=', 'g.account_id_account')
@@ -739,10 +725,11 @@ class CorpListController extends Controller
             ->selectRaw('COUNT(*) as total_reviews, AVG(review.sp_score) as average_score')
             ->first();
         // dd($guideInfo, $guideWork,$guideScore);
-        return view('corporation.profilemyStaff', compact('guideInfo', 'guideWork', 'guideScore'));
+        return view('corporation.profilemyStaff', compact('guideInfo', 'guideWork', 'guideScore', 'countrys'));
     }
     //เสร็จแล้ว
-    function getAllPaymentHistory(Request $request){
+    function getAllPaymentHistory(Request $request)
+    {
         $idAccount = session('userID')->account_id_account;
         $payments = DB::table('payment as p')
             ->join('booking as b', 'b.id_booking', '=', 'p.booking_Tour_id_Tour')
@@ -753,6 +740,7 @@ class CorpListController extends Controller
                     ->where('t.from_owner', 'LIKE', 'corp');
             })
             ->where('c.account_id_account', $idAccount)
+            ->orderBy('id_payment', 'desc')
             ->select(
                 'p.id_payment',
                 'p.booking_Tour_id_Tour',
@@ -770,7 +758,8 @@ class CorpListController extends Controller
         return view('corporation.allPayments', compact('payments'));
     }
     //เสร็จแล้ว
-    function getPaymentDetail(Request $request){
+    function getPaymentDetail(Request $request)
+    {
         $userID = $request->userID;
         $tourID = $request->tourID;
         $paymentID = $request->paymentID;
@@ -781,7 +770,8 @@ class CorpListController extends Controller
         $bookingData = Booking::where('id_booking', $bookingID)->first();
         return view('corporation.paymentDetail', compact('paymentData', 'tourData', 'userData', 'bookingData'));
     }
-    public function searchPayment(Request $request){
+    public function searchPayment(Request $request)
+    {
         $searchKey = $request->searchKey;
         $date = $request->paymentDate;
         $idAccount = session('userID')->account_id_account;
@@ -817,7 +807,8 @@ class CorpListController extends Controller
         return view('corporation.allPayments', compact('payments'));
     }
     //เสร็จแล้ว
-    public function getStatistic(){
+    public function getStatistic()
+    {
         $userID = session('userID')->account_id_account;
         $touristPerMonth = Booking::selectRaw("DATE_FORMAT(booked_date, '%Y-%m') as YM, SUM(adult_qty + kid_qty) as tourListPerMonth")
             ->where('status', 'paid')
@@ -881,16 +872,16 @@ class CorpListController extends Controller
         //dd($revenuePerYear);
         return view('corporation.statistic', compact('touristPerMonth', 'touristPerYear', 'revenuePerMonth', 'revenuePerYear', 'avgTourist', 'avgRevenue'));
     }
-
-
-    function viewProfile(){
+    function viewProfile()
+    {
         $id = session('userID')->account_id_account;
         $accountData = Account::where('id_account', $id)->first();
         $userData = CorpList::where('account_id_account', $id)->first();
         $countrys =  AccountController::getCountry();
         return view('corporation.profile', compact('accountData', 'userData', 'countrys'));
     }
-    function updateUser(Request $request){
+    function updateUser(Request $request)
+    {
 
         $idAccount = session('userID')->account_id_account;
         $user = CorpList::where('account_id_account', $idAccount)->first();

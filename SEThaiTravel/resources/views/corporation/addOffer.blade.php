@@ -15,11 +15,11 @@
     style="background-image: url('https://my.kapook.com/imagescontent/fb_img/816/s_96528_4076.jpg');">
 
     <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl px-4">
+        <div class="grid md:grid-cols-2 gap-6 w-full max-w-6xl px-4 mx-auto">
 
             <!-- Card ซ้าย: รายละเอียด Request -->
             <div
-                class="bg-white bg-opacity-50 backdrop-blur-lg p-8 rounded-2xl shadow-lg w-full md:w-[900px] max-h-[95vh] overflow-y-auto">
+                class="bg-white bg-opacity-50 backdrop-blur-lg p-8 rounded-2xl shadow-lg w-full  max-h-[95vh] overflow-y-auto">
                 <h2 class="text-center text-3xl md:text-4xl font-bold text-[#002D62] mb-6">รายละเอียด Request</h2>
                 <div class="text-sm space-y-2">
                     <p><span class="font-semibold">Request Name:</span> {{ $requestTour->name }}</p>
@@ -37,7 +37,7 @@
 
             <!-- Card ขวา: Add Offer -->
             <div
-                class="bg-white bg-opacity-50 backdrop-blur-lg p-10 rounded-2xl shadow-lg w-full md:w-[900px] max-h-[95vh] overflow-y-auto">
+                class="bg-white bg-opacity-50 backdrop-blur-lg p-10 rounded-2xl shadow-lg w-full  max-h-[95vh] overflow-y-auto">
                 <h2 class="text-center text-3xl md:text-4xl font-bold text-[#002D62] mb-6">OFFER</h2>
 
                 <form action="/corpAddOffer" method="POST">

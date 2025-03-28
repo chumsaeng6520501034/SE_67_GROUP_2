@@ -21,7 +21,7 @@
             class="bg-white bg-opacity-50 backdrop-blur-lg p-10 rounded-2xl shadow-lg w-[900px] my-5 max-h-[90vh] overflow-y-auto">
             <h2 class="text-center text-4xl font-bold text-[#002D62] mb-6">EDIT TOUR</h2>
 
-            <form action="/guideEditTour" method="POST" enctype="multipart/form-data">
+            <form action="/corpEditTour" method="POST" enctype="multipart/form-data">
                 @csrf
                 <!-- Row 1 -->
                 <div class="grid grid-cols-2 gap-4 mb-4">
@@ -91,7 +91,7 @@
                 <!-- ✅ เลือกไกด์แบบ tag แสดงด้านล่าง -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium">Guide</label>
-                    <select id="guideSelect" name="guideintour[]" class="w-full p-2 border rounded shadow-sm">
+                    <select id="guideSelect" name="guideincorps[]" class="w-full p-2 border rounded shadow-sm">
                     </select>
                     <div id="selectedGuides" class="mt-3 flex flex-wrap gap-2"></div>
                 </div>
@@ -133,7 +133,7 @@
 
                 <div class="flex justify-center mt-6 space-x-4">
                     <!-- ปุ่ม BACK -->
-                    <a href="/guideMyTour"
+                    <a href="/corpMyTour"
                         class="bg-gray-500 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-red-700 transition">
                         BACK
                     </a>
@@ -377,7 +377,7 @@ document.addEventListener("DOMContentLoaded", function() {
         tag.innerHTML = `
             <span class="mr-2">${guide.name} ${guide.surname}</span>
             <button type="button" onclick="removeGuide(${guide.account_id_account})" class="text-green-600 hover:text-red-600">&times;</button>
-            <input type="hidden" name="guideintour[]" value="${guide.account_id_account}">
+            <input type="hidden" name="guideinvorp[]" value="${guide.account_id_account}">
         `;
         selectedGuidesContainer.appendChild(tag);
     });

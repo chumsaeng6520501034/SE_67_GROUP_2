@@ -225,6 +225,7 @@ class AccountController extends Controller
     $endDate = $request->endDate;
     $capacity = $request->capacity;
     $path = $_SERVER['REQUEST_URI'];
+    
     if (is_numeric($name)) { //เช็คว่าเป็นตัวเลขไหมถ้าเป็นจะ search แบบ private 
       $searchTourData = Tour::where(function ($query) use ($name, $startDate, $endDate, $capacity) {
         $query->where('name', 'LIKE', '%' . $name . '%')

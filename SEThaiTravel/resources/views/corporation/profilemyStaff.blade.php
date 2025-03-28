@@ -57,8 +57,6 @@
                     <p class="font-semibold">Payment:</p>
                     <p class="mt-1">Visa: {{ $guideInfo->fake_BAN }}</p>
                 </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4 mt-4">
                 <div class="bg-gray-100 p-4 rounded-lg shadow">
                     <p class="font-semibold">Guide License:</p>
                     <p class="mt-1">{{ $guideInfo->guide_license }}</p>
