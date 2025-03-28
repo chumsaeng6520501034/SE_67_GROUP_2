@@ -186,7 +186,7 @@
                                 <button onclick="closeModal({{ $offer->id_offer }})"
                                     class="bg-gray-400 text-white px-4 py-2 rounded-md">Cancel</button>
                                 <!-- Confirm Button (Form for Deleting) -->
-                                <form action="/guideDeleteOffer" method="POST">
+                                <form action="/corpDeleteOffer" method="POST">
                                     @csrf
                                     <input type="hidden" name="offerID" value={{ $offer->id_offer }}>
                                     <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md">Confirm
