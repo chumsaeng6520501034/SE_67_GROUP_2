@@ -895,7 +895,11 @@ class GuideListController extends Controller
       }
       $requestTours=$requestTours->select('request_tour.*','o.*')
           ->paginate(10)->appends($request->query());
-      return view('guide.myOffer', compact('requestTours'));
+          $tourPrivate = [];
+          foreach ($requestTours as $offer) {
+              $tourPrivate[$offer->id_offer] = Tour::where('offer_id_offer', $offer->id_offer)->first();
+          }
+      return view('guide.myOffer', compact('requestTours','tourPrivate'));
   } 
     function getOfferDetail(Request $request)
     {
@@ -1075,6 +1079,7 @@ class GuideListController extends Controller
             ->where('from_owner', 'LIKE', 'guide')
             ->where('owner_id', $idAccount)
             ->whereIn('status', ['finish', 'collect'])
+            ->orderBy('id_tour', 'desc')
             ->paginate(10)->appends($request->query());
         //dd($histours);
         return view('guide.sellHistory', compact('tourData'));

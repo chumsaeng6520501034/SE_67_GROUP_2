@@ -259,6 +259,63 @@ class CorpListController extends Controller
             ->first();
         return view('corporation.detailSearchRequest', compact('requestData', 'path'));
     }
+    public function searchSellHistory(Request $request){
+        $status = $request->status;
+        $name = $request->name;
+        $startDate = $request->startDate;
+        $endDate = $request->endDate;
+        $tourData = Tour::where('owner_id', session('userID')->account_id_account)
+            ->where('status', 'LIKE', '%' . $status . '%')
+            ->whereIn('status', ['finish', 'collect']);
+        if (!empty($name)) {
+            $tourData->whereRaw('LOWER(tour.name) LIKE LOWER(?)', ["%$name%"]);
+        }
+
+        // ✅ กรองวันที่เริ่มต้นทัวร์
+        if (!empty($startDate)) {
+            $tourData->whereDate('tour.start_tour_date', $startDate);
+        }
+
+        // ✅ กรองวันที่สิ้นสุดทัวร์
+        if (!empty($endDate)) {
+            $tourData->whereDate('tour.end_tour_date', $endDate);
+        }
+        $tourData = $tourData->paginate(10)->appends($request->query());
+        $histours =$tourData;
+        return view('corporation.sellHistory', compact('histours'));
+    }
+    function searchMyTour(Request $request)
+    {
+        $status = $request->status;
+        $name = $request->name;
+        $startDate = $request->startDate;
+        $endDate = $request->endDate;
+        $tourData = Tour::where('owner_id', session('userID')->account_id_account)
+            ->where('status', 'LIKE', '%' . $status . '%');
+        if (!empty($name)) {
+            $tourData->whereRaw('LOWER(tour.name) LIKE LOWER(?)', ["%$name%"]);
+        }
+
+        // ✅ กรองวันที่เริ่มต้นทัวร์
+        if (!empty($startDate)) {
+            $tourData->whereDate('tour.start_tour_date', $startDate);
+        }
+
+        // ✅ กรองวันที่สิ้นสุดทัวร์
+        if (!empty($endDate)) {
+            $tourData->whereDate('tour.end_tour_date', $endDate);
+        }
+        $tourData = $tourData->paginate(10)->appends($request->query());
+        $totalMember = [];
+        foreach ($tourData as $tour) {
+            $totalMember[] = Booking::where('tour_id_tour', $tour->id_tour) //TourID ใช้ของที่กดจองมา
+                ->where('status','NOT LIKE','cancel')
+                ->selectRaw('SUM(adult_qty + kid_qty) as Total_Member')
+                ->value('Total_Member');
+        }
+        $tours = $tourData; 
+        return view('corporation.myTour', compact('tours','totalMember'));
+    }
 
     //เสร็จแล้ว
     function getAddTour()
@@ -483,6 +540,7 @@ class CorpListController extends Controller
             ->where('from_owner', 'LIKE', 'corp')
             ->where('owner_id', $idAccount)
             ->where('end_tour_date', '<', now())
+            ->whereIn('status', ['finish', 'collect'])
             ->orderBy('id_tour', 'desc')
             ->paginate(10)->appends($request->query());
         //dd($histours);
@@ -636,6 +694,7 @@ class CorpListController extends Controller
     //c
     function searchOffer(Request $request)
     {
+
         $name = $request->name;
         $startDate = $request->startDate;
         $endDate = $request->endDate;
@@ -655,9 +714,14 @@ class CorpListController extends Controller
         if (!empty($status)) {
             $requestTours->where('o.status', 'LIKE', $status);
         }
+
         $requestTours = $requestTours->select('request_tour.*', 'o.*')
             ->paginate(10)->appends($request->query());
-        return view('corporation.myOffer', compact('requestTours'));
+        $tourPrivate = [];
+        foreach ($requestTours as $offer) {
+            $tourPrivate[$offer->id_offer] = Tour::where('offer_id_offer', $offer->id_offer)->first();
+        }
+        return view('corporation.myOffer', compact('requestTours','tourPrivate'));
     }
 
     //o

@@ -32,7 +32,7 @@
                 @else
                     <img class="h-16 w-16 rounded-full mx-auto border-2 border-white"
                         src="{{ asset('storage/' . session('userID')->photo) }}" alt="avatar" />
-                @endif>
+                @endif
             </a>
             <h2 class="text-lg font-bold mt-2">{{session('userID')->name}}</h2>
         </div>

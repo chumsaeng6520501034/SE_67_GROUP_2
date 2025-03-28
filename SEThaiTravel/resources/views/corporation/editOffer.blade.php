@@ -123,7 +123,7 @@
 
                     <div class="flex justify-center mt-6 space-x-4">
                         <!-- ปุ่ม BACK -->
-                        <a href="/corpMyOffer"
+                        <a href="/corpOffer"
                             class="bg-gray-500 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-red-700 transition">
                             BACK
                         </a>

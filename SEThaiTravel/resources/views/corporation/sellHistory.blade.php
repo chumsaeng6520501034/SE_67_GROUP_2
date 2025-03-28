@@ -69,7 +69,7 @@
 
         <div id="mainContent" class="flex-1 p-10 transition-all duration-300 overflow-y-auto ml-2">
             <!-- Search and Filter -->
-            <form action="/corpSearchMyoffer" method="GET">
+            <form action="/corpSearchHistory" method="GET">
             @csrf
                 <div class="flex items-center p-4 rounded-xl mb-4 space-x-4 bg-white/10 backdrop-blur-2xl mx-52 w-3/4">
                     <div class="relative flex-1 text-white text-xl font-bold">
